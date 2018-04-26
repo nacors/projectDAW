@@ -1,31 +1,193 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <!-- <link rel="stylesheet" type="text/css" href="code/css/style.css"> -->
     <script src="/socket.io/socket.io.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Black+Han+Sans" rel="stylesheet">
     <title>Projecte DAW</title>
     <style>
-        body{
+        body {
             background: #55efc4;
+            margin: auto;
+            text-align: center;
+            font-family: 'Black Han Sans', sans-serif;
+            color: white;
+            text-shadow: 1px 1px 3px black;
+        }
+
+        #zonaInicio {
+            width: 300px;
+            height: 500px;
+            border: 1px #00b894 solid;
+            border-radius: 2px 2px 2px 2px;
+            background: #81ecec;
+            margin: auto;
+            margin-top: 40px;
+            display: grid;
+            padding: 10px;
+            grid-template-areas: "iniciar" "registrar" "invitado";
+        }
+
+        input {
+            font-family: 'Black Han Sans', sans-serif;
+            border: none;
+            border-bottom: 2px black solid;
+            background: none;
+            text-shadow: 1px 1px 3px black;
+            color: gold;
+        }
+
+        .boton {
+            border: none !important;
+            color: white;
+        }
+
+        .boton:hover {
+            cursor: pointer;
+            border: 0px #00cec9 solid !important;
+            background: #fdcb6e;
+            border-radius: 3px 3px 3px 3px;
+        }
+
+        #registrarse {
+            display: none !important;
+            grid-area: registrar;
+            grid-template-areas: "tituloR" "nickR" "contrR" "registrar"
+        }
+
+        #iniciarSesion {
+            display: grid;
+            grid-area: iniciar;
+            grid-template-areas: "tituloI" "nickI" "contrI" "iniciar";
+        }
+
+        #invitado {
+            grid-area: invitado;
+            margin-top: 200px;
+            font-size: 9px;
+        }
+
+        #invitado input {
+            /* margin-top: 283px; */
+            color: #74b9ff;
+        }
+
+        #textI {
+            grid-area: tituloI;
+        }
+
+        input[name=usernameI] {
+            grid-area: nickI;
+            width: 200px;
+            height: 30px;
+            margin: auto;
+        }
+
+        input[name=passwordI] {
+            grid-area: contrI;
+            width: 200px;
+            height: 30px;
+            margin: auto;
+        }
+
+        input[name=iniciar] {
+
+            grid-area: iniciar;
+            width: 40%;
+            margin: auto;
+            margin-top: 30px;
+        }
+
+        input[name=usernameR] {
+            grid-area: nickR;
+            width: 200px;
+            height: 30px;
+            margin: auto;
+        }
+
+        input[name=passwordR] {
+            grid-area: contrR;
+            width: 200px;
+            height: 30px;
+            margin: auto;
+        }
+
+        input[name=registrar] {
+
+            grid-area: registrar;
+            width: 40%;
+            margin: auto;
+            margin-top: 30px;
+        }
+
+        #accionIniciarSesion {
+            display: none;
+        }
+        ::placeholder{
+            opacity: 0.5;
+            color: #dfe6e9;
         }
     </style>
+    <script>
+        window.onload = () => {
+            document.getElementById("accionRegistrar").addEventListener("click", function () {
+                this.style.display = "none";
+                document.getElementById("iniciarSesion").style.display = "none";
+                document.getElementById("registrarse").setAttribute("style", "display: grid !important");
+                document.getElementById("accionIniciarSesion").setAttribute("style", "display: inline");
+            });
+            document.getElementsByName("invitado")[0].addEventListener("click", function (e) {
+                e.preventDefault();
+                alert("jugar como invitado (acabar)");
+            });
+            document.getElementsByName("iniciar")[0].addEventListener("click", function (e) {
+                e.preventDefault();
+                alert("jugar como usuario registrado (acabar)");
+            });
+            document.getElementsByName("registrar")[0].addEventListener("click", function (e) {
+                e.preventDefault();
+                alert("jugar como usuario recien registrado (acabar)");
+            });
+            document.getElementById("accionIniciarSesion").addEventListener("click", function () {
+                this.style.display = "none";
+                document.getElementById("iniciarSesion").style.display = "grid";
+                document.getElementById("registrarse").setAttribute("style", "display: none !important");
+                document.getElementById("accionRegistrar").setAttribute("style", "display: inline");
+            });
+        }
+    </script>
 </head>
+
 <body>
     <div id="zonaInicio">
-        <div id="registrarse">
-            <input type="text" name="usernameR">
-            <input type="text" name="passwordR">
-            <input type="button" name="registrar" value="Registrar-se">
-        </div>
         <div id="iniciarSesion">
-            <input type="text" name="usernameI">
-            <input type="text" name="passwordI">
-            <input type="button" name="iniciar" value="Iniciar Sesión">
+            <p id="textI">
+                <h2>Inicia Sesion</h2>
+            </p>
+            <form>
+                <input type="text" name="usernameI" placeholder="nickname" required>
+                <input type="password" name="passwordI" placeholder="contraseña" required>
+                <input class="boton" type="submit" name="iniciar" value="Iniciar Sesión">
+            </form>
+        </div>
+        <div id="registrarse">
+            <p id="textR">
+                <h2>Registrate</h2>
+            </p>
+            <form>
+                <input type="text" name="usernameR" placeholder="nickname" required>
+                <input type="text" name="passwordR" placeholder="contraseña" required>
+                <input class="boton" type="submit" name="registrar" value="Registrarse">
+            </form>
         </div>
         <div id="invitado">
-            <input type="button" name="invitado" value="Jugadr Como Invitado">
+            <input class="boton" id="accionRegistrar" type="button" value="Registrarse">
+            <input class="boton" id="accionIniciarSesion" type="submit" value="Volver">
+            <input class="boton" type="button" name="invitado" value="Jugar Como Invitado">
         </div>
     </div>
 </body>
+
 </html>
