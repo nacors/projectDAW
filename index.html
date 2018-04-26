@@ -5,8 +5,27 @@
     <!-- <link rel="stylesheet" type="text/css" href="code/css/style.css"> -->
     <script src="/socket.io/socket.io.js"></script>
     <title>Projecte DAW</title>
+    <style>
+        body{
+            background: #55efc4;
+        }
+    </style>
 </head>
 <body>
-    <div>Hey!</div>
+    <div id="zonaInicio">
+        <div id="registrarse">
+            <input type="text" name="usernameR">
+            <input type="text" name="passwordR">
+            <input type="button" name="registrar" value="Registrar-se">
+        </div>
+        <div id="iniciarSesion">
+            <input type="text" name="usernameI">
+            <input type="text" name="passwordI">
+            <input type="button" name="iniciar" value="Iniciar Sesión">
+        </div>
+        <div id="invitado">
+            <input type="button" name="invitado" value="Jugadr Como Invitado">
+        </div>
+    </div>
 </body>
 </html>
