@@ -17,26 +17,26 @@ io.on('connection', function (socket) {
   socket.on('newplayer', function () {
     console.log("Usuario nuevo");
   });
-  socket.on('iniciarSesion', function(data){
+  socket.on('iniciarSesion', function (data) {
     iniciarSesion(data)
   });
   socket.on('registrarse', registrarse);
   socket.on('jugarinvitado', jugarinvitado);
 });
 
-conexioMongo();
 
-function iniciarSesion(data){
+function iniciarSesion(data) {
   console.log("Iniciar Sesion");
   console.log(data.nick);
   console.log(data.cont);
 }
 
-function registrarse(){
+function registrarse(data) {
+  insertarMongo(data.nick, data.cont);
   console.log("registrarse");
 }
 
-function jugarinvitado(){
+function jugarinvitado() {
   console.log("jugarinvitado");
 }
 
@@ -45,13 +45,23 @@ function conexioMongo() {
     , assert = require('assert');
 
   // Connection URL
-  var url = 'mongodb://localhost:27017/myproject';
+  var url = 'mongodb://localhost:27017/projecte';
 
   // Use connect method to connect to the server
   MongoClient.connect(url, function (err, db) {
     assert.equal(null, err);
     console.log("Connected successfully to server");
+    return db;
+  });
+  
+}
 
+function insertarMongo(nick, contr) {
+  var db = conexioMongo();
+  myobj = { nickName: nick, contrasenya: contr };
+  dbo.collection("usuarios").insertOne(myobj, function (err, res) {
+    if (err) throw err;
+    console.log("usuario registrado");
     db.close();
   });
 }
