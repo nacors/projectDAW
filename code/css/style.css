@@ -1,3 +1,121 @@
-body{
-    background: red;
+body {
+    background: #55efc4;
+    margin: auto;
+    text-align: center;
+    font-family: 'Black Han Sans', sans-serif;
+    color: white;
+    text-shadow: 1px 1px 3px black;
+}
+
+#zonaInicio {
+    width: 300px;
+    height: 500px;
+    border: 1px #00b894 solid;
+    border-radius: 2px 2px 2px 2px;
+    background: #81ecec;
+    margin: auto;
+    margin-top: 40px;
+    display: grid;
+    padding: 10px;
+    grid-template-areas: "iniciar" "registrar" "invitado";
+}
+
+input {
+    font-family: 'Black Han Sans', sans-serif;
+    border: none;
+    border-bottom: 2px black solid;
+    background: none;
+    text-shadow: 1px 1px 3px black;
+    color: gold;
+}
+
+.boton {
+    border: none !important;
+    color: white;
+}
+
+.boton:hover {
+    cursor: pointer;
+    border: 0px #00cec9 solid !important;
+    background: #fdcb6e;
+    border-radius: 3px 3px 3px 3px;
+}
+
+#registrarse {
+    display: none !important;
+    grid-area: registrar;
+    grid-template-areas: "tituloR" "nickR" "contrR" "registrar"
+}
+
+#iniciarSesion {
+    display: grid;
+    grid-area: iniciar;
+    grid-template-areas: "tituloI" "nickI" "contrI" "iniciar";
+}
+
+#invitado {
+    grid-area: invitado;
+    margin-top: 200px;
+    font-size: 9px;
+}
+
+#invitado input {
+    /* margin-top: 283px; */
+    color: #74b9ff;
+}
+
+#textI {
+    grid-area: tituloI;
+}
+
+input[name=usernameI] {
+    grid-area: nickI;
+    width: 200px;
+    height: 30px;
+    margin: auto;
+}
+
+input[name=passwordI] {
+    grid-area: contrI;
+    width: 200px;
+    height: 30px;
+    margin: auto;
+}
+
+input[name=iniciar] {
+
+    grid-area: iniciar;
+    width: 40%;
+    margin: auto;
+    margin-top: 30px;
+}
+
+input[name=usernameR] {
+    grid-area: nickR;
+    width: 200px;
+    height: 30px;
+    margin: auto;
+}
+
+input[name=passwordR] {
+    grid-area: contrR;
+    width: 200px;
+    height: 30px;
+    margin: auto;
+}
+
+input[name=registrar] {
+
+    grid-area: registrar;
+    width: 40%;
+    margin: auto;
+    margin-top: 30px;
+}
+
+#accionIniciarSesion {
+    display: none;
+}
+::placeholder{
+    opacity: 0.5;
+    color: #dfe6e9;
 }
