@@ -44,7 +44,7 @@ input {
 #registrarse {
     display: none !important;
     grid-area: registrar;
-    grid-template-areas: "tituloR" "nickR" "contrR" "registrar"
+    grid-template-areas: "tituloR" "nickR" "contrR" "registrar" "mensaje";
 }
 
 #iniciarSesion {
@@ -118,4 +118,7 @@ input[name=registrar] {
 ::placeholder{
     opacity: 0.5;
     color: #dfe6e9;
+}
+#textError{
+    grid-area: mensaje;
 }
