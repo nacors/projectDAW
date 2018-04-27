@@ -23,4 +23,12 @@ window.onload = () => {
         document.getElementById("registrarse").setAttribute("style", "display: none !important");
         document.getElementById("accionRegistrar").setAttribute("style", "display: inline");
     });
+
+    var Client = {};
+    Client.socket = io.connect();
+    Client.askNewPlayer = function(){
+        Client.socket.emit('newplayer');
+    };
+
+    Client.askNewPlayer();
 }

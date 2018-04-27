@@ -11,5 +11,9 @@ server.listen(3000, function(){
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
-io.on('connection', function (socket) { console.log("usuari connectat") });
+io.on('connection', function (socket) {
+  socket.on('newplayer',function(){
+    console.log("Hola");
+  });
+});
 server.listen(3000);
