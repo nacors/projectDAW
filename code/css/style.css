@@ -2,7 +2,7 @@ body {
     background: #55efc4;
     margin: auto;
     text-align: center;
-    font-family: 'Black Han Sans', sans-serif;
+    font-family: 'Merriweather Sans', sans-serif;
     color: white;
     text-shadow: 1px 1px 3px black;
 }
@@ -21,7 +21,7 @@ body {
 }
 
 input {
-    font-family: 'Black Han Sans', sans-serif;
+    font-family: 'Merriweather Sans', sans-serif;
     border: none;
     border-bottom: 2px black solid;
     background: none;
@@ -56,12 +56,17 @@ input {
 #invitado {
     grid-area: invitado;
     margin-top: 200px;
-    font-size: 9px;
+}
+
+form input{
+    text-shadow: 1px 1px 1px black;
 }
 
 #invitado input {
     /* margin-top: 283px; */
     color: #74b9ff;
+    text-shadow: 1px 1px 1px blue;
+    font-size: 15px;;
 }
 
 #textI {
@@ -116,9 +121,13 @@ input[name=registrar] {
     display: none;
 }
 ::placeholder{
-    opacity: 0.5;
-    color: #dfe6e9;
+    opacity: 0.7;
+    color: white;
 }
 #textError{
     grid-area: mensaje;
+}
+
+#textErrorI, #textErrorR{
+    text-shadow: 1px 1px 1px red;
 }
