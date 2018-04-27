@@ -12,6 +12,7 @@ window.onload = () => {
     document.getElementsByName("iniciar")[0].addEventListener("click", function (e) {
         e.preventDefault();
         alert("jugar como usuario registrado (acabar)");
+        Client.iniciarSesion();
     });
     document.getElementsByName("registrar")[0].addEventListener("click", function (e) {
         e.preventDefault();
@@ -29,6 +30,9 @@ window.onload = () => {
     Client.askNewPlayer = function(){
         Client.socket.emit('newplayer');
     };
+    Client.iniciarSesion = function(nick, cont){
+        Client.socket.emit('iniciarSesion', {nick:"isayenko", cont:1234});
+    }
 
     Client.askNewPlayer();
 }
