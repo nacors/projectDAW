@@ -1,67 +1,127 @@
 window.onload = () => {
+    var zonaIniciarSesion = document.getElementById("iniciarSesion");
+    var zonaRegistrarse = document.getElementById("registrarse");
+    var botonVolver = document.getElementById("accionIniciarSesion");
+    var botonIrRegistrar = document.getElementById("accionRegistrar");
+    var zonaInvitado = document.getElementById("invitado");
+    var botonesInvitado = document.getElementsByName("invitado")[0];
+    var botonIniciarSesion = document.getElementsByName("iniciar")[0];
+    var botonRegistrarse = document.getElementsByName("registrar")[0];
+    var mensajeInicio = document.getElementById("textErrorI");
+    var mensajeRegistro = document.getElementById("textErrorR");
+
+
     //funciones del lado cliente
-    document.getElementById("accionRegistrar").addEventListener("click", function () {
+    //si queremos ir al apartado de registro
+    botonIrRegistrar.addEventListener("click", function () {
         this.style.display = "none";
-        document.getElementById("iniciarSesion").style.display = "none";
-        document.getElementById("registrarse").setAttribute("style", "display: grid !important");
-        document.getElementById("accionIniciarSesion").setAttribute("style", "display: inline");
+        zonaIniciarSesion.style.display = "none";
+        zonaRegistrarse.setAttribute("style", "display: grid !important");
+        botonVolver.setAttribute("style", "display: inline");
+        mensajeInicio.innerHTML = "";
+        zonaInvitado.style.marginTop = "200px";
     });
-    document.getElementsByName("invitado")[0].addEventListener("click", function (e) {
+
+    //si queremos jugar como invitado
+    botonesInvitado.addEventListener("click", function (e) {
         e.preventDefault();
         alert("jugar como invitado (acabar)");
     });
-    document.getElementsByName("iniciar")[0].addEventListener("click", function (e) {
+
+    //si queremos iniciar sesion
+    botonIniciarSesion.addEventListener("click", function (e) {
         e.preventDefault();
-        console.log();
-        Client.iniciarSesion(document.getElementsByName("usernameI")[0].value, document.getElementsByName("passwordI")[0].value);
+        comrpobarCamposInicioSesion();
     });
-    document.getElementsByName("registrar")[0].addEventListener("click", function (e) {
+
+    //si nos queremos registrar
+    botonRegistrarse.addEventListener("click", function (e) {
         e.preventDefault();
-        Client.registrarse(document.getElementsByName("usernameR")[0].value, document.getElementsByName("passwordR")[0].value);
-        console.log("usuario registrado con exito");
+        comrpobarCamposRegistro();
     });
-    document.getElementById("accionIniciarSesion").addEventListener("click", function () {
+
+    //si queremos volver a la ventan inicial
+    botonVolver.addEventListener("click", function () {
         this.style.display = "none";
-        document.getElementById("iniciarSesion").style.display = "grid";
-        document.getElementById("registrarse").setAttribute("style", "display: none !important");
-        document.getElementById("accionRegistrar").setAttribute("style", "display: inline");
+        zonaIniciarSesion.style.display = "grid";
+        zonaRegistrarse.setAttribute("style", "display: none !important");
+        botonIrRegistrar.setAttribute("style", "display: inline");
     });
 
 
-    //funciones para el servidor que se envian y se reciben
+
+    //******************FUNCIONES PERSONALES******************//
+    function comrpobarCamposInicioSesion() {
+        var nombre = document.getElementsByName("usernameI")[0].value;
+        var contr = document.getElementsByName("passwordI")[0].value;
+        if (nombre != "" && contr != "") {
+            //llamamos al metodo del cliente que a su vez llamara el metodo del servidor
+            Client.iniciarSesion(nombre, contr);
+        } else {
+            mensajeInicio.innerHTML = "Te faltan campos por rellenar";
+            zonaInvitado.style.marginTop = "163px";
+            setTimeout(function () {
+                mensajeInicio.innerHTML = "";
+                zonaInvitado.style.marginTop = "200px";
+            }, 3000);
+        }
+    }
+
+    function comrpobarCamposRegistro(){
+        var nombre = document.getElementsByName("usernameR")[0].value;
+        var contr = document.getElementsByName("passwordR")[0].value;
+        if (nombre != "" && contr != "") {
+            //llamamos al metodo del cliente que a su vez llamara el metodo del servidor
+            Client.registrarse(nombre, contr);
+        } else {
+            mensajeRegistro.innerHTML = "Te faltan campos por rellenar";
+            zonaInvitado.style.marginTop = "164px";
+            setTimeout(function () {
+                mensajeRegistro.innerHTML = "";
+                zonaInvitado.style.marginTop = "200px";
+            }, 3000);
+        }
+    }
+
+    //******************FUNCIONES DEL SERVIDOR******************//
     var Client = {};
     Client.socket = io.connect();
     Client.askNewPlayer = function () {
         Client.socket.emit('newplayer');
     };
+
+    //llamada del metodo del servidor para iniciar sesion
     Client.iniciarSesion = function (nick, cont) {
         Client.socket.emit('iniciarSesion', { nick: nick, cont: cont });
     }
 
+    //llamada al metodo del servidort para registrarse
     Client.registrarse = function (nick, cont) {
         Client.socket.emit('registrarse', { nick: nick, cont: cont });
     }
 
+    //funcion que utiliza servidor si los datos introducidos son incorrectos 
     Client.socket.on('malIniciado', function () {
-        document.getElementById("textErrorI").innerHTML = "El correo o la contraseña no son correctos. Tal vez no estas registrado";
-        document.getElementById("textErrorI").style.transition = "0.5s";
-        document.getElementById("textErrorI").style.color = "tomato";
-        document.getElementById("invitado").style.marginTop = "120px";
+        mensajeInicio.innerHTML = "El correo o la contraseña no son correctos. Tal vez no estas registrado";
+        mensajeInicio.style.transition = "0.5s";
+        mensajeInicio.style.color = "tomato";
+        botonesInvitado.style.marginTop = "120px";
         setTimeout(function () {
-            document.getElementById("textErrorI").innerHTML = "";
-            document.getElementById("invitado").style.marginTop = "200px";
+            mensajeInicio.innerHTML = "";
+            botonesInvitado.style.marginTop = "200px";
         }, 5000);
     });
 
+    //funcion que utiliza servidor si existe un nickanem en el intento del registro
     Client.socket.on('nickExiste', function () {
-        document.getElementById("textErrorR").innerHTML = "Este nick ya esta registrado";
-        document.getElementById("textErrorR").style.transition = "0.5s";
-        document.getElementById("textErrorR").style.color = "tomato";
-        document.getElementById("invitado").style.marginTop = "150px";
+        mensajeRegistro.innerHTML = "Este nick ya esta registrado";
+        mensajeRegistro.style.transition = "0.5s";
+        mensajeRegistro.style.color = "tomato";
+        botonesInvitado.style.marginTop = "150px";
         document.getElementsByName("usernameR")[0].focus();
         setTimeout(function () {
-            document.getElementById("textErrorR").innerHTML = "";
-            document.getElementById("invitado").style.marginTop = "200px";
+            mensajeRegistro.innerHTML = "";
+            botonesInvitado.style.marginTop = "200px";
         }, 3000);
     });
 

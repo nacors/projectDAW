@@ -17,6 +17,7 @@ io.on('connection', function (socket) {
   socket.on('newplayer', function () {
     console.log("Usuario nuevo");
   });
+  //funciones que se usaran para las llamadas del cliente la servidor
   socket.on('iniciarSesion', iniciarSesion);
   socket.on('registrarse', registrarse);
   socket.on('jugarinvitado', jugarinvitado);
@@ -25,21 +26,24 @@ io.on('connection', function (socket) {
 
 
 
-//funciones personales
+//******************FUNCIONES PERSONALES******************//
+//funcion para incicar sesion, se llama otra funcion para hacer consulta al mongodb
 function iniciarSesion(data) {
   consultarUsuarioRegistrado(data.nick, data.cont);
 }
 
+//funcion para registrarse
 function registrarse(data) {
   insertarMongo(data.nick, data.cont);
 }
+
 
 function jugarinvitado() {
   console.log("jugarinvitado");
 }
 
 //funcion que redirecciona al juego
-function redireccionarJuego(){
+function redireccionarJuego() {
   console.log("redireccionando al juego");
 }
 
@@ -57,22 +61,24 @@ function conexioMongo() {
   });
 }
 
+//funcion que realiza la conexion al mongo
 function conexionMongo() {
   var MongoClient = require('mongodb').MongoClient;
   var url = "mongodb://localhost:27017/";
   return { var: MongoClient, direccion: url };
 }
 
+//funcion de consulta al mongo
 function consultaMongo(dbo, nick, contr = false) {
   var query;
   //si no hay contraseña es la consulta de registro
-  if(!contr){
+  if (!contr) {
     console.log("consulat de registro");
     query = { nickname: nick };
     //si hay contraseña es una consulta que verifica si el usuario esta registrado
-  }else{
+  } else {
     console.log("consulat de incio");
-    query = { nickname: nick,  contrasenya:contr};
+    query = { nickname: nick, contrasenya: contr };
   }
   return new Promise(function (resolve, reject) {
     dbo.collection("usuaris").find(query).toArray(function (err, result) {
@@ -81,10 +87,11 @@ function consultaMongo(dbo, nick, contr = false) {
       resolve(resultado);
     });
   });
-  
+
 }
 
-function consultarUsuarioRegistrado(nick, contr){
+//funcion que mira si un usuario esta registrado
+function consultarUsuarioRegistrado(nick, contr) {
   conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
     if (err) throw err;
     var dbo = db.db("projecte");
@@ -96,7 +103,7 @@ function consultarUsuarioRegistrado(nick, contr){
           redireccionarJuego();
           db.close();
         });
-      }else{
+      } else {
         console.log("este usuario no esta registrado");
         io.emit('malIniciado');
       }
@@ -104,6 +111,7 @@ function consultarUsuarioRegistrado(nick, contr){
   });
 }
 
+//funcion que inserta objetos en mongodb
 function insertarMongo(nick, contr) {
   conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
     if (err) throw err;
@@ -117,7 +125,7 @@ function insertarMongo(nick, contr) {
           redireccionarJuego();
           db.close();
         });
-      }else{
+      } else {
         console.log("este usuario ya existe");
         io.emit('nickExiste');
       }
