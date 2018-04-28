@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io').listen(server);
+var accion = 1;
 app.use('/css', express.static(__dirname + '/code/css'));
 app.use('/js', express.static(__dirname + '/code/js'));
 app.use('/assets', express.static(__dirname + '/media'));
@@ -14,25 +15,33 @@ app.get('/', function (req, res) {
 });
 
 //******************FUNCIONES PERSONALES******************//
+//funcion que imprime lin ea separadora en la consola de server
+function linea(){
+  console.log(accion + ": ------------------------------");
+  accion ++;
+}
+
 //funcion que hace redirect al juego porque jugamos como invitado
 app.get('/invitado', function (req, res) {
-  console.log("**********************************");
+  linea();
   console.log("jugamos como invitado");
   res.sendFile(__dirname + '/pages/game.html');
 });
 
 //funcion que nos registra
 app.get('/registrar', function (req, res) {
-  console.log("**********************************");
+  linea();
   console.log("registramos un usuario nuevo");
-  if(insertarMongo(req.query.usernameR, req.query.passwordR)){
+  let isRegistroCorrecto = insertarMongo(req.query.usernameR, req.query.passwordR);
+  console.log(isRegistroCorrecto);
+  if(isRegistroCorrecto){
     res.sendFile(__dirname + '/pages/game.html');
   }
 });
 
 //funcion que nos inica la sesion
 app.get('/iniciar', function (req, res) {
-  console.log("**********************************");
+  linea();
   console.log("iniciamos sesion");
   if(consultarUsuarioRegistrado(req.query.usernameR, req.query.passwordR)){
     res.sendFile(__dirname + '/pages/game.html');
@@ -42,6 +51,7 @@ app.get('/iniciar', function (req, res) {
 //funciones de peticion del lado cliente
 io.on('connection', function (socket) {
   socket.on('newplayer', function () {
+    linea();
     console.log("Usuario nuevo");
   });
   //funciones que se usaran para las llamadas del cliente la servidor
@@ -53,6 +63,7 @@ io.on('connection', function (socket) {
 //******************FUNCIONES DE MONGO******************//
 // http://mongodb.github.io/node-mongodb-native/ node para windows
 // https://docs.mongodb.com/v3.0/tutorial/install-mongodb-on-windows/
+// npm install mongoose
 function conexioMongo() {
   var MongoClient = require('mongodb').MongoClient
     , assert = require('assert');
@@ -102,7 +113,6 @@ function consultarUsuarioRegistrado(nick, contr) {
       if (existe) {
         dbo.collection("usuaris").insertOne(myobj, function (err, res) {
           if (err) throw err;
-          redireccionarJuego();
           db.close();
           return true;
         });
@@ -125,8 +135,7 @@ function insertarMongo(nick, contr) {
       if (!existe) {
         dbo.collection("usuaris").insertOne(myobj, function (err, res) {
           if (err) throw err;
-          console.log("nou usuari registrat");
-          redireccionarJuego();
+          console.log("Nuevo usuario registrado");
           db.close();
           return true;
         });
