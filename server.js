@@ -18,7 +18,7 @@ app.get('/', function (req, res) {
 app.get('/invitado', function (req, res) {
   console.log("**********************************");
   console.log("jugamos como invitado");
-  res.sendFile(__dirname + '/game.html');
+  res.sendFile(__dirname + '/pages/game.html');
 });
 
 //funcion que nos registra
@@ -26,7 +26,7 @@ app.get('/registrar', function (req, res) {
   console.log("**********************************");
   console.log("registramos un usuario nuevo");
   if(insertarMongo(req.query.usernameR, req.query.passwordR)){
-    res.sendFile(__dirname + '/game.html');
+    res.sendFile(__dirname + '/pages/game.html');
   }
 });
 
@@ -35,7 +35,7 @@ app.get('/iniciar', function (req, res) {
   console.log("**********************************");
   console.log("iniciamos sesion");
   if(consultarUsuarioRegistrado(req.query.usernameR, req.query.passwordR)){
-    res.sendFile(__dirname + '/game.html');
+    res.sendFile(__dirname + '/pages/game.html');
   }
 });
 
