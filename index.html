@@ -19,7 +19,7 @@
             <p id="textI">
                 <h2>Inicia Sesion</h2>
             </p>
-            <form id="formI">
+            <form action="/iniciar" method="GET" id="formI">
                 <input type="text" name="usernameI" placeholder="nickname" required>
                 <input type="password" name="passwordI" placeholder="contraseña" required>
                 <input class="boton" type="submit" name="iniciar" value="Iniciar Sesión">
@@ -30,7 +30,7 @@
             <p id="textR">
                 <h2>Registrate</h2>
             </p>
-            <form id="formR">
+            <form action="/registrar" method="GET" id="formR">
                 <input type="text" name="usernameR" placeholder="nickname" required>
                 <input type="password" name="passwordR" placeholder="contraseña" required>
                 <input class="boton" type="submit" name="registrar" value="Registrarse">
@@ -40,7 +40,11 @@
         <div id="invitado">
             <input class="boton" id="accionRegistrar" type="button" value="Registrarse">
             <input class="boton" id="accionIniciarSesion" type="submit" value="Volver">
-            <input class="boton" type="button" name="invitado" value="Jugar Como Invitado">
+            <form action="/invitado" method="GET">
+                <input class="boton" type="submit" name="invitado" value="Jugar Como Invitado">
+            </form>
+            
+            <!-- <a  class="boton" type="button" name="invitado" value="Jugar Como Invitado"> -->
         </div>
     </div>
 </body>

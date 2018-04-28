@@ -13,46 +13,44 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
+//******************FUNCIONES PERSONALES******************//
+//funcion que hace redirect al juego porque jugamos como invitado
+app.get('/invitado', function (req, res) {
+  console.log("**********************************");
+  console.log("jugamos como invitado");
+  res.sendFile(__dirname + '/game.html');
+});
+
+//funcion que nos registra
+app.get('/registrar', function (req, res) {
+  console.log("**********************************");
+  console.log("registramos un usuario nuevo");
+  if(insertarMongo(req.query.usernameR, req.query.passwordR)){
+    res.sendFile(__dirname + '/game.html');
+  }
+});
+
+//funcion que nos inica la sesion
+app.get('/iniciar', function (req, res) {
+  console.log("**********************************");
+  console.log("iniciamos sesion");
+  if(consultarUsuarioRegistrado(req.query.usernameR, req.query.passwordR)){
+    res.sendFile(__dirname + '/game.html');
+  }
+});
+
+//funciones de peticion del lado cliente
 io.on('connection', function (socket) {
   socket.on('newplayer', function () {
     console.log("Usuario nuevo");
   });
   //funciones que se usaran para las llamadas del cliente la servidor
-  socket.on('iniciarSesion', iniciarSesion);
-  socket.on('registrarse', registrarse);
-  socket.on('jugarinvitado', jugarinvitado);
+  // socket.on('iniciarSesion', iniciarSesion);
+  // socket.on('registrarse', registrarse);
+  // socket.on('jugarinvitado', jugarinvitado);
 });
 
-
-
-
-//******************FUNCIONES PERSONALES******************//
-//funcion para incicar sesion, se llama otra funcion para hacer consulta al mongodb
-function iniciarSesion(data) {
-  consultarUsuarioRegistrado(data.nick, data.cont);
-}
-
-//funcion para registrarse
-function registrarse(data) {
-  insertarMongo(data.nick, data.cont);
-}
-
-
-function jugarinvitado() {
-  console.log("jugarinvitado");
-  redireccionarJuego();
-}
-
-//funcion que redirecciona al juego
-function redireccionarJuego() {
-  app.get('*',function(req,res){  
-    console.log("redireccionando al juego");
-    res.redirect(__dirname + '/index.html')
-})
-}
-
-
-//funciones de consultas de mongo
+//******************FUNCIONES DE MONGO******************//
 function conexioMongo() {
   var MongoClient = require('mongodb').MongoClient
     , assert = require('assert');
@@ -77,11 +75,9 @@ function consultaMongo(dbo, nick, contr = false) {
   var query;
   //si no hay contraseña es la consulta de registro
   if (!contr) {
-    console.log("consulat de registro");
     query = { nickname: nick };
     //si hay contraseña es una consulta que verifica si el usuario esta registrado
   } else {
-    console.log("consulat de incio");
     query = { nickname: nick, contrasenya: contr };
   }
   return new Promise(function (resolve, reject) {
@@ -106,10 +102,12 @@ function consultarUsuarioRegistrado(nick, contr) {
           if (err) throw err;
           redireccionarJuego();
           db.close();
+          return true;
         });
       } else {
         console.log("este usuario no esta registrado");
         io.emit('malIniciado');
+        return false;
       }
     }).catch(console.log);
   });
@@ -128,11 +126,14 @@ function insertarMongo(nick, contr) {
           console.log("nou usuari registrat");
           redireccionarJuego();
           db.close();
+          return true;
         });
       } else {
         console.log("este usuario ya existe");
         io.emit('nickExiste');
+        return false;
       }
     }).catch(console.log);
   });
 }
+

@@ -22,21 +22,13 @@ window.onload = () => {
         zonaInvitado.style.marginTop = "200px";
     });
 
-    //si queremos jugar como invitado
-    botonesInvitado.addEventListener("click", function (e) {
-        e.preventDefault();
-        Client.juagrInvitado();
-    });
-
     //si queremos iniciar sesion
     botonIniciarSesion.addEventListener("click", function (e) {
-        e.preventDefault();
         comrpobarCamposInicioSesion();
     });
 
     //si nos queremos registrar
     botonRegistrarse.addEventListener("click", function (e) {
-        e.preventDefault();
         comrpobarCamposRegistro();
     });
 
@@ -51,13 +43,14 @@ window.onload = () => {
 
 
     //******************FUNCIONES PERSONALES******************//
-    function comrpobarCamposInicioSesion() {
+    function comrpobarCamposInicioSesion(event) {
         var nombre = document.getElementsByName("usernameI")[0].value;
         var contr = document.getElementsByName("passwordI")[0].value;
         if (nombre != "" && contr != "") {
             //llamamos al metodo del cliente que a su vez llamara el metodo del servidor
             Client.iniciarSesion(nombre, contr);
         } else {
+            event.preventDefault();
             mensajeInicio.innerHTML = "Te faltan campos por rellenar";
             zonaInvitado.style.marginTop = "163px";
             setTimeout(function () {
@@ -67,13 +60,14 @@ window.onload = () => {
         }
     }
 
-    function comrpobarCamposRegistro(){
+    function comrpobarCamposRegistro(event){
         var nombre = document.getElementsByName("usernameR")[0].value;
         var contr = document.getElementsByName("passwordR")[0].value;
         if (nombre != "" && contr != "") {
             //llamamos al metodo del cliente que a su vez llamara el metodo del servidor
             Client.registrarse(nombre, contr);
         } else {
+            event.preventDefault();
             mensajeRegistro.innerHTML = "Te faltan campos por rellenar";
             zonaInvitado.style.marginTop = "164px";
             setTimeout(function () {
@@ -98,11 +92,6 @@ window.onload = () => {
     //llamada al metodo del servidort para registrarse
     Client.registrarse = function (nick, cont) {
         Client.socket.emit('registrarse', { nick: nick, cont: cont });
-    }
-
-    //llamada al metodo del servidor donde jugaremos como invitado
-    Client.juagrInvitado = function(){
-        Client.socket.emit('jugarinvitado');
     }
 
     //funcion que utiliza servidor si los datos introducidos son incorrectos 
