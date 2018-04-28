@@ -2,9 +2,6 @@ window.onload = () => {
     var game = new Phaser.Game(2000, 920, Phaser.AUTO, document.getElementById('game'));
     var Game = {};
 
-
-
-
     Game.init = function () {
         game.stage.disableVisibilityChange = true;
     };
@@ -30,4 +27,12 @@ window.onload = () => {
 
     game.state.add('Game', Game);
     game.state.start('Game');
+
+    /*********************FUNCIONES PARA EL LOGEO*********************/
+
+    /*********************FUNCIONES DE EASTER EGG*********************/
+    var frasesRius = ["El windows es una mierda!", "Usa un navegador de verdad!", "Viteh!", "Que eres, de Madrid?"];
+    var frasesInma = ["Estamos a lo que estamos?", "Venga, vamos a ver el pdf", "Esto esta mal", "Me gusta mucho"];
+    var frasesSamuel = ["Estamos a lo que estamos?", "Venga, vamos a ver el pdf", "Esto esta mal", "Me gusta mucho"];
+
 }
