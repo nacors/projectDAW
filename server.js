@@ -52,6 +52,7 @@ io.on('connection', function (socket) {
 
 //******************FUNCIONES DE MONGO******************//
 // http://mongodb.github.io/node-mongodb-native/ node para windows
+// https://docs.mongodb.com/v3.0/tutorial/install-mongodb-on-windows/
 function conexioMongo() {
   var MongoClient = require('mongodb').MongoClient
     , assert = require('assert');
