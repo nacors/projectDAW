@@ -16,9 +16,9 @@ app.get('/', function (req, res) {
 
 //******************FUNCIONES PERSONALES******************//
 //funcion que imprime lin ea separadora en la consola de server
-function linea(){
-  console.log(accion + ": ------------------------------");
-  accion ++;
+function linea() {
+  console.log("\n" + accion + ": ------------------------------");
+  accion++;
 }
 
 //funcion que hace redirect al juego porque jugamos como invitado
@@ -31,21 +31,27 @@ app.get('/invitado', function (req, res) {
 //funcion que nos registra
 app.get('/registrar', function (req, res) {
   linea();
-  console.log("registramos un usuario nuevo");
-  let isRegistroCorrecto = insertarMongo(req.query.usernameR, req.query.passwordR);
-  console.log(isRegistroCorrecto);
-  if(isRegistroCorrecto){
-    res.sendFile(__dirname + '/pages/game.html');
-  }
+  console.log("--registramos un usuario nuevo");
+  insertarMongo(req.query.usernameR, req.query.passwordR).then(function (registrado) {
+    if (registrado) {
+      res.sendFile(__dirname + '/pages/game.html');
+    }
+  });
+  // console.log(isRegistroCorrecto);
+  // if (isRegistroCorrecto) {
+  //   res.sendFile(__dirname + '/pages/game.html');
+  // }
 });
 
 //funcion que nos inica la sesion
 app.get('/iniciar', function (req, res) {
   linea();
-  console.log("iniciamos sesion");
-  if(consultarUsuarioRegistrado(req.query.usernameR, req.query.passwordR)){
-    res.sendFile(__dirname + '/pages/game.html');
-  }
+  console.log("--iniciamos sesion");
+  consultarUsuarioRegistrado(req.query.usernameI, req.query.passwordI).then(function (existe) {
+    if (existe) {
+      res.sendFile(__dirname + '/pages/game.html');
+    }
+  });
 });
 
 //funciones de peticion del lado cliente
@@ -96,6 +102,7 @@ function consultaMongo(dbo, nick, contr = false) {
   return new Promise(function (resolve, reject) {
     dbo.collection("usuaris").find(query).toArray(function (err, result) {
       if (err) throw err;
+      console.log("--resultado de la consulta: " + result);
       resultado = result.length == 0 ? false : true;
       resolve(resultado);
     });
@@ -105,46 +112,52 @@ function consultaMongo(dbo, nick, contr = false) {
 
 //funcion que mira si un usuario esta registrado
 function consultarUsuarioRegistrado(nick, contr) {
-  conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
-    if (err) throw err;
-    var dbo = db.db("projecte");
-    consultaMongo(dbo, nick, contr).then(function (existe) {
-      var myobj = { nickname: nick, contrasenya: contr };
-      if (existe) {
-        dbo.collection("usuaris").insertOne(myobj, function (err, res) {
-          if (err) throw err;
-          db.close();
-          return true;
-        });
-      } else {
-        console.log("este usuario no esta registrado");
-        io.emit('malIniciado');
-        return false;
-      }
-    }).catch(console.log);
+  return new Promise(function (resolve, reject) {
+    conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
+      if (err) throw err;
+      var dbo = db.db("projecte");
+      consultaMongo(dbo, nick, contr).then(function (existe) {
+        var myobj = { nickname: nick, contrasenya: contr };
+        console.log("--usuario existe: " + existe);
+        if (existe) {
+          dbo.collection("usuaris").insertOne(myobj, function (err, res) {
+            if (err) throw err;
+            db.close();
+            console.log("--inicio de usuario correcto");
+            resolve(true);
+          });
+        } else {
+          console.log("--este usuario no esta registrado");
+          io.emit('malIniciado');
+          resolve(false);
+        }
+      }).catch(console.log);
+    });
   });
 }
 
 //funcion que inserta objetos en mongodb
 function insertarMongo(nick, contr) {
-  conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
-    if (err) throw err;
-    var dbo = db.db("projecte");
-    consultaMongo(dbo, nick).then(function (existe) {
-      var myobj = { nickname: nick, contrasenya: contr };
-      if (!existe) {
-        dbo.collection("usuaris").insertOne(myobj, function (err, res) {
-          if (err) throw err;
-          console.log("Nuevo usuario registrado");
-          db.close();
-          return true;
-        });
-      } else {
-        console.log("este usuario ya existe");
-        io.emit('nickExiste');
-        return false;
-      }
-    }).catch(console.log);
+  return new Promise(function (resolve, reject) {
+    conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
+      if (err) throw err;
+      var dbo = db.db("projecte");
+      consultaMongo(dbo, nick).then(function (existe) {
+        var myobj = { nickname: nick, contrasenya: contr };
+        if (!existe) {
+          dbo.collection("usuaris").insertOne(myobj, function (err, res) {
+            if (err) throw err;
+            console.log("--nuevo usuario registrado");
+            db.close();
+            resolve(true);
+          });
+        } else {
+          console.log("--este usuario ya existe");
+          io.emit('nickExiste');
+          resolve(false);
+        }
+      }).catch(console.log);
+    });
   });
 }
 
