@@ -144,3 +144,6 @@ input[name=registrar] {
 #textErrorI, #textErrorR{
     text-shadow: 1px 1px 1px red;
 }
+#jugarInvitadoForm{
+    display: inline;
+}
