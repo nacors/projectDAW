@@ -25,7 +25,7 @@ window.onload = () => {
     //si queremos jugar como invitado
     botonesInvitado.addEventListener("click", function (e) {
         e.preventDefault();
-        alert("jugar como invitado (acabar)");
+        Client.juagrInvitado();
     });
 
     //si queremos iniciar sesion
@@ -98,6 +98,11 @@ window.onload = () => {
     //llamada al metodo del servidort para registrarse
     Client.registrarse = function (nick, cont) {
         Client.socket.emit('registrarse', { nick: nick, cont: cont });
+    }
+
+    //llamada al metodo del servidor donde jugaremos como invitado
+    Client.juagrInvitado = function(){
+        Client.socket.emit('jugarinvitado');
     }
 
     //funcion que utiliza servidor si los datos introducidos son incorrectos 

@@ -40,11 +40,15 @@ function registrarse(data) {
 
 function jugarinvitado() {
   console.log("jugarinvitado");
+  redireccionarJuego();
 }
 
 //funcion que redirecciona al juego
 function redireccionarJuego() {
-  console.log("redireccionando al juego");
+  app.get('*',function(req,res){  
+    console.log("redireccionando al juego");
+    res.redirect(__dirname + '/index.html')
+})
 }
 
 
