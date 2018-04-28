@@ -138,10 +138,13 @@ function consultarUsuarioRegistrado(nick, contr) {
 
 //funcion que inserta objetos en mongodb
 function insertarMongo(nick, contr) {
+  //creamos nueva promesa
   return new Promise(function (resolve, reject) {
+    //se crea la conexion con mongodb
     conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
       if (err) throw err;
       var dbo = db.db("projecte");
+      //una vez hecha consulta se ejecuta la funcion
       consultaMongo(dbo, nick).then(function (existe) {
         var myobj = { nickname: nick, contrasenya: contr };
         if (!existe) {
@@ -149,11 +152,14 @@ function insertarMongo(nick, contr) {
             if (err) throw err;
             console.log("--nuevo usuario registrado");
             db.close();
+            //si se añadio correctamente, devolvemos un true
             resolve(true);
           });
         } else {
           console.log("--este usuario ya existe");
+          //ejecutamos un metodo del lado cliente
           io.emit('nickExiste');
+          //si ya existe, devolvemos un false
           resolve(false);
         }
       }).catch(console.log);
