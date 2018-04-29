@@ -1,4 +1,11 @@
 window.onload = () => {
+    var Client = {};
+    Client.socket = io.connect();
+    Client.askNewPlayer = function () {
+        Client.socket.emit('usuarioJuego');
+    };
+
+
     var game = new Phaser.Game(2000, 920, Phaser.AUTO, document.getElementById('game'));
     var Game = {};
 
@@ -27,6 +34,8 @@ window.onload = () => {
 
     game.state.add('Game', Game);
     game.state.start('Game');
+    /*********************FUNCIONES DEL SOCKET********************/
+    Client.askNewPlayer();
 
     /*********************FUNCIONES PARA EL LOGEO*********************/
 

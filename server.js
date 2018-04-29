@@ -56,20 +56,32 @@ app.get('/iniciar', function (req, res) {
   });
 });
 
-//funciones de peticion del lado cliente
+//funciones de peticion del lado cliente en el menu de incio
 io.on('connection', function (socket) {
   socket.on('newplayer', function () {
     linea();
-    console.log("--usuario conectado");
+    console.log("--usuario conectado al inicio");
     socket.on('disconnect', function () {
       linea();
-      console.log("--usuario desconectado");
+      console.log("--usuario desconectado del inico");
     });
   });
   //funciones que se usaran para las llamadas del cliente la servidor
   // socket.on('iniciarSesion', iniciarSesion);
   // socket.on('registrarse', registrarse);
   // socket.on('jugarinvitado', jugarinvitado);
+});
+
+//funciones del aldo cliente en el juego
+io.on('connection', function (socket) {
+  socket.on('usuarioJuego', function () {
+    linea();
+    console.log("--usuario conectado al juego");
+    socket.on('disconnect', function () {
+      linea();
+      console.log("--usuario desconectado del juego");
+    });
+  });
 });
 
 //******************FUNCIONES DE MONGO******************//
