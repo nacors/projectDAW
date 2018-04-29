@@ -24,7 +24,7 @@ function linea() {
 //funcion que hace redirect al juego porque jugamos como invitado
 app.get('/invitado', function (req, res) {
   linea();
-  console.log("jugamos como invitado");
+  console.log("--jugamos como invitado");
   res.sendFile(__dirname + '/pages/game.html');
 });
 
@@ -50,6 +50,8 @@ app.get('/iniciar', function (req, res) {
   consultarUsuarioRegistrado(req.query.usernameI, req.query.passwordI).then(function (existe) {
     if (existe) {
       res.sendFile(__dirname + '/pages/game.html');
+    } else {
+      //cancelar el res
     }
   });
 });
@@ -58,7 +60,11 @@ app.get('/iniciar', function (req, res) {
 io.on('connection', function (socket) {
   socket.on('newplayer', function () {
     linea();
-    console.log("Usuario nuevo");
+    console.log("--usuario conectado");
+    socket.on('disconnect', function () {
+      linea();
+      console.log("--usuario desconectado");
+    });
   });
   //funciones que se usaran para las llamadas del cliente la servidor
   // socket.on('iniciarSesion', iniciarSesion);
@@ -120,15 +126,15 @@ function consultarUsuarioRegistrado(nick, contr) {
         var myobj = { nickname: nick, contrasenya: contr };
         console.log("--usuario existe: " + existe);
         if (existe) {
-          dbo.collection("usuaris").insertOne(myobj, function (err, res) {
+          dbo.collection("usuaris").find(myobj, function (err, res) {
             if (err) throw err;
             db.close();
             console.log("--inicio de usuario correcto");
             resolve(true);
           });
         } else {
-          console.log("--este usuario no esta registrado");
           io.emit('malIniciado');
+          console.log("--este usuario no esta registrado");
           resolve(false);
         }
       }).catch(console.log);

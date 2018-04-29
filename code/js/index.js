@@ -69,10 +69,10 @@ window.onload = () => {
         } else {
             event.preventDefault();
             mensajeRegistro.innerHTML = "Te faltan campos por rellenar";
-            zonaInvitado.style.marginTop = "164px";
+            // zonaInvitado.style.marginTop = "164px";
             setTimeout(function () {
                 mensajeRegistro.innerHTML = "";
-                zonaInvitado.style.marginTop = "200px";
+                // zonaInvitado.style.marginTop = "200px";
             }, 3000);
         }
     }
@@ -96,13 +96,14 @@ window.onload = () => {
 
     //funcion que utiliza servidor si los datos introducidos son incorrectos 
     Client.socket.on('malIniciado', function () {
-        mensajeInicio.innerHTML = "El correo o la contraseña no son correctos. Tal vez no estas registrado";
+        console.log("iniciamos el metodo del mal logeo");
+        mensajeInicio.innerHTML = "El correo o la contraseña no son correctos";
         mensajeInicio.style.transition = "0.5s";
         mensajeInicio.style.color = "tomato";
-        botonesInvitado.style.marginTop = "120px";
+        zonaInvitado.style.marginTop = "144px";
         setTimeout(function () {
             mensajeInicio.innerHTML = "";
-            botonesInvitado.style.marginTop = "200px";
+            zonaInvitado.style.marginTop = "200px";
         }, 5000);
     });
 
@@ -111,11 +112,11 @@ window.onload = () => {
         mensajeRegistro.innerHTML = "Este nick ya esta registrado";
         mensajeRegistro.style.transition = "0.5s";
         mensajeRegistro.style.color = "tomato";
-        botonesInvitado.style.marginTop = "150px";
+        zonaInvitado.style.marginTop = "160px";
         document.getElementsByName("usernameR")[0].focus();
         setTimeout(function () {
             mensajeRegistro.innerHTML = "";
-            botonesInvitado.style.marginTop = "200px";
+            zonaInvitado.style.marginTop = "200px";
         }, 3000);
     });
 
