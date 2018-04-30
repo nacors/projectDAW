@@ -9,6 +9,8 @@ window.onload = () => {
     salto = false;
 
     var game = new Phaser.Game(2000, 990, Phaser.AUTO, document.getElementById('game'));
+    var idContactoPermitido = [5, 6, 19];
+
     var Game = {};
 
     Game.init = function () {
@@ -72,6 +74,7 @@ window.onload = () => {
         }
         if (jumpButton.isDown && salto)
         {
+            
             jugador1.body.moveUp(500);
             jumpTimer = game.time.now + 1250;
         }
@@ -79,7 +82,8 @@ window.onload = () => {
     }
     //Funciones para el salto --EN DESARROLLO--
     function saltar(body, bodyB, shapeA, shapeB, equation){
-        salto = true;
+        //solo salta en las ids que quiero
+        salto = idContactoPermitido.indexOf(bodyB.id) != -1 ? true : false;
     }
     function nosaltar(body, bodyB){
         salto = false;
