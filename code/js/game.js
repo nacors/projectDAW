@@ -4,9 +4,11 @@ window.onload = () => {
     Client.askNewPlayer = function () {
         Client.socket.emit('usuarioJuego');
     };
+    var suelo, arboles, jugador1, cursor, jumpButton;
+    var jumpTimer = 0;
+    salto = false;
 
-
-    var game = new Phaser.Game(2000, 920, Phaser.AUTO, document.getElementById('game'));
+    var game = new Phaser.Game(2000, 990, Phaser.AUTO, document.getElementById('game'));
     var Game = {};
 
     Game.init = function () {
@@ -16,21 +18,72 @@ window.onload = () => {
     Game.preload = function () {
         game.load.tilemap('map', 'assets/mapas/nevado.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.spritesheet('tileset', 'assets/imagenes/paisaje.png', 10, 10);
+        game.load.spritesheet('ninja', 'assets/imagenes/personajes/correr.png', 709, 624);
     };
 
     Game.create = function () {
+        //activación de las fisicas
         game.physics.startSystem(Phaser.Physics.P2JS);
-
+        game.physics.p2.gravity.y = 800;
+        //color de fondo
         game.stage.backgroundColor = '#2d2d2d';
+        //creacion del mapa
         var map = game.add.tilemap('map');
         map.addTilesetImage('paisaje', 'tileset'); // paisaje is the key of the tileset in map's JSON file
-        var layer;
-        for (var i = 0; i < map.layers.length; i++) {
-            layer = map.createLayer(i);
-        }
-        layer.inputEnabled = true; // Allows clicking on the map
-        game.physics.p2.convertTilemap(map, layer);
+        //Insertando los distintos lienzos
+        suelo = map.createLayer('suelo');
+        arboles = map.createLayer('arboles');
+        //activar collisiones de suelo
+        map.setCollisionBetween(4566,5350, true, suelo);
+        game.physics.p2.convertTilemap(map, suelo);
+        //inserción del jugador y reescalado
+        jugador1 = game.add.sprite(0,0,'ninja');
+        jugador1.scale.setTo(0.2,0.2);
+        jugador1.anchor.setTo(0.5,0.5);
+        jugador1.animations.add('right');
+        //activación de las fisicas del jugador
+        game.physics.p2.enable(jugador1);
+        jugador1.body.fixedRotation = true;
+        //captura de los movimientos
+        suelo.inputEnable = true;
+        cursors = game.input.keyboard.createCursorKeys();
+        jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        //metodos de inicio de colision y fin de colision
+        jugador1.body.onBeginContact.add(saltar, this);
+        jugador1.body.onEndContact.add(nosaltar, this);
     };
+
+
+    Game.update = function (){
+        if (cursors.left.isDown)
+        {
+            jugador1.body.moveLeft(400);
+            jugador1.animations.play('right', 10, true);
+        }
+        else if (cursors.right.isDown)
+        {
+            jugador1.body.moveRight(400);
+            jugador1.animations.play('right', 10, true);
+        }
+        else
+        {
+            jugador1.body.velocity.x = 0;
+            jugador1.animations.stop();
+        }
+        if (jumpButton.isDown && salto)
+        {
+            jugador1.body.moveUp(500);
+            jumpTimer = game.time.now + 1250;
+        }
+
+    }
+    //Funciones para el salto --EN DESARROLLO--
+    function saltar(body, bodyB, shapeA, shapeB, equation){
+        salto = true;
+    }
+    function nosaltar(body, bodyB){
+        salto = false;
+    }
 
     game.state.add('Game', Game);
     game.state.start('Game');
