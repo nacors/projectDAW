@@ -44,12 +44,18 @@ window.onload = () => {
         jugador1.scale.setTo(0.2,0.2);
         jugador1.anchor.setTo(0.5,0.5);
         jugador1.animations.add('right');
+        
+        
         //activación de las fisicas del jugador
-        game.physics.p2.enable(jugador1);
-        resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.2);
+        game.physics.p2.enable(jugador1);game.physics.p2.enable(jugador1);
+        //le damos la física exacta del personaje al poligono cargado (mano, pierna, cabeza...)
+        resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.2);resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.2);
         jugador1.body.clearShapes();
+        //damos el poligono exacto redimensionado al ninja
         jugador1.body.loadPolygon("ninja_escalado", "correr");
         jugador1.body.fixedRotation = true;      
+        
+        
         //captura de los movimientos
         suelo.inputEnable = true;
         cursors = game.input.keyboard.createCursorKeys();
