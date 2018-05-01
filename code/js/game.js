@@ -4,7 +4,7 @@ window.onload = () => {
     Client.askNewPlayer = function () {
         Client.socket.emit('usuarioJuego');
     };
-    var suelo, arboles, jugador1, cursor, jumpButton;
+    var suelo, arboles, jugador1, cursors, jumpButton;
     var jumpTimer = 0;
     salto = false;
 
@@ -21,6 +21,7 @@ window.onload = () => {
         game.load.tilemap('map', 'assets/mapas/nevado.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.spritesheet('tileset', 'assets/imagenes/paisaje.png', 10, 10);
         game.load.spritesheet('ninja', 'assets/imagenes/personajes/correr.png', 709, 624);
+        game.load.physics('ninja_physics', 'assets/imagenes/personajes/correr_physics.json');
     };
 
     Game.create = function () {
@@ -39,13 +40,16 @@ window.onload = () => {
         map.setCollisionBetween(4566,5350, true, suelo);
         game.physics.p2.convertTilemap(map, suelo);
         //inserción del jugador y reescalado
-        jugador1 = game.add.sprite(0,0,'ninja');
+        jugador1 = game.add.sprite(70.9,847.7,'ninja');
         jugador1.scale.setTo(0.2,0.2);
         jugador1.anchor.setTo(0.5,0.5);
         jugador1.animations.add('right');
         //activación de las fisicas del jugador
         game.physics.p2.enable(jugador1);
-        jugador1.body.fixedRotation = true;
+        resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.2);
+        jugador1.body.clearShapes();
+        jugador1.body.loadPolygon("ninja_escalado", "correr");
+        jugador1.body.fixedRotation = true;      
         //captura de los movimientos
         suelo.inputEnable = true;
         cursors = game.input.keyboard.createCursorKeys();
@@ -55,6 +59,26 @@ window.onload = () => {
         jugador1.body.onEndContact.add(nosaltar, this);
     };
 
+    function resizePolygon(originalPhysicsKey, newPhysicsKey, shapeKey, scale){
+        var newData = [];
+        var data = game.cache.getPhysicsData(originalPhysicsKey, shapeKey);
+     
+        for (var i = 0; i < data.length; i++) {
+            var vertices = [];
+     
+            for (var j = 0; j < data[i].shape.length; j += 2) {
+               vertices[j] = data[i].shape[j] * scale;
+               vertices[j+1] = data[i].shape[j+1] * scale; 
+            }
+     
+            newData.push({shape : vertices});
+        }
+     
+        var item = {};
+        item[shapeKey] = newData;
+        game.load.physics(newPhysicsKey, '', item);
+     
+     }
 
     Game.update = function (){
         if (cursors.left.isDown)
@@ -80,6 +104,11 @@ window.onload = () => {
         }
 
     }
+
+    Game.render = function(){
+        
+    }
+
     //Funciones para el salto --EN DESARROLLO--
     function saltar(body, bodyB, shapeA, shapeB, equation){
         //solo salta en las ids que quiero
