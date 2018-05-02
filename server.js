@@ -3,6 +3,9 @@ var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io').listen(server);
 var accion = 1;
+var path = require('path');
+
+
 app.use('/css', express.static(__dirname + '/code/css'));
 app.use('/js', express.static(__dirname + '/code/js'));
 app.use('/assets', express.static(__dirname + '/media'));
@@ -21,6 +24,13 @@ function linea() {
   accion++;
 }
 
+//funcion que redirecciona al juego
+app.get('/juego', function (req, res) {
+  linea();
+  console.log("--redireccionamos al juego");
+  res.sendFile(__dirname + '/index.html')
+});
+
 //funcion que hace redirect al juego porque jugamos como invitado
 app.get('/invitado', function (req, res) {
   linea();
@@ -37,21 +47,18 @@ app.get('/registrar', function (req, res) {
       res.sendFile(__dirname + '/pages/game.html');
     }
   });
-  // console.log(isRegistroCorrecto);
-  // if (isRegistroCorrecto) {
-  //   res.sendFile(__dirname + '/pages/game.html');
-  // }
 });
 
 //funcion que nos inica la sesion
 app.get('/iniciar', function (req, res) {
   linea();
   console.log("--iniciamos sesion");
-  consultarUsuarioRegistrado(req.query.usernameI, req.query.passwordI).then(function (existe) {
+  consultarUsuarioRegistrado(req.query.nick, req.query.contr).then(function (existe) {
     if (existe) {
-      res.sendFile(__dirname + '/pages/game.html');
+      res.json({ruta:"http:www.google.es"});
+      // res.sendFile(__dirname + '/pages/game.html');
     } else {
-      //cancelar el res
+      res.json({ ok: false });
     }
   });
 });
@@ -145,7 +152,7 @@ function consultarUsuarioRegistrado(nick, contr) {
             resolve(true);
           });
         } else {
-          io.emit('malIniciado');
+          // io.emit('malIniciado');
           console.log("--este usuario no esta registrado");
           resolve(false);
         }

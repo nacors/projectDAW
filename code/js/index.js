@@ -24,7 +24,29 @@ window.onload = () => {
 
     //si queremos iniciar sesion
     botonIniciarSesion.addEventListener("click", function (e) {
-        comrpobarCamposInicioSesion();
+        var nombre = document.getElementsByName("usernameI")[0].value;
+        var contr = document.getElementsByName("passwordI")[0].value;
+        console.log("ejectuamos ajax");
+        e.preventDefault();
+        $.ajax({
+            type: 'GET',
+            url: '/iniciar',
+            data: { nick: nombre, contr: contr},
+            success: function (taken) {
+                if (taken.ok === false) {
+                    console.log("false");
+                    malIniciado();
+                }else{
+                    console.log(taken.ruta);
+                    window.location = (taken.ruta);
+                }
+            },error : function(xhr, status) {
+                console.log(status);
+                console.log(xhr);
+                alert('!!!!!!ajax!!!!!!!');
+            },
+        });
+        // comrpobarCamposInicioSesion();
     });
 
     //si nos queremos registrar
@@ -60,7 +82,7 @@ window.onload = () => {
         }
     }
 
-    function comrpobarCamposRegistro(event){
+    function comrpobarCamposRegistro(event) {
         var nombre = document.getElementsByName("usernameR")[0].value;
         var contr = document.getElementsByName("passwordR")[0].value;
         if (nombre != "" && contr != "") {
@@ -95,6 +117,17 @@ window.onload = () => {
     }
 
     //funcion que utiliza servidor si los datos introducidos son incorrectos 
+    function malIniciado(){
+        console.log("iniciamos el metodo del mal logeo");
+        mensajeInicio.innerHTML = "El correo o la contraseña no son correctos";
+        mensajeInicio.style.transition = "0.5s";
+        mensajeInicio.style.color = "tomato";
+        zonaInvitado.style.marginTop = "144px";
+        setTimeout(function () {
+            mensajeInicio.innerHTML = "";
+            zonaInvitado.style.marginTop = "200px";
+        }, 5000);
+    }
     Client.socket.on('malIniciado', function () {
         console.log("iniciamos el metodo del mal logeo");
         mensajeInicio.innerHTML = "El correo o la contraseña no son correctos";
@@ -121,4 +154,9 @@ window.onload = () => {
     });
 
     Client.askNewPlayer();
+
+    //******************LLAMADA AL SERVIDOR******************//
+
+
+    
 }
