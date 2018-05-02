@@ -28,7 +28,7 @@ function linea() {
 app.get('/juego', function (req, res) {
   linea();
   console.log("--redireccionamos al juego");
-  res.sendFile(__dirname + '/index.html')
+  res.sendFile(__dirname + '/pages/game.html')
 });
 
 //funcion que hace redirect al juego porque jugamos como invitado
@@ -55,8 +55,9 @@ app.get('/iniciar', function (req, res) {
   console.log("--iniciamos sesion");
   consultarUsuarioRegistrado(req.query.nick, req.query.contr).then(function (existe) {
     if (existe) {
-      res.json({ruta:"http:www.google.es"});
-      // res.sendFile(__dirname + '/pages/game.html');
+      // res.json({ruta:"http:www.google.es"});
+      // res.send(__dirname + '/pages/game.html');
+      res.json({ ok: true });
     } else {
       res.json({ ok: false });
     }

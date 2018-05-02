@@ -37,8 +37,8 @@ window.onload = () => {
                     console.log("false");
                     malIniciado();
                 }else{
-                    console.log(taken.ruta);
-                    window.location = (taken.ruta);
+                    
+                    window.location = "/juego";
                 }
             },error : function(xhr, status) {
                 console.log(status);
