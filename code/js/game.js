@@ -47,7 +47,7 @@ window.onload = () => {
         
         
         //activación de las fisicas del jugador
-        game.physics.p2.enable(jugador1);game.physics.p2.enable(jugador1);
+        game.physics.p2.enable(jugador1);
         //le damos la física exacta del personaje al poligono cargado (mano, pierna, cabeza...)
         resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.2);
         jugador1.body.clearShapes();
