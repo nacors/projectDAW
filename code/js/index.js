@@ -10,8 +10,6 @@ window.onload = () => {
     var mensajeInicio = document.getElementById("textErrorI");
     var mensajeRegistro = document.getElementById("textErrorR");
 
-
-    //funciones del lado cliente
     //si queremos ir al apartado de registro
     botonIrRegistrar.addEventListener("click", function () {
         this.style.display = "none";
@@ -45,7 +43,6 @@ window.onload = () => {
                 alert('!!!!!!ajax!!!!!!!');
             },
         });
-        // comrpobarCamposInicioSesion();
     });
 
     //si nos queremos registrar
@@ -71,7 +68,6 @@ window.onload = () => {
                 alert('!!!!!!ajax!!!!!!!');
             },
         });
-        //comrpobarCamposRegistro();
     });
 
     //si queremos volver a la ventan inicial
@@ -81,45 +77,6 @@ window.onload = () => {
         zonaRegistrarse.setAttribute("style", "display: none !important");
         botonIrRegistrar.setAttribute("style", "display: inline");
     });
-
-
-
-    //******************FUNCIONES PERSONALES******************//
-    function comrpobarCamposInicioSesion(event) {
-        var nombre = document.getElementsByName("usernameI")[0].value;
-        var contr = document.getElementsByName("passwordI")[0].value;
-        if (nombre != "" && contr != "") {
-            //llamamos al metodo del cliente que a su vez llamara el metodo del servidor
-            Client.iniciarSesion(nombre, contr);
-        } else {
-            event.preventDefault();
-            mensajeInicio.innerHTML = "Te faltan campos por rellenar";
-            zonaInvitado.style.marginTop = "163px";
-            setTimeout(function () {
-                mensajeInicio.innerHTML = "";
-                zonaInvitado.style.marginTop = "200px";
-            }, 3000);
-        }
-    }
-
-    function comrpobarCamposRegistro(event) {
-        var nombre = document.getElementsByName("usernameR")[0].value;
-        var contr = document.getElementsByName("passwordR")[0].value;
-        if (nombre != "" && contr != "") {
-            //llamamos al metodo del cliente que a su vez llamara el metodo del servidor
-            Client.registrarse(nombre, contr);
-        } else {
-            event.preventDefault();
-            mensajeRegistro.innerHTML = "Te faltan campos por rellenar";
-            // zonaInvitado.style.marginTop = "164px";
-            setTimeout(function () {
-                mensajeRegistro.innerHTML = "";
-                // zonaInvitado.style.marginTop = "200px";
-            }, 3000);
-        }
-    }
-
-    //******************FUNCIONES DEL SERVIDOR******************//
 
     //funcion que utiliza servidor si los datos introducidos son incorrectos 
     function malIniciado() {
@@ -145,8 +102,5 @@ window.onload = () => {
             zonaInvitado.style.marginTop = "200px";
         }, 3000);
     }
-    //******************LLAMADA AL SERVIDOR******************//
-
-
 
 }
