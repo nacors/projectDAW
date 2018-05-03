@@ -66,12 +66,13 @@ app.get('/iniciar', function (req, res) {
 //FUNCIONES DE MULTIJUGADOR
 //funciones de peticion del lado cliente en el menu de incio
 io.on('connection', function (socket) {
+  //crea un jugador nuevo
   socket.on('newplayer', function () {
     linea();
     console.log("--usuario conectado al inicio");
     socket.player = {
       id: server.lastPlayderID++,
-      x: server.lastPlayderID % 2 == 0 ? 100 : 300,
+      x: server.lastPlayderID % 2 == 0 ? 300 : 100,
       y: 50
     };
     console.log(socket.player);
@@ -79,14 +80,18 @@ io.on('connection', function (socket) {
     jugadores.push(socket.player);
     nuevoJugador(socket.player, jugadores);
     //al mover el personaje
-
     socket.on('disconnect', function () {
       linea();
       console.log("--usuario desconectado del inico");
     });
   });
 
-
+  //reinicia todas las variables del jugador
+  socket.on("matarConexiones", function () {
+    console.log();
+    jugadores = [];
+    server.lastPlayderID = 0;
+  });
 });
 
 //funciones del aldo cliente en el juego

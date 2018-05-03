@@ -1,3 +1,7 @@
+var frasesRius = ["El windows es una mierda!", "Usa un navegador de verdad!", "Viteh!", "Que eres, de Madrid?"];
+var frasesInma = ["Estamos a lo que estamos?", "Venga, vamos a ver el pdf", "Esto esta mal", "Me gusta mucho"];
+var frasesSamuel = ["Que tal vais?", "Chicos, hoy toca un tipo test", "Teneis la entrega de 'fora de termini'", "Si a mi me dicen que haces UML, te contrato"];
+
 //imprime jugadores si alguien se ha conectado
 function imprimirJugador(jugador) {
     let g = game.add.sprite(jugador.x, jugador.y, 'ninja');
@@ -50,6 +54,15 @@ function nosaltar(body, bodyB) {
     salto = false;
 }
 
-var frasesRius = ["El windows es una mierda!", "Usa un navegador de verdad!", "Viteh!", "Que eres, de Madrid?"];
-var frasesInma = ["Estamos a lo que estamos?", "Venga, vamos a ver el pdf", "Esto esta mal", "Me gusta mucho"];
-var frasesSamuel = ["Que tal vais?", "Chicos, hoy toca un tipo test", "Teneis la entrega de 'fora de termini'", "Si a mi me dicen que haces UML, te contrato"];
+//si se recarga la pagina a la hora del juego se reinicia todo para no poder continiar jugando
+if (window.performance.navigation.type == 1) {
+    if (confirm('Quieres salir?')) {
+        location.href = "/";
+        jugadoresImprimidos = [];
+        idJugadoresImprimidos = [];
+        Client.killAllConnections();
+    }
+    else {
+        alert('Correcto');
+    }
+}

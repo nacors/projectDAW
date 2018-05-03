@@ -12,6 +12,7 @@ Game.playerMap = new Map();
 
 //FUNCIONES GAME---------------------------------------------------------------------------------------------------------------------------------
 Game.addNewPlayer = function (id, x, y, jugadores) {
+    console.log("Imprimimos jugador: " + id);
     let g = game.add.sprite(x, y, 'ninja');
     Game.playerMap.set(id, g);
     var jugador = Game.playerMap.get(id);
@@ -27,12 +28,14 @@ Game.addNewPlayer = function (id, x, y, jugadores) {
     jugadoresImprimidos.push(g);
     idJugadoresImprimidos.push(id);
 
-    //imprimirmos los juagdores que no se muestran 
+    //imprimimos los juagdores que no se muestran 
     //recorremos la array de jugadores que hemos pasado desde el servidor 
     //el servidor nos devuelve la array de todos los jugadores que se han conectado
     for (let player of jugadores) {
+        console.log(player);
         //si el jugador no esta imprimido y id no coincide con actual, se crea un nuevo jugador (se evita que se impriman dobles)
         if (player.id != id && idJugadoresImprimidos.indexOf(player.id) == -1) {
+            console.log("Imprimimos jugador: " + player.id);
             imprimirJugador(player);
         }
     }
@@ -92,7 +95,6 @@ Game.preload = function () {
 
 game.state.add('Game', Game);
 game.state.start('Game');
-
 
 
 
