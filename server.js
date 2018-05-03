@@ -4,7 +4,7 @@ var server = require('http').Server(app);
 var io = require('socket.io').listen(server);
 var accion = 1;
 var path = require('path');
-
+server.lastPlayderID = 0;
 
 app.use('/css', express.static(__dirname + '/code/css'));
 app.use('/js', express.static(__dirname + '/code/js'));
@@ -42,9 +42,12 @@ app.get('/invitado', function (req, res) {
 app.get('/registrar', function (req, res) {
   linea();
   console.log("--registramos un usuario nuevo");
-  insertarMongo(req.query.usernameR, req.query.passwordR).then(function (registrado) {
+  insertarMongo(req.query.nick, req.query.contr).then(function (registrado) {
     if (registrado) {
-      res.sendFile(__dirname + '/pages/game.html');
+      //res.sendFile(__dirname + '/pages/game.html');
+      res.json({ ok: true });
+    } else {
+      res.json({ ok: false });
     }
   });
 });
@@ -64,20 +67,34 @@ app.get('/iniciar', function (req, res) {
   });
 });
 
+//FUNCIONES DE MULTIJUGADOR
 //funciones de peticion del lado cliente en el menu de incio
 io.on('connection', function (socket) {
   socket.on('newplayer', function () {
     linea();
     console.log("--usuario conectado al inicio");
+
+    socket.player = {
+      id: server.lastPlayderID++,
+      x: 500,
+      y: 50
+    };
+    console.log(socket.player);
+    socket.broadcast.emit('newplayer',socket.player);
+
+
+    //al mover el personaje
+    socket.on("mover", function(data){
+
+    });
+    
     socket.on('disconnect', function () {
       linea();
       console.log("--usuario desconectado del inico");
     });
   });
-  //funciones que se usaran para las llamadas del cliente la servidor
-  // socket.on('iniciarSesion', iniciarSesion);
-  // socket.on('registrarse', registrarse);
-  // socket.on('jugarinvitado', jugarinvitado);
+
+
 });
 
 //funciones del aldo cliente en el juego

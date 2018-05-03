@@ -26,21 +26,20 @@ window.onload = () => {
     botonIniciarSesion.addEventListener("click", function (e) {
         var nombre = document.getElementsByName("usernameI")[0].value;
         var contr = document.getElementsByName("passwordI")[0].value;
-        console.log("ejectuamos ajax");
         e.preventDefault();
         $.ajax({
             type: 'GET',
             url: '/iniciar',
-            data: { nick: nombre, contr: contr},
+            data: { nick: nombre, contr: contr },
             success: function (taken) {
                 if (taken.ok === false) {
                     console.log("false");
                     malIniciado();
-                }else{
-                    
+                } else {
+
                     window.location = "/juego";
                 }
-            },error : function(xhr, status) {
+            }, error: function (xhr, status) {
                 console.log(status);
                 console.log(xhr);
                 alert('!!!!!!ajax!!!!!!!');
@@ -51,7 +50,28 @@ window.onload = () => {
 
     //si nos queremos registrar
     botonRegistrarse.addEventListener("click", function (e) {
-        comrpobarCamposRegistro();
+        var nombre = document.getElementsByName("usernameR")[0].value;
+        var contr = document.getElementsByName("passwordR")[0].value;
+        e.preventDefault();
+        $.ajax({
+            type: 'GET',
+            url: '/registrar',
+            data: { nick: nombre, contr: contr },
+            success: function (taken) {
+                if (taken.ok === false) {
+                    console.log("false");
+                    nickExiste();
+                } else {
+
+                    window.location = "/juego";
+                }
+            }, error: function (xhr, status) {
+                console.log(status);
+                console.log(xhr);
+                alert('!!!!!!ajax!!!!!!!');
+            },
+        });
+        //comrpobarCamposRegistro();
     });
 
     //si queremos volver a la ventan inicial
@@ -100,24 +120,9 @@ window.onload = () => {
     }
 
     //******************FUNCIONES DEL SERVIDOR******************//
-    var Client = {};
-    Client.socket = io.connect();
-    Client.askNewPlayer = function () {
-        Client.socket.emit('newplayer');
-    };
-
-    //llamada del metodo del servidor para iniciar sesion
-    Client.iniciarSesion = function (nick, cont) {
-        Client.socket.emit('iniciarSesion', { nick: nick, cont: cont });
-    }
-
-    //llamada al metodo del servidort para registrarse
-    Client.registrarse = function (nick, cont) {
-        Client.socket.emit('registrarse', { nick: nick, cont: cont });
-    }
 
     //funcion que utiliza servidor si los datos introducidos son incorrectos 
-    function malIniciado(){
+    function malIniciado() {
         console.log("iniciamos el metodo del mal logeo");
         mensajeInicio.innerHTML = "El correo o la contraseña no son correctos";
         mensajeInicio.style.transition = "0.5s";
@@ -128,20 +133,8 @@ window.onload = () => {
             zonaInvitado.style.marginTop = "200px";
         }, 5000);
     }
-    Client.socket.on('malIniciado', function () {
-        console.log("iniciamos el metodo del mal logeo");
-        mensajeInicio.innerHTML = "El correo o la contraseña no son correctos";
-        mensajeInicio.style.transition = "0.5s";
-        mensajeInicio.style.color = "tomato";
-        zonaInvitado.style.marginTop = "144px";
-        setTimeout(function () {
-            mensajeInicio.innerHTML = "";
-            zonaInvitado.style.marginTop = "200px";
-        }, 5000);
-    });
 
-    //funcion que utiliza servidor si existe un nickanem en el intento del registro
-    Client.socket.on('nickExiste', function () {
+    function nickExiste() {
         mensajeRegistro.innerHTML = "Este nick ya esta registrado";
         mensajeRegistro.style.transition = "0.5s";
         mensajeRegistro.style.color = "tomato";
@@ -151,12 +144,9 @@ window.onload = () => {
             mensajeRegistro.innerHTML = "";
             zonaInvitado.style.marginTop = "200px";
         }, 3000);
-    });
-
-    Client.askNewPlayer();
-
+    }
     //******************LLAMADA AL SERVIDOR******************//
 
 
-    
+
 }
