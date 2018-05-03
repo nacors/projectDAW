@@ -1,7 +1,8 @@
 var Client = {};
     Client.socket = io.connect();
     Client.askNewPlayer = function () {
-        Client.socket.emit('newplayer');
+        console.log('sdfsdf');
+        this.socket.emit('newplayer');
     };
 
     //llamada del metodo del servidor para iniciar sesion
@@ -44,5 +45,3 @@ var Client = {};
         Game.addNewPlayer(data.id, data.x, data.y);
         
     });
-
-    Client.askNewPlayer();

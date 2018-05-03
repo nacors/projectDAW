@@ -80,9 +80,9 @@ io.on('connection', function (socket) {
       y: 50
     };
     console.log(socket.player);
-    socket.broadcast.emit('newplayer',socket.player);
+    
 
-
+    nuevoJugador(socket.player);
     //al mover el personaje
     socket.on("mover", function(data){
 
@@ -108,6 +108,10 @@ io.on('connection', function (socket) {
     });
   });
 });
+
+function nuevoJugador(player){
+  io.emit('newplayer',player);
+}
 
 //******************FUNCIONES DE MONGO******************//
 // http://mongodb.github.io/node-mongodb-native/ node para windows

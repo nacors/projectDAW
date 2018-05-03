@@ -1,9 +1,3 @@
-
-var Client = {};
-Client.socket = io.connect();
-Client.askNewPlayer = function () {
-    Client.socket.emit('usuarioJuego');
-};
 var suelo, arboles, jugador1, cursors, jumpButton;
 var jumpTimer = 0;
 salto = false;
@@ -25,7 +19,9 @@ Game.preload = function () {
 };
 
 Game.addNewPlayer = function (id, x, y) {
-    Game.playerMap.set(id, game.add.sprite(x, y, 'ninja'));
+    console.log('asdasd');
+    let g = game.add.sprite(x, y, 'ninja');
+    Game.playerMap.set(id, g);
     var jugador2 = Game.playerMap.get(id);
     console.log(jugador2);
     //inserción del jugador y reescalado
@@ -51,7 +47,7 @@ Game.addNewPlayer = function (id, x, y) {
 Game.create = function () {
 
 
-
+    console.log('create');
     //activación de las fisicas
     game.physics.startSystem(Phaser.Physics.P2JS);
     game.physics.p2.gravity.y = 5000;
@@ -67,7 +63,7 @@ Game.create = function () {
     map.setCollisionBetween(4566, 5350, true, suelo);
     game.physics.p2.convertTilemap(map, suelo);
     //inserción del jugador y reescalado
-    jugador1 = game.add.sprite(70.9, 847.7, 'ninja');
+    /*jugador1 = game.add.sprite(70.9, 847.7, 'ninja');
     jugador1.scale.setTo(.2, 0.2);
     jugador1.anchor.setTo(0.5, 0.5);
     jugador1.animations.add('right');
@@ -81,16 +77,16 @@ Game.create = function () {
     //damos el poligono exacto redimensionado al ninja
     jugador1.body.loadPolygon("ninja_escalado", "correr");
     jugador1.body.fixedRotation = true;
-    jugador1.body.mass = 50;
+    jugador1.body.mass = 50;*/
 
     //captura de los movimientos
     suelo.inputEnable = true;
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     //metodos de inicio de colision y fin de colision
-    jugador1.body.onBeginContact.add(saltar, this);
+    /*jugador1.body.onBeginContact.add(saltar, this);
     jugador1.body.onEndContact.add(nosaltar, this);
-    console.log(jugador1);
+    console.log(jugador1);*/
     /*********************FUNCIONES DEL SOCKET********************/
     Client.askNewPlayer();
 };
@@ -117,7 +113,7 @@ function resizePolygon(originalPhysicsKey, newPhysicsKey, shapeKey, scale) {
 }
 
 Game.update = function () {
-    if (cursors.left.isDown) {
+    /*if (cursors.left.isDown) {
         jugador1.body.moveLeft(1000);
         jugador1.animations.play('right', 10, true);
     }
@@ -132,7 +128,7 @@ Game.update = function () {
     if (jumpButton.isDown && salto) {
 
         jugador1.body.moveUp(1000);
-    }
+    }*/
 
 }
 
