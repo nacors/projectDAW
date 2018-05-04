@@ -18,6 +18,14 @@ Client.registrarse = function (nick, cont) {
     Client.socket.emit('registrarse', { nick: nick, cont: cont });
 }
 
+//llama a los metodos para enviar su movimiento
+Client.presionar = function(movimiento){
+    Client.socket.emit('presionar', movimiento);
+}
+Client.soltar = function(movimiento){
+    Client.socket.emit('soltar', movimiento);
+}
+
 Client.socket.on('malIniciado', function () {
     console.log("iniciamos el metodo del mal logeo");
     mensajeInicio.innerHTML = "El correo o la contraseña no son correctos";
@@ -45,4 +53,13 @@ Client.socket.on('nickExiste', function () {
 
 Client.socket.on('newplayer', function (data, jugadores) {
     Game.addNewPlayer(data.id, data.x, data.y, jugadores);
+});
+
+//recibe el movimiento del otro personaje
+Client.socket.on('presionar', function (id, movimiento){
+    Game.movimiento(id,movimiento);
+});
+
+Client.socket.on('soltar', function (id, movimiento){
+    Game.movimiento(id.movimiento);
 });

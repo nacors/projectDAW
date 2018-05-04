@@ -12,8 +12,8 @@ server.lastPlayderID = 0;
 app.use('/css', express.static(__dirname + '/code/css'));
 app.use('/js', express.static(__dirname + '/code/js'));
 app.use('/assets', express.static(__dirname + '/media'));
-server.listen(8080, function () {
-  console.log('listening on *:8080');
+server.listen(8000, function () {
+  console.log('listening on *:8000');
 });
 
 app.get('/', function (req, res) {
@@ -83,9 +83,15 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
       linea();
       console.log("--usuario desconectado del inico");
-    });
+    });   
   });
-
+  //enviar moviemiento a los demas usuarios
+  socket.on('presionar', function (movimiento){
+    socket.broadcast.emit('presionar', socket.player.id, movimiento);
+  });
+  socket.on('soltar', function (movimiento){
+    socket.broadcast.emit('soltar', socket.player.id, movimiento);
+  });
   //reinicia todas las variables del jugador
   socket.on("matarConexiones", function () {
     console.log();

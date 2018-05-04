@@ -18,7 +18,7 @@ function imprimirJugador(jugador) {
     jugador.body.mass = 70;
 
     //metemos el jugador creado en una array
-    jugadoresImprimidos.push(g);
+    jugadoresImprimidos.set(jugador.id,g);
     //metemos la id del jugador imprimido
     idJugadoresImprimidos.push(jugador.id);
 }
