@@ -34,7 +34,7 @@ window.onload = () => {
                     console.log("false");
                     malIniciado();
                 } else {
-                    Client.sendNik(nombre,contr);
+
                     window.location = "/juego";
                 }
             }, error: function (xhr, status) {
@@ -59,7 +59,7 @@ window.onload = () => {
                     console.log("false");
                     nickExiste();
                 } else {
-                    Client.sendNik(nombre,contr);
+
                     window.location = "/juego";
                 }
             }, error: function (xhr, status) {
