@@ -20,7 +20,7 @@ Client.registrarse = function (nick, cont) {
 
 Client.sendNik = function(nik, pass){
     var data = {nik:nik, pass:pass};
-    CLient.socket.emit('recibNik',data);
+    Client.socket.emit('recibNik',data);
 }
 
 Client.socket.on('malIniciado', function () {
