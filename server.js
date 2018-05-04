@@ -89,14 +89,18 @@ io.on('connection', function (socket) {
   socket.on('presionar', function (movimiento){
     socket.broadcast.emit('presionar', socket.player.id, movimiento);
   });
-  socket.on('soltar', function (movimiento){
-    socket.broadcast.emit('soltar', socket.player.id, movimiento);
+  socket.on('soltar', function (){
+    // console.log("entramos en el server dodne se suelta la tecla");
+    socket.emit('soltar', socket.player.id);
+    socket.broadcast.emit('soltar', socket.player.id);
   });
   //reinicia todas las variables del jugador
   socket.on("matarConexiones", function () {
     console.log();
     jugadores = [];
     server.lastPlayderID = 0;
+    //reiniciamos las paginas de todos
+    socket.broadcast.emit('finJuego');
   });
 });
 

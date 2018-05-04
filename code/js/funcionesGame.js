@@ -3,10 +3,10 @@ var frasesInma = ["Estamos a lo que estamos?", "Venga, vamos a ver el pdf", "Est
 var frasesSamuel = ["Que tal vais?", "Chicos, hoy toca un tipo test", "Teneis la entrega de 'fora de termini'", "Si a mi me dicen que haces UML, te contrato"];
 
 //imprime jugadores si alguien se ha conectado
-function imprimirJugador(jugador) {
-    let g = game.add.sprite(jugador.x, jugador.y, 'ninja');
-    Game.playerMap.set(jugador.id, g);
-    var jugador = Game.playerMap.get(jugador.id);
+function imprimirJugador(jugadorImprimir) {
+    let g = game.add.sprite(jugadorImprimir.x, jugadorImprimir.y, 'ninja');
+    Game.playerMap.set(jugadorImprimir.id, g);
+    var jugador = Game.playerMap.get(jugadorImprimir.id);
     jugador.anchor.setTo(0.5, 0.5);
     jugador.scale.setTo(0.2, 0.2);
     jugador.animations.add('right');
@@ -16,11 +16,9 @@ function imprimirJugador(jugador) {
     jugador.body.loadPolygon("ninja_escalado", "correr");
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
-
-    //metemos el jugador creado en una array
-    jugadoresImprimidos.set(jugador.id,g);
+    jugadoresImprimidos.set(jugadorImprimir.id, g);
     //metemos la id del jugador imprimido
-    idJugadoresImprimidos.push(jugador.id);
+    idJugadoresImprimidos.push(jugadorImprimir.id);
 }
 
 
@@ -66,3 +64,28 @@ if (window.performance.navigation.type == 1) {
         alert('Correcto');
     }
 }
+
+//movimiento de los personajes
+document.addEventListener("keydown", function (e) {
+
+    if (e.keyCode == 39) {
+        //derecha
+        Client.presionar("derecha");
+    } else if (e.keyCode == 37) {
+        //izquierda
+        Client.presionar("izquierda");
+    } else if (e.keyCode == 38) {
+        console.log("saltar");
+        //saltar
+        Client.presionar("saltar");
+    } else if (e.keyCode == 32) {
+        //pegar
+        Client.presionar("pegar");
+    }
+});
+
+document.addEventListener("keyup", function (e) {
+    if (e.keyCode == 39 || e.keyCode == 37 || e.keycode == 38 || e.keyCode == 32) {
+        Client.soltar("soltar");
+    }
+});

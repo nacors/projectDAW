@@ -13,7 +13,11 @@ Game.playerMap = new Map();
 
 //FUNCIONES GAME---------------------------------------------------------------------------------------------------------------------------------
 Game.addNewPlayer = function (id, x, y, jugadores) {
-    miid = id;
+    if (jugadoresImprimidos.size < 1) {
+        miid = id;
+    }
+
+    console.log("Imprimimos jugador -----------------------------");
     console.log("Imprimimos jugador: " + id);
     let g = game.add.sprite(x, y, 'ninja');
     Game.playerMap.set(id, g);
@@ -27,20 +31,21 @@ Game.addNewPlayer = function (id, x, y, jugadores) {
     jugador.body.loadPolygon("ninja_escalado", "correr");
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
-    jugadoresImprimidos.set(id,g);
+    jugadoresImprimidos.set(id, g);
     idJugadoresImprimidos.push(id);
 
     //imprimimos los juagdores que no se muestran 
     //recorremos la array de jugadores que hemos pasado desde el servidor 
     //el servidor nos devuelve la array de todos los jugadores que se han conectado
     for (let player of jugadores) {
-        console.log(player);
         //si el jugador no esta imprimido y id no coincide con actual, se crea un nuevo jugador (se evita que se impriman dobles)
         if (player.id != id && idJugadoresImprimidos.indexOf(player.id) == -1) {
-            console.log("Imprimimos jugador: " + player.id);
             imprimirJugador(player);
         }
     }
+
+    console.log("MI MAP de jugadores ES: ****************************");
+    console.log(jugadoresImprimidos);
 
 };
 
@@ -61,21 +66,15 @@ Game.create = function () {
 };
 
 Game.update = function () {
+    //movimiento para el personaje que controla el jugador
     if (cursors.left.isDown) {
-        //jugadoresImprimidos[0].body.moveLeft(1000);
-        //jugadoresImprimidos[0].animations.play('right', 10, true);
+        Game.movimiento(miid, "izquierda");
     }
     else if (cursors.right.isDown) {
         Game.movimiento(miid, "derecha");
     }
-    else {
-        if (jugadoresImprimidos.size != 0) {
-            
-        }
-    }
-    if (jumpButton.isDown && salto) {
-        console.log("salto");
-        //jugadoresImprimidos[0].body.moveUp(1000);
+    if (cursors.up.isDown && salto) {
+        Game.movimiento(miid, "saltar");
     }
 }
 
@@ -93,54 +92,26 @@ Game.preload = function () {
     game.load.physics('ninja_physics', 'assets/imagenes/personajes/correr_physics.json');
 };
 
-Game.movimiento = function (id,movimiento){
-    if(movimiento == "derecha"){
+Game.movimiento = function (id, movimiento) {
+    //movimiento para los otros personajes
+    if (movimiento == "derecha") {
         jugadoresImprimidos.get(id).body.moveRight(1000);
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
-    }
-    else if(movimiento == "soltar"){
-        jugadoresImprimidos.get(id).body.velocity.x = 0;
-        jugadoresImprimidos.get(id).animations.stop();
+    } else if (movimiento == "izquierda") {
+        jugadoresImprimidos.get(id).body.moveLeft(1000);
+        jugadoresImprimidos.get(id).animations.play('right', 10, true);
+    } else if (movimiento == "saltar") {
+        jugadoresImprimidos.get(id).body.moveUp(1000);
+    } else if (movimiento == "soltar") {
+        if (jugadoresImprimidos.size != 0) {
+            // console.log("Entrasmo en el game para soltar tecla");
+            jugadoresImprimidos.get(id).body.velocity.x = 0;
+            jugadoresImprimidos.get(id).animations.stop();
+        }
     }
 }
 
 game.state.add('Game', Game);
 game.state.start('Game');
 
-document.addEventListener("keydown", function (e) {
-
-    if (e.keyCode == 39) {
-        console.log("derecha presionada");
-        //derecha
-        Client.presionar("derecha");
-    } else if (e.keyCode == 37) {
-        //izquierda
-        Client.presionar("izquierda");
-    } else if (e.keycode == 38) {
-        //saltar
-        Client.presionar("saltar");
-    } else if (e.keyCode == 32) {
-        //pegar
-        Client.presionar("pegar");
-    }
-});
-
-
-
-document.addEventListener("keyup", function (e) {
-    if (e.keyCode == 39) {
-        console.log("derecha");
-        //derecha
-        Client.soltar("soltar");
-    } else if (e.keyCode == 37) {
-        //izquierda
-        Client.soltar("izquierda");
-    } else if (e.keycode == 38) {
-        //saltar
-        Client.soltar("saltar");
-    } else if (e.keyCode == 32) {
-        //pegar
-        Client.soltar("pegar");
-    }
-});
 

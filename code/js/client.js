@@ -5,7 +5,7 @@ Client.askNewPlayer = function () {
 };
 
 //elimina todas las conexiones existentes y las reinicia de nuevo
-Client.killAllConnections = function(){
+Client.killAllConnections = function () {
     Client.socket.emit("matarConexiones");
 };
 //llamada del metodo del servidor para iniciar sesion
@@ -19,13 +19,15 @@ Client.registrarse = function (nick, cont) {
 }
 
 //llama a los metodos para enviar su movimiento
-Client.presionar = function(movimiento){
+Client.presionar = function (movimiento) {
     Client.socket.emit('presionar', movimiento);
 }
-Client.soltar = function(movimiento){
-    Client.socket.emit('soltar', movimiento);
+Client.soltar = function () {
+    Client.socket.emit('soltar');
 }
 
+
+//FUNCIONES QUE SE RECIBEN DEL SERVIDOR***********************************************************
 Client.socket.on('malIniciado', function () {
     console.log("iniciamos el metodo del mal logeo");
     mensajeInicio.innerHTML = "El correo o la contraseña no son correctos";
@@ -56,10 +58,17 @@ Client.socket.on('newplayer', function (data, jugadores) {
 });
 
 //recibe el movimiento del otro personaje
-Client.socket.on('presionar', function (id, movimiento){
-    Game.movimiento(id,movimiento);
+Client.socket.on('presionar', function (id, movimiento) {
+    // console.log("ehhhhhh, se ha presionado una tecla");
+    Game.movimiento(id, movimiento);
 });
 
-Client.socket.on('soltar', function (id, movimiento){
-    Game.movimiento(id.movimiento);
+Client.socket.on('soltar', function (id) {
+    // console.log("venga vaaaa, que casi lo tenemos");
+    Game.movimiento(id, "soltar");
 });
+
+//redirecciona al menu si algun jugador ser va de la partida
+Client.socket.on("finJuego", function(){
+    location.href = "/";
+})
