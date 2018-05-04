@@ -32,7 +32,6 @@ app.get('/invitado', function (req, res) {
   linea();
   console.log("--jugamos como invitado");
   res.sendFile(__dirname + '/pages/game.html');
-  jugadores.set(server.lastPlayderID+1, "invitado");
 });
 
 //funcion que nos registra
@@ -74,15 +73,13 @@ io.on('connection', function (socket) {
     var countRoom = funcion.playersCount(io);
     if(countRoom <= 2){}
     socket.player = {
-      id: (!'nik' in player) ? server.lastPlayderID++ : player.nik,
+      id: server.lastPlayderID++,
       x: server.lastPlayderID % 2 == 0 ? 300 : 100,
       y: 50,
-      invitado: jugadores.get(player.id) == "invitado" ? true : false
+      invitado: "invitado"
     };
     console.log(socket.player);
     socket.join("sala1");
-    //creamos una array de jugadores que guarda todos aquellos que se han conectado
-    jugadores.push(socket.player);
     nuevoJugador(socket.player, jugadores);
     
     //al mover el personaje
@@ -91,6 +88,7 @@ io.on('connection', function (socket) {
       console.log("--usuario desconectado del inico");
     });
     socket.on('recibNik', function(data){
+      console.log(data);
       socket.player.nik = data.nik;
     })
   });

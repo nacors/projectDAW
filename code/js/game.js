@@ -12,7 +12,8 @@ Game.playerMap = new Map();
 
 //FUNCIONES GAME---------------------------------------------------------------------------------------------------------------------------------
 Game.addNewPlayer = function (players) {
-    for(jugador of players){
+    console.log(players);
+    for(jugador of players){    
         if(!Game.playerMap.has(jugador.id)){
             let g = game.add.sprite(jugador.x, jugador.y, 'ninja');
             Game.playerMap.set(jugador.id, g);
