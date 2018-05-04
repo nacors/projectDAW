@@ -6,7 +6,7 @@ var server = require('http').Server(app);
 var io = require('socket.io').listen(server);
 var path = require('path');
 var accion = 1;
-var jugadores = [];
+var jugadores = new Map();
 server.lastPlayderID = 0;
 
 app.use('/css', express.static(__dirname + '/code/css'));
@@ -32,6 +32,7 @@ app.get('/invitado', function (req, res) {
   linea();
   console.log("--jugamos como invitado");
   res.sendFile(__dirname + '/pages/game.html');
+  jugadores.set(server.lastPlayderID+1, "invitado");
 });
 
 //funcion que nos registra
@@ -70,20 +71,28 @@ io.on('connection', function (socket) {
   socket.on('newplayer', function () {
     linea();
     console.log("--usuario conectado al inicio");
+    var countRoom = funcion.playersCount(io);
+    if(countRoom <= 2){}
     socket.player = {
-      id: server.lastPlayderID++,
+      id: (!'nik' in player) ? server.lastPlayderID++ : player.nik,
       x: server.lastPlayderID % 2 == 0 ? 300 : 100,
-      y: 50
+      y: 50,
+      invitado: jugadores.get(player.id) == "invitado" ? true : false
     };
     console.log(socket.player);
+    socket.join("sala1");
     //creamos una array de jugadores que guarda todos aquellos que se han conectado
     jugadores.push(socket.player);
     nuevoJugador(socket.player, jugadores);
+    
     //al mover el personaje
     socket.on('disconnect', function () {
       linea();
       console.log("--usuario desconectado del inico");
     });
+    socket.on('recibNik', function(data){
+      socket.player.nik = data.nik;
+    })
   });
 
   //reinicia todas las variables del jugador
@@ -114,7 +123,7 @@ function linea() {
 
 //envia un array de jugadores y el jugador que se ha conectado al juego
 function nuevoJugador(player, jugadores) {
-  io.emit('newplayer', player, jugadores);
+  io.emit('newplayer', funcion.getAllplayers(io));
 }
 
 

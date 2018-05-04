@@ -11,35 +11,32 @@ Game.playerMap = new Map();
 
 
 //FUNCIONES GAME---------------------------------------------------------------------------------------------------------------------------------
-Game.addNewPlayer = function (id, x, y, jugadores) {
-    console.log("Imprimimos jugador: " + id);
-    let g = game.add.sprite(x, y, 'ninja');
-    Game.playerMap.set(id, g);
-    var jugador = Game.playerMap.get(id);
-    jugador.anchor.setTo(0.5, 0.5);
-    jugador.scale.setTo(0.2, 0.2);
-    jugador.animations.add('right');
-    game.physics.p2.enable(jugador, true);
-    resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.2);
-    jugador.body.clearShapes();
-    jugador.body.loadPolygon("ninja_escalado", "correr");
-    jugador.body.fixedRotation = true;
-    jugador.body.mass = 70;
-    jugadoresImprimidos.push(g);
-    idJugadoresImprimidos.push(id);
-
-    //imprimimos los juagdores que no se muestran 
-    //recorremos la array de jugadores que hemos pasado desde el servidor 
-    //el servidor nos devuelve la array de todos los jugadores que se han conectado
-    for (let player of jugadores) {
-        console.log(player);
-        //si el jugador no esta imprimido y id no coincide con actual, se crea un nuevo jugador (se evita que se impriman dobles)
-        if (player.id != id && idJugadoresImprimidos.indexOf(player.id) == -1) {
-            console.log("Imprimimos jugador: " + player.id);
-            imprimirJugador(player);
+Game.addNewPlayer = function (players) {
+    for(jugador of players){
+        if(!Game.playerMap.has(jugador.id)){
+            let g = game.add.sprite(jugador.x, jugador.y, 'ninja');
+            Game.playerMap.set(jugador.id, g);
+            var jugador = Game.playerMap.get(jugador.id);
+            //inserción del jugador y reescalado
+            jugador.anchor.setTo(0.5, 0.5);
+            jugador.scale.setTo(0.2, 0.2);
+            
+            jugador.animations.add('right');
+            
+    
+    
+            //activación de las fisicas del jugador
+            game.physics.p2.enable(jugador, true);
+            //le damos la física exacta del personaje al poligono cargado (mano, pierna, cabeza...)
+            resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.2);
+            jugador.body.clearShapes();
+            //damos el poligono exacto redimensionado al ninja
+            jugador.body.loadPolygon("ninja_escalado", "correr");
+            jugador.body.fixedRotation = true;
+            jugador.body.mass = 70;
         }
     }
-
+    
 };
 
 Game.create = function () {
