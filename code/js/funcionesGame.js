@@ -54,15 +54,11 @@ function nosaltar(body, bodyB) {
 
 //si se recarga la pagina a la hora del juego se reinicia todo para no poder continiar jugando
 if (window.performance.navigation.type == 1) {
-    if (confirm('Quieres salir?')) {
-        location.href = "/";
-        jugadoresImprimidos = [];
-        idJugadoresImprimidos = [];
-        Client.killAllConnections();
-    }
-    else {
-        alert('Correcto');
-    }
+    alert("el juego se va a interrumpir, todos los jugadores iran al menu de logeo");
+    location.href = "/";
+    jugadoresImprimidos = [];
+    idJugadoresImprimidos = [];
+    Client.killAllConnections();
 }
 
 //movimiento de los personajes

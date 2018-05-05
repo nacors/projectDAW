@@ -128,7 +128,12 @@ io.on('connection', function (socket) {
     console.log();
     let id = socket.id;
     let sala = jugadoresTodos[id];
+    //eliminamos la sala
     delete jugadores[sala];
+    //eliminamos los jugadores de la sala
+    console.log("**********************************************");
+    console.log(jugadoresTodos[id]);
+    console.log("**********************************************");
     delete jugadoresTodos[id];
     //reiniciamos las paginas de todos
     socket.broadcast.to(sala).emit('finJuego');
