@@ -109,6 +109,7 @@ io.on('connection', function (socket) {
       let id = socket.id;
       let sala = jugadoresTodos[id];
       delete jugadores[sala];
+      delete jugadoresTodos[id];
       //reiniciamos las paginas de todos
       socket.broadcast.to(sala).emit('finJuego');
     });   
@@ -128,6 +129,7 @@ io.on('connection', function (socket) {
     let id = socket.id;
     let sala = jugadoresTodos[id];
     delete jugadores[sala];
+    delete jugadoresTodos[id];
     //reiniciamos las paginas de todos
     socket.broadcast.to(sala).emit('finJuego');
   });
