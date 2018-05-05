@@ -6,6 +6,7 @@ var server = require('http').Server(app);
 var io = require('socket.io').listen(server);
 var path = require('path');
 var accion = 1;
+var jugadoresTodos = {};
 var jugadores = {};
 var jugadoresRoom = 0;
 var room = "sala";
@@ -84,6 +85,7 @@ io.on('connection', function (socket) {
       socket.join(room+roomcount);
       jugadoresRoom = 1;
     }
+    jugadoresTodos[socket.id] = funcion.getRoom(socket);
     console.log(funcion.getRoom(socket));
     socket.player = {
       id: server.lastPlayderID++,
@@ -104,6 +106,11 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
       linea();
       console.log("--usuario desconectado del inico");
+      let id = socket.id;
+      let sala = jugadoresTodos[id];
+      delete jugadores[sala];
+      //reiniciamos las paginas de todos
+      socket.broadcast.to(sala).emit('finJuego');
     });   
   });
   //enviar moviemiento a los demas usuarios
@@ -118,10 +125,11 @@ io.on('connection', function (socket) {
   //reinicia todas las variables del jugador
   socket.on("matarConexiones", function () {
     console.log();
-    jugadores = {};
-    server.lastPlayderID = 0;
+    let id = socket.id;
+    let sala = jugadoresTodos[id];
+    delete jugadores[sala];
     //reiniciamos las paginas de todos
-    socket.broadcast.emit('finJuego');
+    socket.broadcast.to(sala).emit('finJuego');
   });
 });
 
