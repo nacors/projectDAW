@@ -70,6 +70,8 @@ app.get('/iniciar', function (req, res) {
 //FUNCIONES DE MULTIJUGADOR
 //funciones de peticion del lado cliente en el menu de incio
 io.on('connection', function (socket) {
+  
+  
   //crea un jugador nuevo
   socket.on('newplayer', function () {
     linea();
@@ -114,10 +116,14 @@ io.on('connection', function (socket) {
       socket.broadcast.to(sala).emit('finJuego');
     });   
   });
+  
+  
   //enviar moviemiento a los demas usuarios
   socket.on('presionar', function (movimiento){
     socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', socket.player.id, movimiento);
+    socket.emit('presionar', socket.player.id, movimiento);
   });
+  
   socket.on('soltar', function (){
     // console.log("entramos en el server dodne se suelta la tecla");
     socket.emit('soltar', socket.player.id);

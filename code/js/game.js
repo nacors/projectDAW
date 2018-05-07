@@ -67,7 +67,7 @@ Game.create = function () {
 
 Game.update = function () {
     //movimiento para el personaje que controla el jugador
-    if (cursors.left.isDown) {
+    /*if (cursors.left.isDown) {
         Game.movimiento(miid, "izquierda");
     }
     else if (cursors.right.isDown) {
@@ -75,7 +75,7 @@ Game.update = function () {
     }
     if (cursors.up.isDown && salto) {
         Game.movimiento(miid, "saltar");
-    }
+    }*/
 }
 
 Game.render = function () {
@@ -95,6 +95,7 @@ Game.preload = function () {
 Game.movimiento = function (id, movimiento) {
     //movimiento para los otros personajes
     if (movimiento == "derecha") {
+        console.log("derecha");
         jugadoresImprimidos.get(id).body.moveRight(1000);
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
     } else if (movimiento == "izquierda") {
