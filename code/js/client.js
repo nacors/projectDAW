@@ -57,6 +57,10 @@ Client.socket.on('newplayer', function (data, jugadores) {
     Game.addNewPlayer(data.id, data.x, data.y, jugadores);
 });
 
+Client.socket.on('inicarPartida', function () {
+    Game.iniciarPartida();
+});
+
 //recibe el movimiento del otro personaje
 Client.socket.on('presionar', function (id, movimiento) {
     // console.log("ehhhhhh, se ha presionado una tecla");

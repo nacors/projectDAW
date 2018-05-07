@@ -85,3 +85,28 @@ document.addEventListener("keyup", function (e) {
         Client.soltar("soltar");
     }
 });
+
+function iniciarPartida() {
+    if (idJugadoresImprimidos[0] < idJugadoresImprimidos[1]) {
+        jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 200;
+        jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 400;
+    } else {
+        jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 200;
+        jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 400;
+    }
+}
+
+function textoEspera() {
+    console.log("imprimimos el texto de espera");
+    propiedadesTexto = {
+        fill: "white",
+        stroke: "black",
+        fontSize: 40
+    };
+    if (jugadoresImprimidos.size != 2) {
+        mensaje = game.add.text(game.world.centerX, game.world.centerY, "Esperando a otro jugador...", propiedadesTexto);
+        mensaje.anchor.setTo(0.5, 0.5);
+        mensaje.setShadow(1, 1, 'black', 5);
+    }
+    
+}

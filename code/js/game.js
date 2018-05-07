@@ -8,6 +8,7 @@ var game = new Phaser.Game(2000, 990, Phaser.AUTO, document.getElementById('game
 var idContactoPermitido = [5, 6, 19];
 var Game = {};
 var miid = 0;
+var mensaje;
 Game.playerMap = new Map();
 
 
@@ -16,7 +17,6 @@ Game.addNewPlayer = function (id, x, y, jugadores) {
     if (jugadoresImprimidos.size < 1) {
         miid = id;
     }
-
     console.log("Imprimimos jugador -----------------------------");
     console.log("Imprimimos jugador: " + id);
     let g = game.add.sprite(x, y, 'ninja');
@@ -33,7 +33,7 @@ Game.addNewPlayer = function (id, x, y, jugadores) {
     jugador.body.mass = 70;
     jugadoresImprimidos.set(id, g);
     idJugadoresImprimidos.push(id);
-
+    textoEspera();
     //imprimimos los juagdores que no se muestran 
     //recorremos la array de jugadores que hemos pasado desde el servidor 
     //el servidor nos devuelve la array de todos los jugadores que se han conectado
@@ -95,7 +95,6 @@ Game.preload = function () {
 Game.movimiento = function (id, movimiento) {
     //movimiento para los otros personajes
     if (movimiento == "derecha") {
-        console.log("derecha");
         jugadoresImprimidos.get(id).body.moveRight(1000);
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
     } else if (movimiento == "izquierda") {
@@ -111,7 +110,22 @@ Game.movimiento = function (id, movimiento) {
         }
     }
 }
-
+Game.iniciarPartida = function () {
+    var segundos = 5;
+    var imprimirSegundos;
+    setTimeout(function () {
+        imprimirSegundos = setInterval(function () {
+            mensaje.setText(segundos);
+            segundos--;
+            if (segundos == -1) {
+                iniciarPartida();
+                mensaje.setText("");
+                clearInterval(imprimirSegundos);
+            }
+        }, 1000);
+    }, 5000);
+    
+}
 game.state.add('Game', Game);
 game.state.start('Game');
 

@@ -70,8 +70,8 @@ app.get('/iniciar', function (req, res) {
 //FUNCIONES DE MULTIJUGADOR
 //funciones de peticion del lado cliente en el menu de incio
 io.on('connection', function (socket) {
-  
-  
+
+
   //crea un jugador nuevo
   socket.on('newplayer', function () {
     linea();
@@ -79,12 +79,15 @@ io.on('connection', function (socket) {
     console.log(jugadoresRoom);
     //jugadores room es un contador que guarda cuanjos jugadores hay en la última room creada
     //si hay mas de 2 se resetea y se crea una nueva room
-    if(jugadoresRoom < 2){
-      socket.join(room+roomcount);
+    if (jugadoresRoom < 2) {
+      socket.join(room + roomcount);
       jugadoresRoom++;
-    }else{
+      if (jugadoresRoom == 2) {
+        iniciarPartida(socket);
+      }
+    } else {
       roomcount++;
-      socket.join(room+roomcount);
+      socket.join(room + roomcount);
       jugadoresRoom = 1;
     }
     jugadoresTodos[socket.id] = funcion.getRoom(socket);
@@ -92,18 +95,18 @@ io.on('connection', function (socket) {
     socket.player = {
       id: server.lastPlayderID++,
       x: server.lastPlayderID % 2 == 0 ? 300 : 100,
-      y: 50
+      y: 700
     };
     console.log(socket.player);
     //creamos una objeto de jugadores donde la key es la room y el valor es una array de los jugadores que guarda todos aquellos que se han conectado
-    if(room+roomcount in jugadores){
-      jugadores[room+roomcount].push(socket.player);
-    }else{
-      jugadores[room+roomcount] = [];
-      jugadores[room+roomcount].push(socket.player);
+    if (room + roomcount in jugadores) {
+      jugadores[room + roomcount].push(socket.player);
+    } else {
+      jugadores[room + roomcount] = [];
+      jugadores[room + roomcount].push(socket.player);
     }
     console.log(jugadores);
-    nuevoJugador(socket, jugadores[room+roomcount]);
+    nuevoJugador(socket, jugadores[room + roomcount]);
     //al mover el personaje
     socket.on('disconnect', function () {
       linea();
@@ -115,17 +118,17 @@ io.on('connection', function (socket) {
       //reiniciamos las paginas de todos
       socket.broadcast.to(sala).emit('finJuego');
       jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
-    });   
+    });
   });
-  
-  
+
+
   //enviar moviemiento a los demas usuarios
-  socket.on('presionar', function (movimiento){
+  socket.on('presionar', function (movimiento) {
     socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', socket.player.id, movimiento);
     socket.emit('presionar', socket.player.id, movimiento);
   });
-  
-  socket.on('soltar', function (){
+
+  socket.on('soltar', function () {
     // console.log("entramos en el server dodne se suelta la tecla");
     socket.emit('soltar', socket.player.id);
     socket.broadcast.to(funcion.getRoom(socket)).emit('soltar', socket.player.id);
@@ -169,6 +172,12 @@ function linea() {
 //envia un array de jugadores y el jugador que se ha conectado al juego
 function nuevoJugador(socket, jugadores) {
   io.sockets.in(funcion.getRoom(socket)).emit('newplayer', socket.player, jugadores);
+}
+
+//funcion que inicia la partida cuando hay 2 jugadores conectados
+function iniciarPartida(socket) {
+  console.log("inicar partida servidor");
+  io.sockets.in(funcion.getRoom(socket)).emit('inicarPartida');
 }
 
 
