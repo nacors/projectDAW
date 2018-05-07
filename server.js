@@ -114,6 +114,7 @@ io.on('connection', function (socket) {
       delete jugadoresTodos[id];
       //reiniciamos las paginas de todos
       socket.broadcast.to(sala).emit('finJuego');
+      jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
     });   
   });
   
@@ -143,6 +144,7 @@ io.on('connection', function (socket) {
     delete jugadoresTodos[id];
     //reiniciamos las paginas de todos
     socket.broadcast.to(sala).emit('finJuego');
+    jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
   });
 });
 
