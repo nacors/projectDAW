@@ -123,14 +123,14 @@ io.on('connection', function (socket) {
 
 
   //enviar moviemiento a los demas usuarios
-  socket.on('presionar', function (movimiento, x, y) {
-    socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', socket.player.id, movimiento, x, y);
+  socket.on('presionar', function (movimiento) {
+    socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', socket.player.id, movimiento);
     //socket.emit('presionar', socket.player.id, movimiento, x, y);
   });
 
   socket.on('soltar', function () {
     // console.log("entramos en el server dodne se suelta la tecla");
-    socket.emit('soltar', socket.player.id);
+    //socket.emit('soltar', socket.player.id);
     socket.broadcast.to(funcion.getRoom(socket)).emit('soltar', socket.player.id);
   });
   //reinicia todas las variables del jugador

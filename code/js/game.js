@@ -69,21 +69,28 @@ Game.create = function () {
 Game.update = function () {
     //movimiento para el personaje que controla el jugador
     if (cursors.left.isDown) {
+        Client.presionar("izquierda");
         jugadoresImprimidos.get(miid).body.moveLeft(1000);
         jugadoresImprimidos.get(miid).animations.play('right', 10, true);
+        
     }
     else if (cursors.right.isDown) {
+        Client.presionar("derecha");
         jugadoresImprimidos.get(miid).body.moveRight(1000);
         jugadoresImprimidos.get(miid).animations.play('right', 10, true);
+        
+    }
+    else{
+        Client.soltar("soltar");
+        if(jugadoresImprimidos.has(miid)){
+            jugadoresImprimidos.get(miid).body.velocity.x = 0;
+            jugadoresImprimidos.get(miid).animations.stop();
+        }
     }
     if (cursors.up.isDown && salto) {
-        Game.movimiento(miid, "saltar");
-    }
-    if(jugadoresImprimidos.has(miid)){
-        posx = jugadoresImprimidos.get(miid).world.x;
-        posy = jugadoresImprimidos.get(miid).world.y;
-    }
-    
+        Client.presionar("saltar");
+        jugadoresImprimidos.get(miid).body.moveUp(1000);
+    }  
 }
 
 Game.render = function () {
@@ -100,14 +107,13 @@ Game.preload = function () {
     game.load.physics('ninja_physics', 'assets/imagenes/personajes/correr_physics.json');
 };
 
-Game.movimiento = function (id, movimiento, movx, movy) {
+Game.movimiento = function (id, movimiento) {
     //movimiento para los otros personajes
     if (movimiento == "derecha") {
-        console.log("derecha");
-        jugadoresImprimidos.get(id).body.x = movx;
+        jugadoresImprimidos.get(id).body.moveRight(1000);
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
     } else if (movimiento == "izquierda") {
-        jugadoresImprimidos.get(id).body.y = movy;
+        jugadoresImprimidos.get(id).body.moveLeft(1000);
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
     } else if (movimiento == "saltar") {
         jugadoresImprimidos.get(id).body.moveUp(1000);
