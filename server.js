@@ -123,9 +123,9 @@ io.on('connection', function (socket) {
 
 
   //enviar moviemiento a los demas usuarios
-  socket.on('presionar', function (movimiento) {
-    socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', socket.player.id, movimiento);
-    socket.emit('presionar', socket.player.id, movimiento);
+  socket.on('presionar', function (movimiento, x, y) {
+    socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', socket.player.id, movimiento, x, y);
+    //socket.emit('presionar', socket.player.id, movimiento, x, y);
   });
 
   socket.on('soltar', function () {

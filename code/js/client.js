@@ -19,8 +19,8 @@ Client.registrarse = function (nick, cont) {
 }
 
 //llama a los metodos para enviar su movimiento
-Client.presionar = function (movimiento) {
-    Client.socket.emit('presionar', movimiento);
+Client.presionar = function (movimiento, x, y) {
+    Client.socket.emit('presionar', movimiento, x, y);
 }
 Client.soltar = function () {
     Client.socket.emit('soltar');
@@ -62,9 +62,9 @@ Client.socket.on('inicarPartida', function () {
 });
 
 //recibe el movimiento del otro personaje
-Client.socket.on('presionar', function (id, movimiento) {
+Client.socket.on('presionar', function (id, movimiento, x, y) {
     // console.log("ehhhhhh, se ha presionado una tecla");
-    Game.movimiento(id, movimiento);
+    Game.movimiento(id, movimiento, x, y);
 });
 
 Client.socket.on('soltar', function (id) {

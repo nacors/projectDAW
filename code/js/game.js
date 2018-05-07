@@ -9,6 +9,7 @@ var idContactoPermitido = [5, 6, 19];
 var Game = {};
 var miid = 0;
 var mensaje;
+var posx,posy;
 Game.playerMap = new Map();
 
 
@@ -67,15 +68,22 @@ Game.create = function () {
 
 Game.update = function () {
     //movimiento para el personaje que controla el jugador
-    /*if (cursors.left.isDown) {
-        Game.movimiento(miid, "izquierda");
+    if (cursors.left.isDown) {
+        jugadoresImprimidos.get(miid).body.moveLeft(1000);
+        jugadoresImprimidos.get(miid).animations.play('right', 10, true);
     }
     else if (cursors.right.isDown) {
-        Game.movimiento(miid, "derecha");
+        jugadoresImprimidos.get(miid).body.moveRight(1000);
+        jugadoresImprimidos.get(miid).animations.play('right', 10, true);
     }
     if (cursors.up.isDown && salto) {
         Game.movimiento(miid, "saltar");
-    }*/
+    }
+    if(jugadoresImprimidos.has(miid)){
+        posx = jugadoresImprimidos.get(miid).world.x;
+        posy = jugadoresImprimidos.get(miid).world.y;
+    }
+    
 }
 
 Game.render = function () {
@@ -92,13 +100,14 @@ Game.preload = function () {
     game.load.physics('ninja_physics', 'assets/imagenes/personajes/correr_physics.json');
 };
 
-Game.movimiento = function (id, movimiento) {
+Game.movimiento = function (id, movimiento, movx, movy) {
     //movimiento para los otros personajes
     if (movimiento == "derecha") {
-        jugadoresImprimidos.get(id).body.moveRight(1000);
+        console.log("derecha");
+        jugadoresImprimidos.get(id).body.x = movx;
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
     } else if (movimiento == "izquierda") {
-        jugadoresImprimidos.get(id).body.moveLeft(1000);
+        jugadoresImprimidos.get(id).body.y = movy;
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
     } else if (movimiento == "saltar") {
         jugadoresImprimidos.get(id).body.moveUp(1000);
@@ -110,6 +119,7 @@ Game.movimiento = function (id, movimiento) {
         }
     }
 }
+
 Game.iniciarPartida = function () {
     var segundos = 5;
     var imprimirSegundos;

@@ -66,10 +66,10 @@ document.addEventListener("keydown", function (e) {
 
     if (e.keyCode == 39) {
         //derecha
-        Client.presionar("derecha");
+        Client.presionar("derecha", posx, posy);
     } else if (e.keyCode == 37) {
         //izquierda
-        Client.presionar("izquierda");
+        Client.presionar("izquierda", posx, posy);
     } else if (e.keyCode == 38) {
         console.log("saltar");
         //saltar
