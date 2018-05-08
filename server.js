@@ -17,7 +17,7 @@ app.use('/css', express.static(__dirname + '/code/css'));
 app.use('/js', express.static(__dirname + '/code/js'));
 app.use('/assets', express.static(__dirname + '/media'));
 server.listen(8000, function () {
-  console.log('listening on *:8000');
+  //console.log('listening on *:8000');
 });
 
 app.get('/', function (req, res) {
@@ -26,8 +26,8 @@ app.get('/', function (req, res) {
 
 //funcion que redirecciona al juego
 app.get('/juego', function (req, res) {
-  funcion.linea();
-  console.log("--redireccionamos al juego");
+  linea();
+  //console.log("--redireccionamos al juego");
   res.sendFile(__dirname + '/pages/game.html')
 });
 
@@ -70,8 +70,6 @@ app.get('/iniciar', function (req, res) {
 //FUNCIONES DE MULTIJUGADOR
 //funciones de peticion del lado cliente en el menu de incio
 io.on('connection', function (socket) {
-
-
   //crea un jugador nuevo
   socket.on('newplayer', function () {
     linea();
@@ -113,7 +111,7 @@ io.on('connection', function (socket) {
       console.log("--usuario desconectado del inico");
       let id = socket.id;
       let sala = jugadoresTodos[id];
-      if(jugadoresTodos[socket.id] == room + roomcount){
+      if (jugadoresTodos[socket.id] == room + roomcount) {
         jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
       }
       delete jugadores[sala];
@@ -126,15 +124,16 @@ io.on('connection', function (socket) {
 
 
   //enviar moviemiento a los demas usuarios
-  socket.on('presionar', function (movimiento) {
-    socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', socket.player.id, movimiento);
+  socket.on('presionar', function (x, y) {
+    console.log("en el servidor enviamos los movimientos");
+    socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', "presionar", socket.player.id, x, y);
     //socket.emit('presionar', socket.player.id, movimiento, x, y);
   });
 
-  socket.on('soltar', function () {
+  socket.on('soltar', function (x, y) {
     // console.log("entramos en el server dodne se suelta la tecla");
     //socket.emit('soltar', socket.player.id);
-    socket.broadcast.to(funcion.getRoom(socket)).emit('soltar', socket.player.id);
+    socket.broadcast.to(funcion.getRoom(socket)).emit('soltar', "soltar", socket.player.id, x, y);
   });
   //reinicia todas las variables del jugador
   socket.on("matarConexiones", function () {
@@ -144,10 +143,7 @@ io.on('connection', function (socket) {
     //eliminamos la sala
     delete jugadores[sala];
     //eliminamos los jugadores de la sala
-    console.log("**********************************************");
-    console.log(jugadoresTodos[id]);
-    console.log("**********************************************");
-    if(jugadoresTodos[socket.id] == room + roomcount){
+    if (jugadoresTodos[socket.id] == room + roomcount) {
       jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
     }
     delete jugadoresTodos[id];
@@ -161,10 +157,10 @@ io.on('connection', function (socket) {
 io.on('connection', function (socket) {
   socket.on('usuarioJuego', function () {
     linea();
-    console.log("--usuario conectado al juego");
+    //console.log("--usuario conectado al juego");
     socket.on('disconnect', function () {
       linea();
-      console.log("--usuario desconectado del juego");
+      //console.log("--usuario desconectado del juego");
     });
   });
 });
@@ -182,7 +178,7 @@ function nuevoJugador(socket, jugadores) {
 
 //funcion que inicia la partida cuando hay 2 jugadores conectados
 function iniciarPartida(socket) {
-  console.log("inicar partida servidor");
+  //console.log("inicar partida servidor");
   io.sockets.in(funcion.getRoom(socket)).emit('inicarPartida');
 }
 

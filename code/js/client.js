@@ -19,17 +19,16 @@ Client.registrarse = function (nick, cont) {
 }
 
 //llama a los metodos para enviar su movimiento
-Client.presionar = function (movimiento) {
-    Client.socket.emit('presionar', movimiento);
+Client.presionar = function (x, y) {
+    Client.socket.emit('presionar', x, y);
 }
-Client.soltar = function () {
-    Client.socket.emit('soltar');
+Client.soltar = function (x, y) {
+    Client.socket.emit('soltar', x, y);
 }
 
 
 //FUNCIONES QUE SE RECIBEN DEL SERVIDOR***********************************************************
 Client.socket.on('malIniciado', function () {
-    console.log("iniciamos el metodo del mal logeo");
     mensajeInicio.innerHTML = "El correo o la contraseña no son correctos";
     mensajeInicio.style.transition = "0.5s";
     mensajeInicio.style.color = "tomato";
@@ -62,17 +61,18 @@ Client.socket.on('inicarPartida', function () {
 });
 
 //recibe el movimiento del otro personaje
-Client.socket.on('presionar', function (id, movimiento, x, y) {
+Client.socket.on('presionar', function (accion, id, x, y) {
+    //console.log("client recibe los movimiento y los envia a game");
     // console.log("ehhhhhh, se ha presionado una tecla");
-    Game.movimiento(id, movimiento);
+    Game.movimiento(id, accion, x, y);
 });
 
-Client.socket.on('soltar', function (id) {
+Client.socket.on('soltar', function (accion, id, x, y) {
     // console.log("venga vaaaa, que casi lo tenemos");
-    Game.movimiento(id, "soltar");
+    Game.movimiento(id, accion, x, y);
 });
 
 //redirecciona al menu si algun jugador ser va de la partida
-Client.socket.on("finJuego", function(){
+Client.socket.on("finJuego", function () {
     location.href = "/";
 })

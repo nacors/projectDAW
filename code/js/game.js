@@ -9,7 +9,7 @@ var idContactoPermitido = [5, 6, 19];
 var Game = {};
 var miid = 0;
 var mensaje;
-var posx,posy;
+var posx, posy;
 Game.playerMap = new Map();
 
 
@@ -69,31 +69,33 @@ Game.create = function () {
 Game.update = function () {
     //movimiento para el personaje que controla el jugador
     if (cursors.left.isDown) {
-        Client.presionar("izquierda");
+        //console.log(jugadoresImprimidos.get(miid).x);
+        Client.presionar(jugadoresImprimidos.get(miid).x, jugadoresImprimidos.get(miid).y);
         jugadoresImprimidos.get(miid).body.moveLeft(1000);
         jugadoresImprimidos.get(miid).animations.play('right', 10, true);
-        
     }
     else if (cursors.right.isDown) {
-        Client.presionar("derecha");
+        Client.presionar(jugadoresImprimidos.get(miid).x, jugadoresImprimidos.get(miid).y);
         jugadoresImprimidos.get(miid).body.moveRight(1000);
         jugadoresImprimidos.get(miid).animations.play('right', 10, true);
-        
     }
-    else{
-        Client.soltar("soltar");
-        if(jugadoresImprimidos.has(miid)){
+    else {
+        if (jugadoresImprimidos.has(miid)) {
+            if (jugadoresImprimidos.get(miid).body.velocity.x > 0) {
+                Client.soltar(jugadoresImprimidos.get(miid).x, jugadoresImprimidos.get(miid).y);
+            }
             jugadoresImprimidos.get(miid).body.velocity.x = 0;
             jugadoresImprimidos.get(miid).animations.stop();
         }
     }
     if (cursors.up.isDown && salto) {
-        Client.presionar("saltar");
+        Client.presionar(jugadoresImprimidos.get(miid).x, jugadoresImprimidos.get(miid).y);
         jugadoresImprimidos.get(miid).body.moveUp(1000);
-    }  
+    }
 }
 
 Game.render = function () {
+    game.debug.text('FPS: ' + game.time.fps || 'FPS: --', 40, 40, "#00ff00");
 }
 
 Game.init = function () {
@@ -101,15 +103,34 @@ Game.init = function () {
 };
 
 Game.preload = function () {
+    game.time.advancedTiming = true;
     game.load.tilemap('map', 'assets/mapas/nevado.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.spritesheet('tileset', 'assets/imagenes/paisaje.png', 10, 10);
     game.load.spritesheet('ninja', 'assets/imagenes/personajes/correr.png', 709, 624);
     game.load.physics('ninja_physics', 'assets/imagenes/personajes/correr_physics.json');
 };
 
-Game.movimiento = function (id, movimiento) {
+Game.movimiento = function (id, accion, x = 0, y = 0) {
     //movimiento para los otros personajes
-    if (movimiento == "derecha") {
+    console.log("---------------------------------");
+    console.log("accion: " + accion);
+    console.log("id: " + id);
+    console.log("x: " + x);
+    console.log("y: " + y);
+    console.log("---------------------------------");
+    if (accion == "presionar") {
+        console.log("la x: " + x);
+        console.log("la y: " + y);
+        jugadoresImprimidos.get(id).body.x = x;
+        jugadoresImprimidos.get(id).body.y = y;
+    } else if (accion == "soltar" && jugadoresImprimidos.size == 2) {
+        jugadoresImprimidos.get(id).body.x = x;
+        jugadoresImprimidos.get(id).body.y = y;
+        jugadoresImprimidos.get(id).body.velocity.x = 0;
+        jugadoresImprimidos.get(id).animations.stop();
+    }
+
+    /*if (movimiento == "derecha") {
         jugadoresImprimidos.get(id).body.moveRight(1000);
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
     } else if (movimiento == "izquierda") {
@@ -123,7 +144,7 @@ Game.movimiento = function (id, movimiento) {
             jugadoresImprimidos.get(id).body.velocity.x = 0;
             jugadoresImprimidos.get(id).animations.stop();
         }
-    }
+    }*/
 }
 
 Game.iniciarPartida = function () {
@@ -140,7 +161,7 @@ Game.iniciarPartida = function () {
             }
         }, 1000);
     }, 5000);
-    
+
 }
 game.state.add('Game', Game);
 game.state.start('Game');
