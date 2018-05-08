@@ -72,6 +72,7 @@ function iniciarPartida() {
 }
 
 function textoEspera() {
+    console.log("imprimimos el texto de espera");
     propiedadesTexto = {
         fill: "white",
         stroke: "black",
