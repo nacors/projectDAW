@@ -4,7 +4,7 @@ var jumpTimer = 0;
 var salto = true;
 var jugadoresImprimidos = new Map();
 var idJugadoresImprimidos = [];
-var game = new Phaser.Game(window.innerWidth - 25, window.innerHeight - 17, Phaser.AUTO, document.getElementById('game'));
+var game = new Phaser.Game(1920, 900, Phaser.AUTO, document.getElementById('game'));
 console.log(window.innerWidth);
 var idContactoPermitido = [5, 6, 19];
 var Game = {};
@@ -46,8 +46,8 @@ Game.addNewPlayer = function (id, x, y, jugadores) {
     // jugador.body.moves = false;
     
     
-    // game.camera.follow(jugador);
-    // game.world.setBounds(0, 0, 2100, 990);
+    game.camera.follow(jugador);
+    game.world.setBounds(0, 0, 2100, 990);
     jugadoresImprimidos.set(id, g);
     idJugadoresImprimidos.push(id);
     textoEspera();
