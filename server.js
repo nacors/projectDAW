@@ -113,6 +113,9 @@ io.on('connection', function (socket) {
       console.log("--usuario desconectado del inico");
       let id = socket.id;
       let sala = jugadoresTodos[id];
+      if(jugadoresTodos[socket.id] == room + roomcount){
+        jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
+      }
       delete jugadores[sala];
       delete jugadoresTodos[id];
       //reiniciamos las paginas de todos
@@ -144,6 +147,9 @@ io.on('connection', function (socket) {
     console.log("**********************************************");
     console.log(jugadoresTodos[id]);
     console.log("**********************************************");
+    if(jugadoresTodos[socket.id] == room + roomcount){
+      jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
+    }
     delete jugadoresTodos[id];
     //reiniciamos las paginas de todos
     socket.broadcast.to(sala).emit('finJuego');
