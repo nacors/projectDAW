@@ -123,8 +123,8 @@ io.on('connection', function (socket) {
 
 
   //enviar moviemiento a los demas usuarios
-  socket.on('presionar', function (movimiento) {
-    socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', socket.player.id, movimiento);
+  socket.on('presionar', function (movimiento, x, y) {
+    socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', socket.player.id, movimiento, x, y);
     //socket.emit('presionar', socket.player.id, movimiento, x, y);
   });
 
@@ -144,10 +144,14 @@ io.on('connection', function (socket) {
     console.log("**********************************************");
     console.log(jugadoresTodos[id]);
     console.log("**********************************************");
+    if(jugadoresTodos[socket.id] == room + roomcount){
+      jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
+    }
+    
     delete jugadoresTodos[id];
     //reiniciamos las paginas de todos
     socket.broadcast.to(sala).emit('finJuego');
-    jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
+    
   });
 });
 

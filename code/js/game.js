@@ -10,6 +10,7 @@ var Game = {};
 var miid = 0;
 var mensaje;
 var posx,posy;
+var quieto = false;
 Game.playerMap = new Map();
 
 
@@ -69,19 +70,17 @@ Game.create = function () {
 Game.update = function () {
     //movimiento para el personaje que controla el jugador
     if (cursors.left.isDown) {
-        Client.presionar("izquierda");
+        Client.presionar("izquierda", jugadoresImprimidos.get(miid).world.x, jugadoresImprimidos.get(miid).world.y);
         jugadoresImprimidos.get(miid).body.moveLeft(1000);
         jugadoresImprimidos.get(miid).animations.play('right', 10, true);
         
     }
     else if (cursors.right.isDown) {
-        Client.presionar("derecha");
+        Client.presionar("derecha", jugadoresImprimidos.get(miid).world.x, jugadoresImprimidos.get(miid).world.y);
         jugadoresImprimidos.get(miid).body.moveRight(1000);
         jugadoresImprimidos.get(miid).animations.play('right', 10, true);
-        
     }
     else{
-        Client.soltar("soltar");
         if(jugadoresImprimidos.has(miid)){
             jugadoresImprimidos.get(miid).body.velocity.x = 0;
             jugadoresImprimidos.get(miid).animations.stop();
@@ -90,10 +89,15 @@ Game.update = function () {
     if (cursors.up.isDown && salto) {
         Client.presionar("saltar");
         jugadoresImprimidos.get(miid).body.moveUp(1000);
-    }  
+    }
+    if(jugadoresImprimidos.has(miid) && jugadoresImprimidos.get(miid).body.velocity.x > 0){
+        Client.soltar("soltar");
+        Client.presionar("derecha", jugadoresImprimidos.get(miid).world.x, jugadoresImprimidos.get(miid).world.y);
+    }
 }
 
 Game.render = function () {
+    game.debug.text('FPS: ' + game.time.fps || 'FPS: --', 40, 40, "#00ff00");
 }
 
 Game.init = function () {
@@ -101,19 +105,23 @@ Game.init = function () {
 };
 
 Game.preload = function () {
+    game.time.advancedTiming = true;
     game.load.tilemap('map', 'assets/mapas/nevado.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.spritesheet('tileset', 'assets/imagenes/paisaje.png', 10, 10);
     game.load.spritesheet('ninja', 'assets/imagenes/personajes/correr.png', 709, 624);
     game.load.physics('ninja_physics', 'assets/imagenes/personajes/correr_physics.json');
 };
 
-Game.movimiento = function (id, movimiento) {
+Game.movimiento = function (id, movimiento, movx, movy) {
     //movimiento para los otros personajes
     if (movimiento == "derecha") {
-        jugadoresImprimidos.get(id).body.moveRight(1000);
+        console.log(movx);
+        jugadoresImprimidos.get(id).body.x = movx;
+        jugadoresImprimidos.get(id).body.y = movy;
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
     } else if (movimiento == "izquierda") {
-        jugadoresImprimidos.get(id).body.moveLeft(1000);
+        jugadoresImprimidos.get(id).body.x = movx;
+        jugadoresImprimidos.get(id).body.y = movy;
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
     } else if (movimiento == "saltar") {
         jugadoresImprimidos.get(id).body.moveUp(1000);
