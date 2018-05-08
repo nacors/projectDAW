@@ -44,10 +44,9 @@ function resizePolygon(originalPhysicsKey, newPhysicsKey, shapeKey, scale) {
 
 //Funciones para el salto --EN DESARROLLO--
 function saltar(body, bodyB, shapeA, shapeB, equation) {
-    console.log(bodyB.id);
     //solo salta en las ids que quiero
-    //salto = idContactoPermitido.indexOf(bodyB.id) != -1 ? true : false;
-    salto = true;
+    salto = idContactoPermitido.indexOf(bodyB.id) != -1 ? true : false;
+    // salto = true;
 }
 
 function nosaltar(body, bodyB) {
@@ -75,11 +74,6 @@ function iniciarPartida() {
 
 function textoEspera() {
     console.log("imprimimos el texto de espera");
-    propiedadesTexto = {
-        fill: "white",
-        stroke: "black",
-        fontSize: 40
-    };
     if (jugadoresImprimidos.size != 2) {
         mensaje = game.add.text(game.world.centerX, game.world.centerY, "Esperando a otro jugador...", propiedadesTexto);
         mensaje.anchor.setTo(0.5, 0.5);

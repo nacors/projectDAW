@@ -88,13 +88,13 @@ io.on('connection', function (socket) {
       jugadoresRoom = 1;
     }
     jugadoresTodos[socket.id] = funcion.getRoom(socket);
-    console.log(funcion.getRoom(socket));
+    // console.log(funcion.getRoom(socket));
     socket.player = {
       id: server.lastPlayderID++,
       x: server.lastPlayderID % 2 == 0 ? 300 : 100,
       y: 700
     };
-    console.log(socket.player);
+    // console.log(socket.player);
     //creamos una objeto de jugadores donde la key es la room y el valor es una array de los jugadores que guarda todos aquellos que se han conectado
     if (room + roomcount in jugadores) {
       jugadores[room + roomcount].push(socket.player);
@@ -102,7 +102,7 @@ io.on('connection', function (socket) {
       jugadores[room + roomcount] = [];
       jugadores[room + roomcount].push(socket.player);
     }
-    console.log(jugadores);
+    // console.log(jugadores);
     nuevoJugador(socket, jugadores[room + roomcount]);
     //al mover el personaje
     socket.on('disconnect', function () {

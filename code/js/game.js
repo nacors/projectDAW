@@ -10,6 +10,13 @@ var Game = {};
 var miid = 0;
 var mensaje;
 var posx, posy;
+var cantidadSalto = 0;
+var sePuedeJugar = true;
+var propiedadesTexto = {
+    fill: "white",
+    stroke: "black",
+    fontSize: 40
+};
 Game.playerMap = new Map();
 
 
@@ -70,33 +77,50 @@ Game.create = function () {
 };
 
 Game.update = function () {
-    if (jugadoresImprimidos.size != 0) {
-        var data = {
-            x: jugadoresImprimidos.get(miid).x,
-            y: jugadoresImprimidos.get(miid).y
-        };
-    }
-    //movimiento para el personaje que controla el jugador
-    if (cursors.left.isDown) {
-        Client.presionar(data);
-        jugadoresImprimidos.get(miid).body.moveLeft(700);
-        jugadoresImprimidos.get(miid).animations.play('right', 10, true);
-    } else if (cursors.right.isDown) {
-        Client.presionar(data);
-        jugadoresImprimidos.get(miid).body.moveRight(700);
-        jugadoresImprimidos.get(miid).animations.play('right', 10, true);
-    } else {
+    //solo permite movimiento
+    if (sePuedeJugar) {
         if (jugadoresImprimidos.size != 0) {
-            Client.soltar(data);
-            if (jugadoresImprimidos.has(miid)) {
-                jugadoresImprimidos.get(miid).body.velocity.x = 0;
-                jugadoresImprimidos.get(miid).animations.stop();
+            var data = {
+                x: jugadoresImprimidos.get(miid).x,
+                y: jugadoresImprimidos.get(miid).y
+            };
+        }
+        //movimiento para el personaje que controla el jugador
+        if (cursors.left.isDown) {
+            Client.presionar(data);
+            jugadoresImprimidos.get(miid).body.moveLeft(700);
+            jugadoresImprimidos.get(miid).animations.play('right', 10, true);
+        } else if (cursors.right.isDown) {
+            Client.presionar(data);
+            jugadoresImprimidos.get(miid).body.moveRight(700);
+            jugadoresImprimidos.get(miid).animations.play('right', 10, true);
+        } else {
+            if (jugadoresImprimidos.size != 0) {
+                Client.soltar(data);
+                if (jugadoresImprimidos.has(miid)) {
+                    jugadoresImprimidos.get(miid).body.velocity.x = 0;
+                    jugadoresImprimidos.get(miid).animations.stop();
+                }
             }
         }
-    }
-    if (cursors.up.isDown && salto) {
-        Client.presionar("saltar");
-        jugadoresImprimidos.get(miid).body.moveUp(700);
+        if (cursors.up.isDown) {
+            // while(salto && cantidadSalto < 3){
+            //     jugadoresImprimidos.get(miid).body.moveUp(1200);
+            //     salto = false;
+            // }
+            while (salto) {
+                jugadoresImprimidos.get(miid).body.moveUp(1200);
+                salto = false;
+            }
+            Client.presionar(data);
+            // console.log(cantidadSalto);
+        } else if (cursors.up.isUp) {
+            // if(cantidadSalto > 2 && !salto){
+            //     cantidadSalto = 0;
+            // }
+            // cantidadSalto ++;
+            salto = true;
+        }
     }
 }
 
@@ -132,10 +156,12 @@ Game.movimiento = function (id, data, accion) {
 }
 
 Game.iniciarPartida = function () {
-    var segundos = 4;
+    propiedadesTexto.fontSize = 50;
+    sePuedeJugar = false;
+    var segundos = 3;
     var imprimirSegundos;
     setTimeout(function () {
-        mensaje.setText("partida empieza en...");
+        mensaje.setText("La partida empieza en...");
         imprimirSegundos = setInterval(function () {
             mensaje.setText(segundos);
             segundos--;
@@ -143,9 +169,10 @@ Game.iniciarPartida = function () {
                 iniciarPartida();
                 mensaje.setText("");
                 clearInterval(imprimirSegundos);
+                sePuedeJugar = true;
             }
         }, 1000);
-    }, 5000);
+    }, 1000);
 
 }
 game.state.add('Game', Game);
