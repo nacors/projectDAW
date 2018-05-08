@@ -103,4 +103,16 @@ window.onload = () => {
         }, 3000);
     }
 
+    function cambiarFondoRegistro() {
+        var fondo = document.getElementById("fondo");
+        var fondos = ["fondoVerano1.png", "fondoNevado2.png", "fondoVerano2.png", "fondoPersonaje.png"];
+        var pos = 0;
+        setInterval(function () {
+            fondo.style.backgroundImage = `url(../assets/imagenes/estilo/${fondos[pos]})`;
+            pos = pos == fondos.length - 1 ? 0 : pos + 1;
+        }, 10000);
+    }
+
+    cambiarFondoRegistro();
+
 }
