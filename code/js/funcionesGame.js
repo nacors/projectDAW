@@ -61,31 +61,6 @@ if (window.performance.navigation.type == 1) {
     Client.killAllConnections();
 }
 
-//movimiento de los personajes
-document.addEventListener("keydown", function (e) {
-
-    if (e.keyCode == 39) {
-        //derecha
-        Client.presionar("derecha", posx, posy);
-    } else if (e.keyCode == 37) {
-        //izquierda
-        Client.presionar("izquierda", posx, posy);
-    } else if (e.keyCode == 38) {
-        console.log("saltar");
-        //saltar
-        Client.presionar("saltar");
-    } else if (e.keyCode == 32) {
-        //pegar
-        Client.presionar("pegar");
-    }
-});
-
-document.addEventListener("keyup", function (e) {
-    if (e.keyCode == 39 || e.keyCode == 37 || e.keycode == 38 || e.keyCode == 32) {
-        Client.soltar("soltar");
-    }
-});
-
 function iniciarPartida() {
     if (idJugadoresImprimidos[0] < idJugadoresImprimidos[1]) {
         jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 200;
