@@ -24,22 +24,21 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-//funcion que redirecciona al juego
 app.get('/juego', function (req, res) {
   funcion.linea();
   console.log("--redireccionamos al juego");
   res.sendFile(__dirname + '/pages/game.html')
 });
 
-//funcion que hace redirect al juego porque jugamos como invitado
 app.get('/invitado', function (req, res) {
+  //funcion que hace redirect al juego porque jugamos como invitado
   linea();
   console.log("--jugamos como invitado");
   res.sendFile(__dirname + '/pages/game.html');
 });
 
-//funcion que nos registra
 app.get('/registrar', function (req, res) {
+  //funcion que nos registra
   linea();
   console.log("--registramos un usuario nuevo");
   mongo.insertarMongo(req.query.nick, req.query.contr).then(function (registrado) {
@@ -52,8 +51,8 @@ app.get('/registrar', function (req, res) {
   });
 });
 
-//funcion que nos inica la sesion
 app.get('/iniciar', function (req, res) {
+  //funcion que nos inica la sesion
   linea();
   console.log("--iniciamos sesion");
   mongo.consultarUsuarioRegistrado(req.query.nick, req.query.contr).then(function (existe) {
@@ -70,8 +69,6 @@ app.get('/iniciar', function (req, res) {
 //FUNCIONES DE MULTIJUGADOR
 //funciones de peticion del lado cliente en el menu de incio
 io.on('connection', function (socket) {
-
-
   //crea un jugador nuevo
   socket.on('newplayer', function () {
     linea();
@@ -123,15 +120,15 @@ io.on('connection', function (socket) {
 
 
   //enviar moviemiento a los demas usuarios
-  socket.on('presionar', function (movimiento) {
-    socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', socket.player.id, movimiento);
+  socket.on('presionar', function (data) {
+    socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', socket.player.id, data);
     //socket.emit('presionar', socket.player.id, movimiento, x, y);
   });
 
-  socket.on('soltar', function () {
+  socket.on('soltar', function (data) {
     // console.log("entramos en el server dodne se suelta la tecla");
     //socket.emit('soltar', socket.player.id);
-    socket.broadcast.to(funcion.getRoom(socket)).emit('soltar', socket.player.id);
+    socket.broadcast.to(funcion.getRoom(socket)).emit('soltar', socket.player.id, data);
   });
   //reinicia todas las variables del jugador
   socket.on("matarConexiones", function () {
@@ -141,9 +138,6 @@ io.on('connection', function (socket) {
     //eliminamos la sala
     delete jugadores[sala];
     //eliminamos los jugadores de la sala
-    console.log("**********************************************");
-    console.log(jugadoresTodos[id]);
-    console.log("**********************************************");
     delete jugadoresTodos[id];
     //reiniciamos las paginas de todos
     socket.broadcast.to(sala).emit('finJuego');

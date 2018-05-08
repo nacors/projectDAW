@@ -16,6 +16,8 @@ function imprimirJugador(jugadorImprimir) {
     jugador.body.loadPolygon("ninja_escalado", "correr");
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
+    jugador.body.immovable = true;
+    jugador.body.moves = false;
     jugadoresImprimidos.set(jugadorImprimir.id, g);
     //metemos la id del jugador imprimido
     idJugadoresImprimidos.push(jugadorImprimir.id);

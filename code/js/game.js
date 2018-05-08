@@ -9,7 +9,7 @@ var idContactoPermitido = [5, 6, 19];
 var Game = {};
 var miid = 0;
 var mensaje;
-var posx,posy;
+var posx, posy;
 Game.playerMap = new Map();
 
 
@@ -18,8 +18,8 @@ Game.addNewPlayer = function (id, x, y, jugadores) {
     if (jugadoresImprimidos.size < 1) {
         miid = id;
     }
-    console.log("Imprimimos jugador -----------------------------");
-    console.log("Imprimimos jugador: " + id);
+    // console.log("Imprimimos jugador -----------------------------");
+    // console.log("Imprimimos jugador: " + id);
     let g = game.add.sprite(x, y, 'ninja');
     Game.playerMap.set(id, g);
     var jugador = Game.playerMap.get(id);
@@ -32,6 +32,9 @@ Game.addNewPlayer = function (id, x, y, jugadores) {
     jugador.body.loadPolygon("ninja_escalado", "correr");
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
+    //hacemos al personaje inmovible
+    jugador.body.immovable = true;
+    jugador.body.moves = false;
     jugadoresImprimidos.set(id, g);
     idJugadoresImprimidos.push(id);
     textoEspera();
@@ -45,15 +48,15 @@ Game.addNewPlayer = function (id, x, y, jugadores) {
         }
     }
 
-    console.log("MI MAP de jugadores ES: ****************************");
-    console.log(jugadoresImprimidos);
+    // console.log("MI MAP de jugadores ES: ****************************");
+    // console.log(jugadoresImprimidos);
 
 };
 
 Game.create = function () {
     game.physics.startSystem(Phaser.Physics.P2JS);
     game.physics.p2.gravity.y = 5000;
-    game.stage.backgroundColor = '#ffffff';
+    game.stage.backgroundColor = '#ccffff';
     var map = game.add.tilemap('map');
     map.addTilesetImage('paisaje', 'tileset');
     suelo = map.createLayer('suelo');
@@ -67,30 +70,34 @@ Game.create = function () {
 };
 
 Game.update = function () {
+    if (jugadoresImprimidos.size != 0) {
+        var data = {
+            x: jugadoresImprimidos.get(miid).x,
+            y: jugadoresImprimidos.get(miid).y
+        };
+    }
     //movimiento para el personaje que controla el jugador
     if (cursors.left.isDown) {
-        Client.presionar("izquierda");
-        jugadoresImprimidos.get(miid).body.moveLeft(1000);
+        Client.presionar(data);
+        jugadoresImprimidos.get(miid).body.moveLeft(700);
         jugadoresImprimidos.get(miid).animations.play('right', 10, true);
-        
-    }
-    else if (cursors.right.isDown) {
-        Client.presionar("derecha");
-        jugadoresImprimidos.get(miid).body.moveRight(1000);
+    } else if (cursors.right.isDown) {
+        Client.presionar(data);
+        jugadoresImprimidos.get(miid).body.moveRight(700);
         jugadoresImprimidos.get(miid).animations.play('right', 10, true);
-        
-    }
-    else{
-        Client.soltar("soltar");
-        if(jugadoresImprimidos.has(miid)){
-            jugadoresImprimidos.get(miid).body.velocity.x = 0;
-            jugadoresImprimidos.get(miid).animations.stop();
+    } else {
+        if (jugadoresImprimidos.size != 0) {
+            Client.soltar(data);
+            if (jugadoresImprimidos.has(miid)) {
+                jugadoresImprimidos.get(miid).body.velocity.x = 0;
+                jugadoresImprimidos.get(miid).animations.stop();
+            }
         }
     }
     if (cursors.up.isDown && salto) {
         Client.presionar("saltar");
-        jugadoresImprimidos.get(miid).body.moveUp(1000);
-    }  
+        jugadoresImprimidos.get(miid).body.moveUp(700);
+    }
 }
 
 Game.render = function () {
@@ -107,19 +114,17 @@ Game.preload = function () {
     game.load.physics('ninja_physics', 'assets/imagenes/personajes/correr_physics.json');
 };
 
-Game.movimiento = function (id, movimiento) {
+Game.movimiento = function (id, data, accion) {
     //movimiento para los otros personajes
-    if (movimiento == "derecha") {
-        jugadoresImprimidos.get(id).body.moveRight(1000);
+    //hay que tener en cuenta de que escuha constantemente los movimientos, tal vez es lo que mas carga el sistema
+    if (accion == "presionar") {
+        jugadoresImprimidos.get(id).body.x = data.x;
+        jugadoresImprimidos.get(id).body.y = data.y;
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
-    } else if (movimiento == "izquierda") {
-        jugadoresImprimidos.get(id).body.moveLeft(1000);
-        jugadoresImprimidos.get(id).animations.play('right', 10, true);
-    } else if (movimiento == "saltar") {
-        jugadoresImprimidos.get(id).body.moveUp(1000);
-    } else if (movimiento == "soltar") {
+    } else if (accion == "soltar") {
         if (jugadoresImprimidos.size != 0) {
-            // console.log("Entrasmo en el game para soltar tecla");
+            jugadoresImprimidos.get(id).body.x = data.x;
+            jugadoresImprimidos.get(id).body.y = data.y;
             jugadoresImprimidos.get(id).body.velocity.x = 0;
             jugadoresImprimidos.get(id).animations.stop();
         }
@@ -127,9 +132,10 @@ Game.movimiento = function (id, movimiento) {
 }
 
 Game.iniciarPartida = function () {
-    var segundos = 5;
+    var segundos = 4;
     var imprimirSegundos;
     setTimeout(function () {
+        mensaje.setText("partida empieza en...");
         imprimirSegundos = setInterval(function () {
             mensaje.setText(segundos);
             segundos--;
@@ -140,7 +146,7 @@ Game.iniciarPartida = function () {
             }
         }, 1000);
     }, 5000);
-    
+
 }
 game.state.add('Game', Game);
 game.state.start('Game');
