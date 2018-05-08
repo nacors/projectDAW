@@ -4,7 +4,8 @@ var jumpTimer = 0;
 var salto = true;
 var jugadoresImprimidos = new Map();
 var idJugadoresImprimidos = [];
-var game = new Phaser.Game(2000, 990, Phaser.AUTO, document.getElementById('game'));
+var game = new Phaser.Game(window.innerWidth - 25, window.innerHeight - 17, Phaser.AUTO, document.getElementById('game'));
+console.log(window.innerWidth);
 var idContactoPermitido = [5, 6, 19];
 var Game = {};
 var miid = 0;
@@ -39,9 +40,14 @@ Game.addNewPlayer = function (id, x, y, jugadores) {
     jugador.body.loadPolygon("ninja_escalado", "correr");
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
+    // game.camera.follow(jugador, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
     //hacemos al personaje inmovible
-    jugador.body.immovable = true;
-    jugador.body.moves = false;
+    // jugador.body.immovable = true;
+    // jugador.body.moves = false;
+    
+    
+    // game.camera.follow(jugador);
+    // game.world.setBounds(0, 0, 2100, 990);
     jugadoresImprimidos.set(id, g);
     idJugadoresImprimidos.push(id);
     textoEspera();
@@ -74,6 +80,7 @@ Game.create = function () {
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     Client.askNewPlayer();
+    game.input.onDown.add(resize, this);
 };
 
 Game.update = function () {

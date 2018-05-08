@@ -79,5 +79,23 @@ function textoEspera() {
         mensaje.anchor.setTo(0.5, 0.5);
         mensaje.setShadow(1, 1, 'black', 5);
     }
-    
+
+}
+
+function resize() {
+
+    // layer.offset.x += 50;
+
+    if (layer.displayWidth !== undefined) {
+        var w = layer.displayWidth + 100;
+        var h = layer.displayHeight + 100;
+        layer.resize(w, h);
+    } else {
+        if (layer.width < 800) {
+            var w = layer.width + 100;
+            var h = layer.height + 100;
+            layer.resize(w, h);
+        }
+    }
+
 }
