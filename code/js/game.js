@@ -10,6 +10,7 @@ var idContactoPermitido = [5, 6, 19];
 var Game = {};
 var miid = 0;
 var mensaje;
+var map;
 var posx, posy;
 var cantidadSalto = 0;
 var sePuedeJugar = true;
@@ -46,8 +47,8 @@ Game.addNewPlayer = function (id, x, y, jugadores) {
     // jugador.body.moves = false;
     
     
-    game.camera.follow(jugador);
-    game.world.setBounds(0, 0, 2100, 990);
+    //game.camera.follow(jugador);
+    //game.world.setBounds(0, 0, 2100, 990);
     jugadoresImprimidos.set(id, g);
     idJugadoresImprimidos.push(id);
     textoEspera();
@@ -70,17 +71,24 @@ Game.create = function () {
     game.physics.startSystem(Phaser.Physics.P2JS);
     game.physics.p2.gravity.y = 5000;
     game.stage.backgroundColor = '#ccffff';
-    var map = game.add.tilemap('map');
+    map = game.add.tilemap('map');
     map.addTilesetImage('paisaje', 'tileset');
+    nocolision = map.createLayer('nocolision');
     suelo = map.createLayer('suelo');
+    doblesuelo = map.createLayer('doblesuelo');
+    console.log(doblesuelo);
+    doblesuelo.name = "doblesuelo";
     arboles = map.createLayer('arboles');
-    map.setCollisionBetween(4566, 5350, true, suelo);
+    map.setCollisionBetween(40, 216, true, suelo);
+    map.setCollisionBetween(40, 216, true, doblesuelo);
     game.physics.p2.convertTilemap(map, suelo);
     suelo.inputEnable = true;
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     Client.askNewPlayer();
     game.input.onDown.add(resize, this);
+    game.physics.p2.setPostBroadphaseCallback(checkOverlap, this);
+
 };
 
 Game.update = function () {
@@ -139,8 +147,8 @@ Game.init = function () {
 };
 
 Game.preload = function () {
-    game.load.tilemap('map', 'assets/mapas/mapa_montañas.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.spritesheet('tileset', 'assets/imagenes/escenarios/montaña/tileset.png', 32, 32);
+    game.load.tilemap('map', 'assets/mapas/mapa1.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.spritesheet('tileset', 'assets/imagenes/escenarios/montana/tileset.png', 32, 32);
     game.load.spritesheet('ninja', 'assets/imagenes/personajes/correr.png', 709, 624);
     game.load.physics('ninja_physics', 'assets/imagenes/personajes/correr_physics.json');
 };

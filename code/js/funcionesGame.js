@@ -18,6 +18,7 @@ function imprimirJugador(jugadorImprimir) {
     jugador.body.mass = 70;
     jugador.body.immovable = true;
     jugador.body.moves = false;
+    jugador.name = "jugador";
     jugadoresImprimidos.set(jugadorImprimir.id, g);
     //metemos la id del jugador imprimido
     idJugadoresImprimidos.push(jugadorImprimir.id);
@@ -98,4 +99,18 @@ function resize() {
         }
     }
 
+}
+var prueba = false;
+//comprobacion se plataformas
+function checkOverlap(body1, body2) {
+    if(prueba == false){
+        console.log("body1: ");
+        console.log(body1);
+        console.log("body2: ");
+        console.log(body2);
+    }
+    
+    //if(prueba == false)console.log(map);
+    prueba = true;
+    return true;
 }
