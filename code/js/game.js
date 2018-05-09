@@ -81,13 +81,11 @@ Game.create = function () {
     map.setCollisionBetween(40, 216, true, doblesuelo);
     game.physics.p2.convertTilemap(map, suelo);
     game.physics.p2.convertTilemap(map, doblesuelo);
-    suelo.inputEnable = true;
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     Client.askNewPlayer();
     game.input.onDown.add(resize, this);
     game.physics.p2.setPostBroadphaseCallback(checkOverlap, this);
-
 };
 
 Game.update = function () {
@@ -146,8 +144,8 @@ Game.init = function () {
 };
 
 Game.preload = function () {
-    game.load.tilemap('map', 'assets/mapas/mapa1.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.spritesheet('tileset', 'assets/imagenes/escenarios/montana/tileset.png', 32, 32);
+    game.load.tilemap('map', 'assets/mapas/elMapa2.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.spritesheet('tileset', 'assets/imagenes/escenarios/bosque/mapa2.png', 16, 16);
     game.load.spritesheet('ninja', 'assets/imagenes/personajes/correr.png', 709, 624);
     game.load.physics('ninja_physics', 'assets/imagenes/personajes/correr_physics.json');
 };

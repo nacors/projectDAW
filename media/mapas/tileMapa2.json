@@ -1,0 +1,12 @@
+{ "columns":17,
+ "image":"..\/imagenes\/escenarios\/bosque\/mapa2.png",
+ "imageheight":240,
+ "imagewidth":272,
+ "margin":0,
+ "name":"tileMapa2",
+ "spacing":0,
+ "tilecount":255,
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset"
+}

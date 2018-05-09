@@ -103,7 +103,8 @@ function resize() {
 var prueba = false;
 //comprobacion se plataformas
 function checkOverlap(body1, body2) {
-    if(body1 && body2)
+    if(prueba == false){
+    }
     prueba = true;
     return true;
 }
