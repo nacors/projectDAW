@@ -76,12 +76,11 @@ Game.create = function () {
     nocolision = map.createLayer('nocolision');
     suelo = map.createLayer('suelo');
     doblesuelo = map.createLayer('doblesuelo');
-    console.log(doblesuelo);
-    doblesuelo.name = "doblesuelo";
     arboles = map.createLayer('arboles');
     map.setCollisionBetween(40, 216, true, suelo);
     map.setCollisionBetween(40, 216, true, doblesuelo);
     game.physics.p2.convertTilemap(map, suelo);
+    game.physics.p2.convertTilemap(map, doblesuelo);
     suelo.inputEnable = true;
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);

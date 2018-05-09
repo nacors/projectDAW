@@ -103,14 +103,7 @@ function resize() {
 var prueba = false;
 //comprobacion se plataformas
 function checkOverlap(body1, body2) {
-    if(prueba == false){
-        console.log("body1: ");
-        console.log(body1);
-        console.log("body2: ");
-        console.log(body2);
-    }
-    
-    //if(prueba == false)console.log(map);
+    if(body1 && body2)
     prueba = true;
     return true;
 }
