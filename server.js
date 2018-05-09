@@ -130,6 +130,7 @@ io.on('connection', function (socket) {
     //socket.emit('soltar', socket.player.id);
     socket.broadcast.to(funcion.getRoom(socket)).emit('soltar', socket.player.id, data);
   });
+
   //reinicia todas las variables del jugador
   socket.on("matarConexiones", function () {
     console.log();

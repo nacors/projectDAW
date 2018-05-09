@@ -74,7 +74,7 @@ function iniciarPartida() {
 }
 
 function textoEspera() {
-    console.log("imprimimos el texto de espera");
+    // console.log("imprimimos el texto de espera");
     if (jugadoresImprimidos.size != 2) {
         mensaje = game.add.text(game.world.centerX, game.world.centerY, "Esperando a otro jugador...", propiedadesTexto);
         mensaje.anchor.setTo(0.5, 0.5);
@@ -83,27 +83,18 @@ function textoEspera() {
 
 }
 
-function resize() {
-
-    // layer.offset.x += 50;
-
-    if (layer.displayWidth !== undefined) {
-        var w = layer.displayWidth + 100;
-        var h = layer.displayHeight + 100;
-        layer.resize(w, h);
-    } else {
-        if (layer.width < 800) {
-            var w = layer.width + 100;
-            var h = layer.height + 100;
-            layer.resize(w, h);
-        }
+function mapaAleatorio() {
+    if (isNaN(mapNum)) {
+        mapNum = parseInt(Math.random() * (4 - 1) + 1);
     }
+    game.load.tilemap('map', `assets/mapas/mapa${mapNum}/elMapa${mapNum}.json`, null, Phaser.Tilemap.TILED_JSON);
+    game.load.spritesheet('tileset', `assets/mapas/mapa${mapNum}/mapa${mapNum}.png`, 16, 16);
 
 }
 var prueba = false;
 //comprobacion se plataformas
 function checkOverlap(body1, body2) {
-    if(prueba == false){
+    if (prueba == false) {
     }
     prueba = true;
     return true;

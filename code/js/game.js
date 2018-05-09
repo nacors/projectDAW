@@ -5,7 +5,7 @@ var salto = true;
 var jugadoresImprimidos = new Map();
 var idJugadoresImprimidos = [];
 var game = new Phaser.Game(1920, 900, Phaser.AUTO, document.getElementById('game'));
-console.log(window.innerWidth);
+// console.log(window.innerWidth);
 var idContactoPermitido = [5, 6, 19];
 var Game = {};
 var miid = 0;
@@ -19,6 +19,7 @@ var propiedadesTexto = {
     stroke: "black",
     fontSize: 40
 };
+var mapNum = "game";
 Game.playerMap = new Map();
 
 
@@ -84,7 +85,8 @@ Game.create = function () {
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     Client.askNewPlayer();
-    game.input.onDown.add(resize, this);
+    
+    //coliisones
     game.physics.p2.setPostBroadphaseCallback(checkOverlap, this);
 };
 
@@ -143,9 +145,8 @@ Game.init = function () {
     game.stage.disableVisibilityChange = true;
 };
 
-Game.preload = function () {
-    game.load.tilemap('map', 'assets/mapas/elMapa2.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.spritesheet('tileset', 'assets/imagenes/escenarios/bosque/mapa2.png', 16, 16);
+Game.preload = function (mapNum) {
+    mapaAleatorio();
     game.load.spritesheet('ninja', 'assets/imagenes/personajes/correr.png', 709, 624);
     game.load.physics('ninja_physics', 'assets/imagenes/personajes/correr_physics.json');
 };
@@ -187,6 +188,7 @@ Game.iniciarPartida = function () {
     }, 1000);
 
 }
+
 game.state.add('Game', Game);
 game.state.start('Game');
 
