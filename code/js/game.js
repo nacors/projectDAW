@@ -139,8 +139,8 @@ Game.init = function () {
 };
 
 Game.preload = function () {
-    game.load.tilemap('map', 'assets/mapas/nevado.json', null, Phaser.Tilemap.TILED_JSON);
-    game.load.spritesheet('tileset', 'assets/imagenes/paisaje.png', 10, 10);
+    game.load.tilemap('map', 'assets/mapas/mapa_montañas.json', null, Phaser.Tilemap.TILED_JSON);
+    game.load.spritesheet('tileset', 'assets/imagenes/escenarios/montaña/tileset.png', 32, 32);
     game.load.spritesheet('ninja', 'assets/imagenes/personajes/correr.png', 709, 624);
     game.load.physics('ninja_physics', 'assets/imagenes/personajes/correr_physics.json');
 };
