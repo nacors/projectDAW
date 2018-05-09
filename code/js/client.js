@@ -75,4 +75,5 @@ Client.socket.on('soltar', function (id, data) {
 //redirecciona al menu si algun jugador ser va de la partida
 Client.socket.on("finJuego", function(){
     location.href = "/";
-})
+});
+
