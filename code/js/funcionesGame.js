@@ -8,10 +8,10 @@ function imprimirJugador(jugadorImprimir) {
     Game.playerMap.set(jugadorImprimir.id, g);
     var jugador = Game.playerMap.get(jugadorImprimir.id);
     jugador.anchor.setTo(0.5, 0.5);
-    jugador.scale.setTo(0.2, 0.2);
+    jugador.scale.setTo(0.1, 0.1);
     jugador.animations.add('right');
     game.physics.p2.enable(jugador, true);
-    resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.2);
+    resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.clearShapes();
     jugador.body.loadPolygon("ninja_escalado", "correr");
     jugador.body.fixedRotation = true;
@@ -84,11 +84,12 @@ function textoEspera() {
 }
 
 function mapaAleatorio() {
-    if (isNaN(mapNum)) {
-        mapNum = parseInt(Math.random() * (4 - 1) + 1);
-    }
-    game.load.tilemap('map', `assets/mapas/mapa${mapNum}/elMapa${mapNum}.json`, null, Phaser.Tilemap.TILED_JSON);
-    game.load.spritesheet('tileset', `assets/mapas/mapa${mapNum}/mapa${mapNum}.png`, 16, 16);
+    Client.pedirNumeroAleatorio();
+
+    game.load.tilemap('map', `assets/mapas/mapa${numeroMapa}/elMapa${numeroMapa}.json`, null, Phaser.Tilemap.TILED_JSON);
+    game.load.spritesheet('tileset', `assets/mapas/mapa${numeroMapa}/mapa${numeroMapa}.png`, 16, 16);
+
+
 
 }
 var prueba = false;

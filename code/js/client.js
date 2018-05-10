@@ -25,7 +25,10 @@ Client.presionar = function (data) {
 Client.soltar = function (data) {
     Client.socket.emit('soltar', data);
 }
-
+Client.pedirNumeroAleatorio = function(){
+    console.log("pedimos el numero del servidor");
+    Client.socket.emit("numMapaServidor");
+}
 
 //FUNCIONES QUE SE RECIBEN DEL SERVIDOR***********************************************************
 Client.socket.on('malIniciado', function () {
@@ -75,5 +78,9 @@ Client.socket.on('soltar', function (id, data) {
 //redirecciona al menu si algun jugador ser va de la partida
 Client.socket.on("finJuego", function(){
     location.href = "/";
+});
+
+Client.socket.on("numMapaServidor", function(num){
+    Game.recibirNumeroServidor(num);
 });
 

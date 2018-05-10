@@ -12,6 +12,7 @@ var jugadoresRoom = 0;
 var room = "sala";
 var roomcount = 0;
 server.lastPlayderID = 0;
+var numeroMapa;
 
 app.use('/css', express.static(__dirname + '/code/css'));
 app.use('/js', express.static(__dirname + '/code/js'));
@@ -73,7 +74,7 @@ io.on('connection', function (socket) {
   socket.on('newplayer', function () {
     linea();
     console.log("--usuario conectado al inicio");
-    console.log(jugadoresRoom);
+    // console.log(jugadoresRoom);
     //jugadores room es un contador que guarda cuanjos jugadores hay en la última room creada
     //si hay mas de 2 se resetea y se crea una nueva room
     if (jugadoresRoom < 2) {
@@ -83,6 +84,7 @@ io.on('connection', function (socket) {
         iniciarPartida(socket);
       }
     } else {
+      numeroMapa = parseInt(Math.random() * (4 - 1) + 1);
       roomcount++;
       socket.join(room + roomcount);
       jugadoresRoom = 1;
@@ -92,7 +94,8 @@ io.on('connection', function (socket) {
     socket.player = {
       id: server.lastPlayderID++,
       x: server.lastPlayderID % 2 == 0 ? 300 : 100,
-      y: 700
+      y: 700,
+      numMap: numeroMapa
     };
     // console.log(socket.player);
     //creamos una objeto de jugadores donde la key es la room y el valor es una array de los jugadores que guarda todos aquellos que se han conectado
@@ -133,7 +136,7 @@ io.on('connection', function (socket) {
 
   //reinicia todas las variables del jugador
   socket.on("matarConexiones", function () {
-    console.log();
+    // console.log();
     let id = socket.id;
     let sala = jugadoresTodos[id];
     //eliminamos la sala
@@ -144,6 +147,11 @@ io.on('connection', function (socket) {
     socket.broadcast.to(sala).emit('finJuego');
     jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
   });
+
+  socket.on("numMapaServidor", function () {
+    // console.log("devolvemos el numero al game");
+    io.sockets.in(funcion.getRoom(socket)).emit('numMapaServidor', numeroMapa);
+  })
 });
 
 //funciones del aldo cliente en el juego
