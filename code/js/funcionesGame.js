@@ -83,15 +83,6 @@ function textoEspera() {
 
 }
 
-function mapaAleatorio() {
-    Client.pedirNumeroAleatorio();
-
-    game.load.tilemap('map', `assets/mapas/mapa${numeroMapa}/elMapa${numeroMapa}.json`, null, Phaser.Tilemap.TILED_JSON);
-    game.load.spritesheet('tileset', `assets/mapas/mapa${numeroMapa}/mapa${numeroMapa}.png`, 16, 16);
-
-
-
-}
 var prueba = false;
 //comprobacion se plataformas
 function checkOverlap(body1, body2) {

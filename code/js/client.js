@@ -25,10 +25,7 @@ Client.presionar = function (data) {
 Client.soltar = function (data) {
     Client.socket.emit('soltar', data);
 }
-Client.pedirNumeroAleatorio = function(){
-    console.log("pedimos el numero del servidor");
-    Client.socket.emit("numMapaServidor");
-}
+
 
 //FUNCIONES QUE SE RECIBEN DEL SERVIDOR***********************************************************
 Client.socket.on('malIniciado', function () {
@@ -57,7 +54,6 @@ Client.socket.on('nickExiste', function () {
 });
 
 Client.socket.on('newplayer', function (data, jugadores) {
-    console.log("el numero de mapa es " + data.numMap);
     Game.addNewPlayer(data.id, data.x, data.y, jugadores, data.numMap);
 });
 
@@ -81,7 +77,4 @@ Client.socket.on("finJuego", function(){
     location.href = "/";
 });
 
-Client.socket.on("numMapaServidor", function(num){
-    Game.recibirNumeroServidor(num);
-});
 

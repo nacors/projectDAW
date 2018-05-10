@@ -58,8 +58,6 @@ app.get('/iniciar', function (req, res) {
   console.log("--iniciamos sesion");
   mongo.consultarUsuarioRegistrado(req.query.nick, req.query.contr).then(function (existe) {
     if (existe) {
-      // res.json({ruta:"http:www.google.es"});
-      // res.send(__dirname + '/pages/game.html');
       res.json({ ok: true });
     } else {
       res.json({ ok: false });
@@ -148,10 +146,6 @@ io.on('connection', function (socket) {
     jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
   });
 
-  socket.on("numMapaServidor", function () {
-    // console.log("devolvemos el numero al game");
-    io.sockets.in(funcion.getRoom(socket)).emit('numMapaServidor', numeroMapa);
-  })
 });
 
 //funciones del aldo cliente en el juego

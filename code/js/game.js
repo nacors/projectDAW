@@ -5,7 +5,6 @@ var salto = true;
 var jugadoresImprimidos = new Map();
 var idJugadoresImprimidos = [];
 var game = new Phaser.Game(1920, 900, Phaser.AUTO, document.getElementById('game'));
-// console.log(window.innerWidth);
 var idContactoPermitido = [5, 6, 19];
 var Game = {};
 var miid = 0;
@@ -27,29 +26,22 @@ Game.playerMap = new Map();
 
 //FUNCIONES GAME---------------------------------------------------------------------------------------------------------------------------------
 Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
-    // if(isNaN(numeroMapa)){
-
-    //     Game.create();
-    // }
-    console.log("ejecuto add new player");
     if (jugadoresImprimidos.size < 1) {
         miid = id;
-        if(countCon < 1){
-            map = game.add.tilemap(`mapa${numMapa}`);
-            map.addTilesetImage('paisaje', `tileset${numMapa}`);
-            nocolision = map.createLayer('nocolision');
-            suelo = map.createLayer('suelo');
-            doblesuelo = map.createLayer('doblesuelo');
-            arboles = map.createLayer('arboles');
-            map.setCollisionBetween(40, 216, true, suelo);
-            map.setCollisionBetween(40, 216, true, doblesuelo);
-            game.physics.p2.convertTilemap(map, suelo);
-            game.physics.p2.convertTilemap(map, doblesuelo);
-            countCon = 1;
-        }
+        //dibujamos el mapa para el jugador
+        map = game.add.tilemap(`mapa${numMapa}`);
+        map.addTilesetImage('paisaje', `tileset${numMapa}`);
+        nocolision = map.createLayer('nocolision');
+        suelo = map.createLayer('suelo');
+        doblesuelo = map.createLayer('doblesuelo');
+        arboles = map.createLayer('arboles');
+        map.setCollisionBetween(40, 216, true, suelo);
+        map.setCollisionBetween(40, 216, true, doblesuelo);
+        game.physics.p2.convertTilemap(map, suelo);
+        game.physics.p2.convertTilemap(map, doblesuelo);
+        countCon = 1;
     }
-    // console.log("Imprimimos jugador -----------------------------");
-    // console.log("Imprimimos jugador: " + id);
+
     let g = game.add.sprite(x, y, 'ninja');
     Game.playerMap.set(id, g);
     var jugador = Game.playerMap.get(id);
@@ -62,14 +54,6 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     jugador.body.loadPolygon("ninja_escalado", "correr");
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
-    // game.camera.follow(jugador, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
-    //hacemos al personaje inmovible
-    // jugador.body.immovable = true;
-    // jugador.body.moves = false;
-
-
-    //game.camera.follow(jugador);
-    //game.world.setBounds(0, 0, 2100, 990);
     jugadoresImprimidos.set(id, g);
     idJugadoresImprimidos.push(id);
     textoEspera();
@@ -82,25 +66,16 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
             imprimirJugador(player);
         }
     }
-    // console.log("MI MAP de jugadores ES: ****************************");
-    // console.log(jugadoresImprimidos);
-    // Client.pedirNumeroAleatorio();
 };
 
 Game.create = function () {
-    console.log("ejecuto create");
     game.physics.startSystem(Phaser.Physics.P2JS);
     game.physics.p2.gravity.y = 5000;
     game.stage.backgroundColor = '#ccffff';
-    
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    
     Client.askNewPlayer();
-    //coliisones
     game.physics.p2.setPostBroadphaseCallback(checkOverlap, this);
-    
-    // game.state.add('mapa1', mapa1);
 };
 
 Game.update = function () {
@@ -131,25 +106,16 @@ Game.update = function () {
             }
         }
         if (cursors.up.isDown) {
-            // while(salto && cantidadSalto < 3){
-            //     jugadoresImprimidos.get(miid).body.moveUp(1200);
-            //     salto = false;
-            // }
             while (salto) {
                 jugadoresImprimidos.get(miid).body.moveUp(1200);
                 salto = false;
             }
             Client.presionar(data);
-            // console.log(cantidadSalto);
         } else if (cursors.up.isUp) {
-            // if(cantidadSalto > 2 && !salto){
-            //     cantidadSalto = 0;
-            // }
-            // cantidadSalto ++;
             salto = true;
         }
     }
-    
+
 }
 
 Game.render = function () {
@@ -160,9 +126,7 @@ Game.init = function () {
 };
 
 Game.preload = function () {
-    console.log("ejecuto preload");
-    // mapaAleatorio();
-    for(let numMapa = 1; numMapa < 4; numMapa++){
+    for (let numMapa = 1; numMapa < 4; numMapa++) {
         game.load.tilemap(`mapa${numMapa}`, `assets/mapas/mapa${numMapa}/elMapa${numMapa}.json`, null, Phaser.Tilemap.TILED_JSON);
         game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.png`, 16, 16);
     }
@@ -207,30 +171,30 @@ Game.iniciarPartida = function () {
     }, 1000);
 
 }
-Game.recibirNumeroServidor = function (numero) {
-    numeroMapa = numero;
-    // game.state.start('mapa1');
-    nocolision.destroy();
-    suelo.destroy();
-    doblesuelo.destroy();
-    arboles.destroy();
-    // map.destroy();
-    
-    // game.load.tilemap('map', `assets/mapas/mapa${numero}/elMapa${numero}.json`, null, Phaser.Tilemap.TILED_JSON);
-    // game.load.spritesheet('tileset', `assets/mapas/mapa${numero}/mapa${numero}.png`, 16, 16);
-    
-    // console.log(map);
-    // g_tilemapLayer = this.game.add.tilemapLayer (0, 0, 800, 800, g_tileset, g_tilemap, 0);
-    // map = game.add.tilemap('map');
-    // console.log(map);
-    // map.addTilesetImage('paisaje', 'tileset');
-    // nocolision = map.createLayer('nocolision');
-    // suelo = map.createLayer('suelo');
-    // doblesuelo = map.createLayer('doblesuelo');
-    // arboles = map.createLayer('arboles');
-    // map.setCollisionBetween(40, 216, true, suelo);
-    // map.setCollisionBetween(40, 216, true, doblesuelo);
-}
+// Game.recibirNumeroServidor = function (numero) {
+//     numeroMapa = numero;
+//     // game.state.start('mapa1');
+//     nocolision.destroy();
+//     suelo.destroy();
+//     doblesuelo.destroy();
+//     arboles.destroy();
+//     // map.destroy();
+
+//     // game.load.tilemap('map', `assets/mapas/mapa${numero}/elMapa${numero}.json`, null, Phaser.Tilemap.TILED_JSON);
+//     // game.load.spritesheet('tileset', `assets/mapas/mapa${numero}/mapa${numero}.png`, 16, 16);
+
+//     // console.log(map);
+//     // g_tilemapLayer = this.game.add.tilemapLayer (0, 0, 800, 800, g_tileset, g_tilemap, 0);
+//     // map = game.add.tilemap('map');
+//     // console.log(map);
+//     // map.addTilesetImage('paisaje', 'tileset');
+//     // nocolision = map.createLayer('nocolision');
+//     // suelo = map.createLayer('suelo');
+//     // doblesuelo = map.createLayer('doblesuelo');
+//     // arboles = map.createLayer('arboles');
+//     // map.setCollisionBetween(40, 216, true, suelo);
+//     // map.setCollisionBetween(40, 216, true, doblesuelo);
+// }
 game.state.add('Game', Game);
 game.state.start('Game');
 
