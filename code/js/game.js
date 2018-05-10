@@ -171,30 +171,7 @@ Game.iniciarPartida = function () {
     }, 1000);
 
 }
-// Game.recibirNumeroServidor = function (numero) {
-//     numeroMapa = numero;
-//     // game.state.start('mapa1');
-//     nocolision.destroy();
-//     suelo.destroy();
-//     doblesuelo.destroy();
-//     arboles.destroy();
-//     // map.destroy();
 
-//     // game.load.tilemap('map', `assets/mapas/mapa${numero}/elMapa${numero}.json`, null, Phaser.Tilemap.TILED_JSON);
-//     // game.load.spritesheet('tileset', `assets/mapas/mapa${numero}/mapa${numero}.png`, 16, 16);
-
-//     // console.log(map);
-//     // g_tilemapLayer = this.game.add.tilemapLayer (0, 0, 800, 800, g_tileset, g_tilemap, 0);
-//     // map = game.add.tilemap('map');
-//     // console.log(map);
-//     // map.addTilesetImage('paisaje', 'tileset');
-//     // nocolision = map.createLayer('nocolision');
-//     // suelo = map.createLayer('suelo');
-//     // doblesuelo = map.createLayer('doblesuelo');
-//     // arboles = map.createLayer('arboles');
-//     // map.setCollisionBetween(40, 216, true, suelo);
-//     // map.setCollisionBetween(40, 216, true, doblesuelo);
-// }
 game.state.add('Game', Game);
 game.state.start('Game');
 
