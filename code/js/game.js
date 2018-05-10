@@ -20,6 +20,7 @@ var propiedadesTexto = {
     stroke: "black",
     fontSize: 40
 };
+var countCon = 0;
 var numeroMapa = "hola";
 Game.playerMap = new Map();
 
@@ -33,6 +34,19 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     console.log("ejecuto add new player");
     if (jugadoresImprimidos.size < 1) {
         miid = id;
+        if(countCon < 1){
+            map = game.add.tilemap(`mapa${numMapa}`);
+            map.addTilesetImage('paisaje', `tileset${numMapa}`);
+            nocolision = map.createLayer('nocolision');
+            suelo = map.createLayer('suelo');
+            doblesuelo = map.createLayer('doblesuelo');
+            arboles = map.createLayer('arboles');
+            map.setCollisionBetween(40, 216, true, suelo);
+            map.setCollisionBetween(40, 216, true, doblesuelo);
+            game.physics.p2.convertTilemap(map, suelo);
+            game.physics.p2.convertTilemap(map, doblesuelo);
+            countCon = 1;
+        }
     }
     // console.log("Imprimimos jugador -----------------------------");
     // console.log("Imprimimos jugador: " + id);
@@ -78,24 +92,14 @@ Game.create = function () {
     game.physics.startSystem(Phaser.Physics.P2JS);
     game.physics.p2.gravity.y = 5000;
     game.stage.backgroundColor = '#ccffff';
-    map = game.add.tilemap('map');
-    map.addTilesetImage('paisaje', 'tileset');
-   
-    nocolision = map.createLayer('nocolision');
-    suelo = map.createLayer('suelo');
-    doblesuelo = map.createLayer('doblesuelo');
-    arboles = map.createLayer('arboles');
-    map.setCollisionBetween(40, 216, true, suelo);
-    map.setCollisionBetween(40, 216, true, doblesuelo);
-    game.physics.p2.convertTilemap(map, suelo);
-    game.physics.p2.convertTilemap(map, doblesuelo);
+    
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     
-
+    Client.askNewPlayer();
     //coliisones
     game.physics.p2.setPostBroadphaseCallback(checkOverlap, this);
-
+    
     // game.state.add('mapa1', mapa1);
 };
 
@@ -158,9 +162,10 @@ Game.init = function () {
 Game.preload = function () {
     console.log("ejecuto preload");
     // mapaAleatorio();
-    Client.askNewPlayer();
-    game.load.tilemap('map', `assets/mapas/mapa${numeroMapa}/elMapa${numeroMapa}.json`, null, Phaser.Tilemap.TILED_JSON);
-    game.load.spritesheet('tileset', `assets/mapas/mapa${numeroMapa}/mapa${numeroMapa}.png`, 16, 16);
+    for(let numMapa = 1; numMapa < 4; numMapa++){
+        game.load.tilemap(`mapa${numMapa}`, `assets/mapas/mapa${numMapa}/elMapa${numMapa}.json`, null, Phaser.Tilemap.TILED_JSON);
+        game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.png`, 16, 16);
+    }
     game.load.spritesheet('ninja', 'assets/imagenes/personajes/correr.png', 709, 624);
     game.load.physics('ninja_physics', 'assets/imagenes/personajes/correr_physics.json');
 };

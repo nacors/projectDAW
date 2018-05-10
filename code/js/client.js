@@ -57,7 +57,8 @@ Client.socket.on('nickExiste', function () {
 });
 
 Client.socket.on('newplayer', function (data, jugadores) {
-    Game.addNewPlayer(data.id, data.x, data.y, jugadores);
+    console.log("el numero de mapa es " + data.numMap);
+    Game.addNewPlayer(data.id, data.x, data.y, jugadores, data.numMap);
 });
 
 Client.socket.on('inicarPartida', function () {
