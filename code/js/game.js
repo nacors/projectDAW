@@ -49,11 +49,11 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     var jugador = Game.playerMap.get(id);
     jugador.anchor.setTo(0.5, 0.5);
     jugador.scale.setTo(1.3, 1.3);
-    jugador.animations.add('right', [15,16,17,18,19], 60, true);
-    jugador.animations.add('stay', [1,2,3,4], 60, true);
-    jugador.animations.add('hit1', [5,6,7,8,9,10], 60, false);
-    jugador.animations.add('hit2', [11,12,13,14], 60, true);
-    
+    jugador.animations.add('right', [15, 16, 17, 18, 19], 60, true);
+    jugador.animations.add('stay', [1, 2, 3, 4], 60, true);
+    jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
+    jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
+
     game.physics.p2.enable(jugador, true);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
@@ -96,20 +96,12 @@ Game.update = function () {
         }
         //movimiento para el personaje que controla el jugador
         if (cursors.left.isDown && quieto) {
-            Client.presionar(data);
-            direccion = "left";
-            jugadoresImprimidos.get(miid).scale.setTo(-1.3,1.3);
-            jugadoresImprimidos.get(miid).body.setRectangle(35, 58, 10, 22);
-            jugadoresImprimidos.get(miid).body.moveLeft(700);
-            jugadoresImprimidos.get(miid).animations.play('right', 10, true);
+            Client.presionar(data, "izquierda");
+            moverJugador(miid, "izquierda");
         } else if (cursors.right.isDown && quieto) {
-            Client.presionar(data);
-            direccion = "right";
-            jugadoresImprimidos.get(miid).body.setRectangle(35, 58, -10, 22);
-            jugadoresImprimidos.get(miid).scale.setTo(1.3,1.3);
-            jugadoresImprimidos.get(miid).body.moveRight(700);
-            jugadoresImprimidos.get(miid).animations.play('right', 10, true);
-        } else if(quieto) {
+            Client.presionar(data, "derecha");
+            moverJugador(miid, "derecha");
+        } else if (quieto) {
             if (jugadoresImprimidos.size != 0) {
                 Client.soltar(data);
                 if (jugadoresImprimidos.has(miid)) {
@@ -123,36 +115,17 @@ Game.update = function () {
                 jugadoresImprimidos.get(miid).body.moveUp(1200);
                 salto = false;
             }
-            Client.presionar(data);
+            Client.presionar(data, "salto");
         } else if (cursors.up.isUp) {
             salto = true;
         }
-        if (hit1.isDown){
-            //Client.pegar(data,"hit1");
-            jugadoresImprimidos.get(miid).body.velocity.x = 0;
-            if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(60, 58, 5, 22);
-            else jugadoresImprimidos.get(miid).body.setRectangle(60, 58, -5, 22);
-            quieto = false;
-            jugadoresImprimidos.get(miid).animations.play('hit1', 10, false);
-            jugadoresImprimidos.get(miid).animations.currentAnim.onComplete.add(function () {	
-                quieto = true;
-                if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(35, 58, -10, 22);
-                else jugadoresImprimidos.get(miid).body.setRectangle(35, 58, 10, 22);
-            }, this);
+        if (hit1.isDown) {
+            Client.ataque("hit1");
+            pegar1(miid);
         }
-        if (hit2.isDown){
-            jugadoresImprimidos.get(miid).body.velocity.x = 0;
-            //Client.pegar(data,"hit1");
-            if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(70, 58, 10, 22);
-            else jugadoresImprimidos.get(miid).body.setRectangle(70, 58, -10, 22);
-            quieto = false;
-            quieto = false;
-            jugadoresImprimidos.get(miid).animations.play('hit2', 10, false);
-            jugadoresImprimidos.get(miid).animations.currentAnim.onComplete.add(function () {	
-                quieto = true;
-                if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(35, 58, -10, 22);
-                else jugadoresImprimidos.get(miid).body.setRectangle(35, 58, 10, 22);
-            }, this);
+        if (hit2.isDown) {
+            Client.ataque("hit2");
+            pegar2(miid);
         }
     }
 
@@ -173,18 +146,30 @@ Game.preload = function () {
     game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 80);
 };
 
-Game.movimiento = function (id, data, accion) {
+//movemos al jugadopr enemigo sincornizando los movimientos
+Game.movimiento = function (id, data, accion, direccion) {
+    //le decimos al personaje enemigo controlado por otro jugador que no tenga sus propios movimientos
+    jugadoresImprimidos.get(id).body.velocity.x = 0;
+    jugadoresImprimidos.get(id).body.velocity.y = 0;
+    //aqui le decimos que siga exactamente las x e y del jugador que lo controla
+    jugadoresImprimidos.get(id).body.x = data.x;
+    jugadoresImprimidos.get(id).body.y = data.y;
     //movimiento para los otros personajes
     //hay que tener en cuenta de que escuha constantemente los movimientos, tal vez es lo que mas carga el sistema
     if (accion == "presionar") {
-        jugadoresImprimidos.get(id).body.x = data.x;
-        jugadoresImprimidos.get(id).body.y = data.y;
-        jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        if (direccion == "izquierda") {
+            jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
+            jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+            jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        } else if (direccion == "derecha") {
+            jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
+            jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
+            jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        } else if (direccion == "salto") {
+            jugadoresImprimidos.get(id).animations.play('stay', 10, true);
+        }
     } else if (accion == "soltar") {
         if (jugadoresImprimidos.size != 0) {
-            jugadoresImprimidos.get(id).body.x = data.x;
-            jugadoresImprimidos.get(id).body.y = data.y;
-            jugadoresImprimidos.get(id).body.velocity.x = 0;
             jugadoresImprimidos.get(id).animations.play('stay', 10, true);
         }
     }
@@ -211,6 +196,13 @@ Game.iniciarPartida = function () {
 
 }
 
+Game.ataqueEnemigo = function (id, ataque) {
+    if (ataque == "hit1") {
+        pegar1(id);
+    } else if (ataque == "hit2") {
+        pegar2(id);
+    }
+}
 game.state.add('Game', Game);
 game.state.start('Game');
 

@@ -8,11 +8,11 @@ function imprimirJugador(jugadorImprimir) {
     Game.playerMap.set(jugadorImprimir.id, g);
     var jugador = Game.playerMap.get(jugadorImprimir.id);
     jugador.anchor.setTo(0.5, 0.5);
-    //jugador.scale.setTo(0.1, 0.1);
-    jugador.animations.add('right', [15,16,17,18,19], 60, true);
-    jugador.animations.add('stay', [1,2,3,4], 60, true);
-    jugador.animations.add('hit1', [5,6,7,8,9,10], 60, false);
-    jugador.animations.add('hit2', [11,12,13,14], 60, true);
+    jugador.scale.setTo(1.3, 1.3);
+    jugador.animations.add('right', [15, 16, 17, 18, 19], 60, true);
+    jugador.animations.add('stay', [1, 2, 3, 4], 60, true);
+    jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
+    jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
     game.physics.p2.enable(jugador, true);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(30, 47, -10, 18);
@@ -93,3 +93,46 @@ function checkOverlap(body1, body2) {
     prueba = true;
     return true;
 }
+function pegar1(id) {
+    jugadoresImprimidos.get(id).body.velocity.x = 0;
+    if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(60, 58, 5, 22);
+    else jugadoresImprimidos.get(id).body.setRectangle(60, 58, -5, 22);
+    quieto = false;
+    jugadoresImprimidos.get(id).animations.play('hit1', 10, false);
+    jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
+        quieto = true;
+        if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
+        else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+    }, this);
+}
+
+function pegar2(id) {
+    jugadoresImprimidos.get(id).body.velocity.x = 0;
+    //Client.pegar(data,"hit1");
+    if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(70, 58, 10, 22);
+    else jugadoresImprimidos.get(id).body.setRectangle(70, 58, -10, 22);
+    quieto = false;
+    quieto = false;
+    jugadoresImprimidos.get(id).animations.play('hit2', 10, false);
+    jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
+        quieto = true;
+        if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
+        else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+    }, this);
+}
+
+function moverJugador(id, direccion) {
+    if (direccion == "izquierda") {
+        jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
+        jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+        jugadoresImprimidos.get(id).body.moveLeft(700);
+        jugadoresImprimidos.get(id).animations.play('right', 10, true);
+    } else if (direccion == "derecha") {
+        jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
+        jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
+        jugadoresImprimidos.get(id).body.moveRight(700);
+        jugadoresImprimidos.get(id).animations.play('right', 10, true);
+    }
+
+}
+

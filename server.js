@@ -121,8 +121,8 @@ io.on('connection', function (socket) {
 
 
   //enviar moviemiento a los demas usuarios
-  socket.on('presionar', function (data) {
-    socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', socket.player.id, data);
+  socket.on('presionar', function (data, direccion) {
+    socket.broadcast.to(funcion.getRoom(socket)).emit('presionar', socket.player.id, data, direccion);
     //socket.emit('presionar', socket.player.id, movimiento, x, y);
   });
 
@@ -144,6 +144,11 @@ io.on('connection', function (socket) {
     //reiniciamos las paginas de todos
     socket.broadcast.to(sala).emit('finJuego');
     jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
+  });
+
+  //el atque del personaje
+  socket.on("atacar", function (ataque) {
+    socket.broadcast.to(funcion.getRoom(socket)).emit('atacar', socket.player.id, ataque);
   });
 
 });
