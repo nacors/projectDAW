@@ -4,16 +4,18 @@ var frasesSamuel = ["Que tal vais?", "Chicos, hoy toca un tipo test", "Teneis la
 
 //imprime jugadores si alguien se ha conectado
 function imprimirJugador(jugadorImprimir) {
-    let g = game.add.sprite(jugadorImprimir.x, jugadorImprimir.y, 'ninja');
+    let g = game.add.sprite(jugadorImprimir.x, jugadorImprimir.y, 'caballero');
     Game.playerMap.set(jugadorImprimir.id, g);
     var jugador = Game.playerMap.get(jugadorImprimir.id);
     jugador.anchor.setTo(0.5, 0.5);
-    jugador.scale.setTo(0.1, 0.1);
-    jugador.animations.add('right');
+    //jugador.scale.setTo(0.1, 0.1);
+    jugador.animations.add('right', [15,16,17,18,19], 60, true);
+    jugador.animations.add('stay', [1,2,3,4], 60, true);
+    jugador.animations.add('hit1', [5,6,7,8,9,10], 60, false);
+    jugador.animations.add('hit2', [11,12,13,14], 60, true);
     game.physics.p2.enable(jugador, true);
-    resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
-    jugador.body.clearShapes();
-    jugador.body.loadPolygon("ninja_escalado", "correr");
+    //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
+    jugador.body.setRectangle(30, 47, -10, 18);
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
     jugador.body.immovable = true;

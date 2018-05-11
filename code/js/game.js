@@ -1,6 +1,6 @@
 //VARIABLES------------------------------------------------------------------------------------------------------------------------------------
-var suelo, arboles, jugador1, cursors, jumpButton;
-var jumpTimer = 0;
+var suelo, arboles, jugador1, cursors, hit1;
+var Timer = 0;
 var salto = true;
 var jugadoresImprimidos = new Map();
 var idJugadoresImprimidos = [];
@@ -19,6 +19,8 @@ var propiedadesTexto = {
     stroke: "black",
     fontSize: 40
 };
+var quieto = true;
+var direccion = "right";
 var countCon = 0;
 var numeroMapa = "hola";
 Game.playerMap = new Map();
@@ -42,16 +44,20 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
         countCon = 1;
     }
 
-    let g = game.add.sprite(x, y, 'ninja');
+    let g = game.add.sprite(x, y, 'caballero');
     Game.playerMap.set(id, g);
     var jugador = Game.playerMap.get(id);
     jugador.anchor.setTo(0.5, 0.5);
-    jugador.scale.setTo(0.1, 0.1);
-    jugador.animations.add('right');
+    //jugador.scale.setTo(0.1, 0.1);
+    jugador.animations.add('right', [15,16,17,18,19], 60, true);
+    jugador.animations.add('stay', [1,2,3,4], 60, true);
+    jugador.animations.add('hit1', [5,6,7,8,9,10], 60, false);
+    jugador.animations.add('hit2', [11,12,13,14], 60, true);
+    
     game.physics.p2.enable(jugador, true);
-    resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
-    jugador.body.clearShapes();
-    jugador.body.loadPolygon("ninja_escalado", "correr");
+    //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
+    jugador.body.setRectangle(30, 47, -10, 18);
+    //jugador.body.loadPolygon("ninja_escalado", "correr");
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
     jugadoresImprimidos.set(id, g);
@@ -73,7 +79,8 @@ Game.create = function () {
     game.physics.p2.gravity.y = 5000;
     game.stage.backgroundColor = '#ccffff';
     cursors = game.input.keyboard.createCursorKeys();
-    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    hit1 = game.input.keyboard.addKey(Phaser.Keyboard.C);
+    hit2 = game.input.keyboard.addKey(Phaser.Keyboard.X);
     Client.askNewPlayer();
     game.physics.p2.setPostBroadphaseCallback(checkOverlap, this);
 };
@@ -88,20 +95,26 @@ Game.update = function () {
             };
         }
         //movimiento para el personaje que controla el jugador
-        if (cursors.left.isDown) {
+        if (cursors.left.isDown && quieto) {
             Client.presionar(data);
+            direccion = "left";
+            jugadoresImprimidos.get(miid).scale.setTo(-1,1);
+            jugadoresImprimidos.get(miid).body.setRectangle(30, 47, 10, 18);
             jugadoresImprimidos.get(miid).body.moveLeft(700);
             jugadoresImprimidos.get(miid).animations.play('right', 10, true);
-        } else if (cursors.right.isDown) {
+        } else if (cursors.right.isDown && quieto) {
             Client.presionar(data);
+            direccion = "right";
+            jugadoresImprimidos.get(miid).body.setRectangle(30, 47, -10, 18);
+            jugadoresImprimidos.get(miid).scale.setTo(1,1);
             jugadoresImprimidos.get(miid).body.moveRight(700);
             jugadoresImprimidos.get(miid).animations.play('right', 10, true);
-        } else {
+        } else if(quieto) {
             if (jugadoresImprimidos.size != 0) {
                 Client.soltar(data);
                 if (jugadoresImprimidos.has(miid)) {
                     jugadoresImprimidos.get(miid).body.velocity.x = 0;
-                    jugadoresImprimidos.get(miid).animations.stop();
+                    jugadoresImprimidos.get(miid).animations.play('stay', 10, true);
                 }
             }
         }
@@ -113,6 +126,33 @@ Game.update = function () {
             Client.presionar(data);
         } else if (cursors.up.isUp) {
             salto = true;
+        }
+        if (hit1.isDown){
+            //Client.pegar(data,"hit1");
+            jugadoresImprimidos.get(miid).body.velocity.x = 0;
+            if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(60, 47, 5, 18);
+            else jugadoresImprimidos.get(miid).body.setRectangle(60, 47, -5, 18);
+            quieto = false;
+            jugadoresImprimidos.get(miid).animations.play('hit1', 10, false);
+            jugadoresImprimidos.get(miid).animations.currentAnim.onComplete.add(function () {	
+                quieto = true;
+                if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(30, 47, -10, 18);
+                else jugadoresImprimidos.get(miid).body.setRectangle(30, 47, 10, 18);
+            }, this);
+        }
+        if (hit2.isDown){
+            jugadoresImprimidos.get(miid).body.velocity.x = 0;
+            //Client.pegar(data,"hit1");
+            if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(60, 47, 5, 18);
+            else jugadoresImprimidos.get(miid).body.setRectangle(60, 47, -5, 18);
+            quieto = false;
+            quieto = false;
+            jugadoresImprimidos.get(miid).animations.play('hit2', 10, false);
+            jugadoresImprimidos.get(miid).animations.currentAnim.onComplete.add(function () {	
+                quieto = true;
+                if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(30, 47, -10, 18);
+                else jugadoresImprimidos.get(miid).body.setRectangle(30, 47, 10, 18);
+            }, this);
         }
     }
 
@@ -130,8 +170,7 @@ Game.preload = function () {
         game.load.tilemap(`mapa${numMapa}`, `assets/mapas/mapa${numMapa}/elMapa${numMapa}.json`, null, Phaser.Tilemap.TILED_JSON);
         game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.png`, 16, 16);
     }
-    game.load.spritesheet('ninja', 'assets/imagenes/personajes/correr.png', 709, 624);
-    game.load.physics('ninja_physics', 'assets/imagenes/personajes/correr_physics.json');
+    game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 80);
 };
 
 Game.movimiento = function (id, data, accion) {
@@ -146,7 +185,7 @@ Game.movimiento = function (id, data, accion) {
             jugadoresImprimidos.get(id).body.x = data.x;
             jugadoresImprimidos.get(id).body.y = data.y;
             jugadoresImprimidos.get(id).body.velocity.x = 0;
-            jugadoresImprimidos.get(id).animations.stop();
+            jugadoresImprimidos.get(id).animations.play('stay', 10, true);
         }
     }
 }
