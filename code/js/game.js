@@ -48,7 +48,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     Game.playerMap.set(id, g);
     var jugador = Game.playerMap.get(id);
     jugador.anchor.setTo(0.5, 0.5);
-    //jugador.scale.setTo(0.1, 0.1);
+    jugador.scale.setTo(1.3, 1.3);
     jugador.animations.add('right', [15,16,17,18,19], 60, true);
     jugador.animations.add('stay', [1,2,3,4], 60, true);
     jugador.animations.add('hit1', [5,6,7,8,9,10], 60, false);
@@ -56,7 +56,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     
     game.physics.p2.enable(jugador, true);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
-    jugador.body.setRectangle(30, 47, -10, 18);
+    jugador.body.setRectangle(35, 58, -10, 22);
     //jugador.body.loadPolygon("ninja_escalado", "correr");
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
@@ -98,15 +98,15 @@ Game.update = function () {
         if (cursors.left.isDown && quieto) {
             Client.presionar(data);
             direccion = "left";
-            jugadoresImprimidos.get(miid).scale.setTo(-1,1);
-            jugadoresImprimidos.get(miid).body.setRectangle(30, 47, 10, 18);
+            jugadoresImprimidos.get(miid).scale.setTo(-1.3,1.3);
+            jugadoresImprimidos.get(miid).body.setRectangle(35, 58, 10, 22);
             jugadoresImprimidos.get(miid).body.moveLeft(700);
             jugadoresImprimidos.get(miid).animations.play('right', 10, true);
         } else if (cursors.right.isDown && quieto) {
             Client.presionar(data);
             direccion = "right";
-            jugadoresImprimidos.get(miid).body.setRectangle(30, 47, -10, 18);
-            jugadoresImprimidos.get(miid).scale.setTo(1,1);
+            jugadoresImprimidos.get(miid).body.setRectangle(35, 58, -10, 22);
+            jugadoresImprimidos.get(miid).scale.setTo(1.3,1.3);
             jugadoresImprimidos.get(miid).body.moveRight(700);
             jugadoresImprimidos.get(miid).animations.play('right', 10, true);
         } else if(quieto) {
@@ -130,28 +130,28 @@ Game.update = function () {
         if (hit1.isDown){
             //Client.pegar(data,"hit1");
             jugadoresImprimidos.get(miid).body.velocity.x = 0;
-            if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(60, 47, 5, 18);
-            else jugadoresImprimidos.get(miid).body.setRectangle(60, 47, -5, 18);
+            if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(60, 58, 5, 22);
+            else jugadoresImprimidos.get(miid).body.setRectangle(60, 58, -5, 22);
             quieto = false;
             jugadoresImprimidos.get(miid).animations.play('hit1', 10, false);
             jugadoresImprimidos.get(miid).animations.currentAnim.onComplete.add(function () {	
                 quieto = true;
-                if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(30, 47, -10, 18);
-                else jugadoresImprimidos.get(miid).body.setRectangle(30, 47, 10, 18);
+                if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(35, 58, -10, 22);
+                else jugadoresImprimidos.get(miid).body.setRectangle(35, 58, 10, 22);
             }, this);
         }
         if (hit2.isDown){
             jugadoresImprimidos.get(miid).body.velocity.x = 0;
             //Client.pegar(data,"hit1");
-            if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(60, 47, 5, 18);
-            else jugadoresImprimidos.get(miid).body.setRectangle(60, 47, -5, 18);
+            if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(70, 58, 10, 22);
+            else jugadoresImprimidos.get(miid).body.setRectangle(70, 58, -10, 22);
             quieto = false;
             quieto = false;
             jugadoresImprimidos.get(miid).animations.play('hit2', 10, false);
             jugadoresImprimidos.get(miid).animations.currentAnim.onComplete.add(function () {	
                 quieto = true;
-                if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(30, 47, -10, 18);
-                else jugadoresImprimidos.get(miid).body.setRectangle(30, 47, 10, 18);
+                if(direccion == "right")jugadoresImprimidos.get(miid).body.setRectangle(35, 58, -10, 22);
+                else jugadoresImprimidos.get(miid).body.setRectangle(35, 58, 10, 22);
             }, this);
         }
     }
