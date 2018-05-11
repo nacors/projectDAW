@@ -148,6 +148,9 @@ Game.preload = function () {
 
 //movemos al jugadopr enemigo sincornizando los movimientos
 Game.movimiento = function (id, data, accion, direccion) {
+    //¿Porque se producia mal sincronizacion del personaje en el servidor ubuntu?
+    //- Porque no reinciaba la variable de velocidad y, y el personaje tenia su propia velocidad y caia mas rapido de como lo hacia el jugador de verdad
+    //- y se producian esos lagazos
     //le decimos al personaje enemigo controlado por otro jugador que no tenga sus propios movimientos
     jugadoresImprimidos.get(id).body.velocity.x = 0;
     jugadoresImprimidos.get(id).body.velocity.y = 0;
