@@ -47,13 +47,13 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     let g = game.add.sprite(x, y, 'caballero');
     Game.playerMap.set(id, g);
     var jugador = Game.playerMap.get(id);
+    jugador.name = (jugadoresImprimidos.size < 1) ? "yo" : "enemigo";
     jugador.anchor.setTo(0.5, 0.5);
     jugador.scale.setTo(1.3, 1.3);
     jugador.animations.add('right', [15, 16, 17, 18, 19], 60, true);
     jugador.animations.add('stay', [1, 2, 3, 4], 60, true);
     jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
-
     game.physics.p2.enable(jugador, true);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
@@ -96,9 +96,11 @@ Game.update = function () {
         }
         //movimiento para el personaje que controla el jugador
         if (cursors.left.isDown && quieto) {
+            direccion = "left";
             Client.presionar(data, "izquierda");
             moverJugador(miid, "izquierda");
         } else if (cursors.right.isDown && quieto) {
+            direccion = "right";
             Client.presionar(data, "derecha");
             moverJugador(miid, "derecha");
         } else if (quieto) {
@@ -120,12 +122,12 @@ Game.update = function () {
             salto = true;
         }
         if (hit1.isDown) {
-            Client.ataque("hit1");
-            pegar1(miid);
+            Client.ataque("hit1", direccion);
+            pegar1(miid, direccion);
         }
         if (hit2.isDown) {
-            Client.ataque("hit2");
-            pegar2(miid);
+            Client.ataque("hit2", direccion);
+            pegar2(miid, direccion);
         }
     }
 
@@ -199,11 +201,11 @@ Game.iniciarPartida = function () {
 
 }
 
-Game.ataqueEnemigo = function (id, ataque) {
+Game.ataqueEnemigo = function (id, ataque, direccion) {
     if (ataque == "hit1") {
-        pegar1(id);
+        pegar1(id, direccion);
     } else if (ataque == "hit2") {
-        pegar2(id);
+        pegar2(id, direccion);
     }
 }
 game.state.add('Game', Game);

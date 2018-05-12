@@ -147,8 +147,8 @@ io.on('connection', function (socket) {
   });
 
   //el atque del personaje
-  socket.on("atacar", function (ataque) {
-    socket.broadcast.to(funcion.getRoom(socket)).emit('atacar', socket.player.id, ataque);
+  socket.on("atacar", function (ataque, direccion) {
+    socket.broadcast.to(funcion.getRoom(socket)).emit('atacar', socket.player.id, ataque, direccion);
   });
 
 });

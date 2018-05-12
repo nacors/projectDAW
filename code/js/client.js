@@ -26,8 +26,8 @@ Client.soltar = function (data) {
     Client.socket.emit('soltar', data);
 }
 
-Client.ataque = function (ataque) {
-    Client.socket.emit("atacar", ataque);
+Client.ataque = function (ataque, direccion) {
+    Client.socket.emit("atacar", ataque, direccion);
 }
 
 
@@ -81,7 +81,7 @@ Client.socket.on("finJuego", function () {
     location.href = "/";
 });
 
-Client.socket.on("atacar", function (id, ataque) {
-    Game.ataqueEnemigo(id, ataque);
+Client.socket.on("atacar", function (id, ataque, direccion) {
+    Game.ataqueEnemigo(id, ataque, direccion);
 });
 

@@ -20,7 +20,7 @@ function imprimirJugador(jugadorImprimir) {
     jugador.body.mass = 70;
     jugador.body.immovable = true;
     jugador.body.moves = false;
-    jugador.name = "jugador";
+    jugador.name = "enemigo";
     jugadoresImprimidos.set(jugadorImprimir.id, g);
     //metemos la id del jugador imprimido
     idJugadoresImprimidos.push(jugadorImprimir.id);
@@ -88,12 +88,23 @@ function textoEspera() {
 var prueba = false;
 //comprobacion se plataformas
 function checkOverlap(body1, body2) {
-    if (prueba == false) {
+    if ((body1 != null && body2 != null) && (body1.sprite && body2.sprite) && (nombreSprite(body1) && nombreSprite(body2))) {
+        console.log("Ambos muertos");
+    }else if(body1 != null && nombreSprite(body1) && (body1.sprite && body2.sprite)){
+        console.log("Muere " + body2.sprite.name);
+    }else if(body2 != null && nombreSprite(body2) && (body1.sprite && body2.sprite)){
+        console.log("Muere " + body1.sprite.name);
     }
-    prueba = true;
+    if((body1 != null && body2 != null) && (body1.sprite && body2.sprite)) return false;
     return true;
 }
-function pegar1(id) {
+
+function nombreSprite(body){
+    if(body.sprite && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
+    return false;
+}
+
+function pegar1(id, direccion) {
     jugadoresImprimidos.get(id).body.velocity.x = 0;
     if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(60, 58, 5, 22);
     else jugadoresImprimidos.get(id).body.setRectangle(60, 58, -5, 22);
@@ -106,7 +117,7 @@ function pegar1(id) {
     }, this);
 }
 
-function pegar2(id) {
+function pegar2(id, direccion) {
     jugadoresImprimidos.get(id).body.velocity.x = 0;
     //Client.pegar(data,"hit1");
     if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(70, 58, 10, 22);
