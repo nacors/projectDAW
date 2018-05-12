@@ -9,6 +9,7 @@ var idContactoPermitido = [5, 6, 19];
 var Game = {};
 var miid = 0;
 var mensaje;
+var mensajeOculto;
 var map;
 var otromapa;
 var posx, posy;
@@ -20,9 +21,11 @@ var propiedadesTexto = {
     fontSize: 40
 };
 var quieto = true;
-var direccion = "right";
 var countCon = 0;
-var numeroMapa = "hola";
+var direccion;
+var contadorTecla = 0;
+var mostrarMensajeOculto = false;
+var frase;
 Game.playerMap = new Map();
 
 
@@ -130,7 +133,35 @@ Game.update = function () {
             pegar2(miid, direccion);
         }
     }
+    //parte de easter egg
+    if (game.input.keyboard.addKey(Phaser.Keyboard.R).isDown) {
+        contadorTecla += 1;
+        if (contadorTecla == 200) {
+            imprimirMensajeOculto("rius");
+            cuentaAtras(5);
+            mostrarMensajeOculto = true;
+        }
+    } else if (game.input.keyboard.addKey(Phaser.Keyboard.I).isDown) {
+        contadorTecla += 1;
+        if (contadorTecla == 200) {
+            imprimirMensajeOculto("inma");
+            cuentaAtras(5);
+            mostrarMensajeOculto = true;
+        }
+    } else if (game.input.keyboard.addKey(Phaser.Keyboard.S).isDown) {
+        contadorTecla += 1;
+        if (contadorTecla == 200) {
+            imprimirMensajeOculto("samuel");
+            cuentaAtras(5);
+            mostrarMensajeOculto = true;
+        }
+    }
+    //easter egg
+    if (mostrarMensajeOculto === true) {
+        mensajeOculto.position.x = jugadoresImprimidos.get(miid).x;
+        mensajeOculto.position.y = jugadoresImprimidos.get(miid).y - 20;
 
+    }
 }
 
 Game.render = function () {
