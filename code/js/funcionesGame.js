@@ -82,7 +82,6 @@ function textoEspera() {
         mensaje.anchor.setTo(0.5, 0.5);
         mensaje.setShadow(1, 1, 'black', 5);
     }
-
 }
 
 var prueba = false;
@@ -133,6 +132,28 @@ function moverJugador(id, direccion) {
         jugadoresImprimidos.get(id).body.moveRight(700);
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
     }
-
 }
 
+function imprimirMensajeOculto(quien) {
+    if (quien == "rius") {
+        frase = frasesRius[parseInt(Math.random() * (frasesRius.length - 0) + 0)];
+    } else if (quien == "samuel") {
+        frase = frasesSamuel[parseInt(Math.random() * (frasesSamuel.length - 0) + 0)];
+    } else if (quien == "inma") {
+        frase = frasesInma[parseInt(Math.random() * (frasesInma.length - 0) + 0)];
+    }
+    mensajeOculto = game.add.text(jugadoresImprimidos.get(miid).x, jugadoresImprimidos.get(miid).y - 20, frase, {
+        fill: "black",
+        stroke: "black",
+        fontSize: 10
+    });
+    mensajeOculto.anchor.setTo(0.5, 0.5);
+}
+
+function cuentaAtras(segundos) {
+    setTimeout(function () {
+        mostrarMensajeOculto = false;
+        mensajeOculto.destroy();
+        contadorTecla = 0;
+    }, segundos * 1000)
+}
