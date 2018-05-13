@@ -15,7 +15,7 @@ function imprimirJugador(jugadorImprimir) {
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
     game.physics.p2.enable(jugador, true);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
-    jugador.body.setRectangle(30, 47, -10, 18);
+    jugador.body.setRectangle(35, 58, -10, 22);
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
     jugador.body.immovable = true;
@@ -85,21 +85,49 @@ function textoEspera() {
 }
 
 var prueba = false;
-//comprobacion se plataformas
+//comprobacion de pegar
 function checkOverlap(body1, body2) {
     if ((body1 != null && body2 != null) && (body1.sprite && body2.sprite) && (nombreSprite(body1) && nombreSprite(body2))) {
         console.log("Ambos muertos");
-    }else if(body1 != null && nombreSprite(body1) && (body1.sprite && body2.sprite)){
-        console.log("Muere " + body2.sprite.name);
-    }else if(body2 != null && nombreSprite(body2) && (body1.sprite && body2.sprite)){
-        console.log("Muere " + body1.sprite.name);
+    } else if (body1 != null && nombreSprite(body1) && (body1.sprite && body2.sprite)) {
+        if (body2.x < body1.x && direccion == "left") {
+            // console.log("Muere " + body2.sprite.name);
+            // body2.sprite.tint = Math.random() * 0xffffff;
+            //solo hacemos que se ponga en opacity en el cliente que realiza la accion
+            //no es exacta en la pantalla del enemigo
+            if (jugadoresImprimidos.get(miid) == body1.sprite) {
+                body2.sprite.alpha = 0.2;
+            }
+            volverTransparenciaNormal();
+        } else if (body2.x > body1.x && direccion == "right") {
+            // console.log("Muere " + body2.sprite.name);
+            if (jugadoresImprimidos.get(miid) == body1.sprite) {
+                body2.sprite.alpha = 0.2;
+            }
+            volverTransparenciaNormal();
+        }
+
+    } else if (body2 != null && nombreSprite(body2) && (body1.sprite && body2.sprite)) {
+        if (body2.x > body1.x && direccion == "left") {
+            // console.log("Muere " + body1.sprite.name);
+            if (jugadoresImprimidos.get(miid) == body2.sprite) {
+                body1.sprite.alpha = 0.2;
+            }
+            volverTransparenciaNormal();
+        } else if (body2.x < body1.x && direccion == "right") {
+            // console.log("Muere " + body1.sprite.name);
+            if (jugadoresImprimidos.get(miid) == body2.sprite) {
+                body1.sprite.alpha = 0.2;
+            }
+            volverTransparenciaNormal();
+        }
     }
-    if((body1 != null && body2 != null) && (body1.sprite && body2.sprite)) return false;
+    if ((body1 != null && body2 != null) && (body1.sprite && body2.sprite)) return false;
     return true;
 }
 
-function nombreSprite(body){
-    if(body.sprite && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
+function nombreSprite(body) {
+    if (body.sprite && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
     return false;
 }
 
@@ -167,4 +195,26 @@ function cuentaAtras(segundos) {
         mensajeOculto.destroy();
         contadorTecla = 0;
     }, segundos * 1000)
+}
+
+function cargarMapa(numMapa) {
+    //dibujamos el mapa para el jugador
+    map = game.add.tilemap(`mapa${numMapa}`);
+    map.addTilesetImage('paisaje', `tileset${numMapa}`);
+    nocolision = map.createLayer('nocolision');
+    suelo = map.createLayer('suelo');
+    doblesuelo = map.createLayer('doblesuelo');
+    arboles = map.createLayer('arboles');
+    map.setCollisionBetween(40, 216, true, suelo);
+    map.setCollisionBetween(40, 216, true, doblesuelo);
+    game.physics.p2.convertTilemap(map, suelo);
+    game.physics.p2.convertTilemap(map, doblesuelo);
+}
+
+function volverTransparenciaNormal() {
+    setTimeout(function () {
+        for (let ids of idJugadoresImprimidos) {
+            jugadoresImprimidos.get(ids).alpha = 1;
+        }
+    }, 1000);
 }

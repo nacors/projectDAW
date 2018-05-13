@@ -33,18 +33,7 @@ Game.playerMap = new Map();
 Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     if (jugadoresImprimidos.size < 1) {
         miid = id;
-        //dibujamos el mapa para el jugador
-        map = game.add.tilemap(`mapa${numMapa}`);
-        map.addTilesetImage('paisaje', `tileset${numMapa}`);
-        nocolision = map.createLayer('nocolision');
-        suelo = map.createLayer('suelo');
-        doblesuelo = map.createLayer('doblesuelo');
-        arboles = map.createLayer('arboles');
-        map.setCollisionBetween(40, 216, true, suelo);
-        map.setCollisionBetween(40, 216, true, doblesuelo);
-        game.physics.p2.convertTilemap(map, suelo);
-        game.physics.p2.convertTilemap(map, doblesuelo);
-        countCon = 1;
+        cargarMapa(numMapa);
     }
 
     let g = game.add.sprite(x, y, 'caballero');
@@ -214,7 +203,7 @@ Game.movimiento = function (id, data, accion, direccion) {
 Game.iniciarPartida = function () {
     propiedadesTexto.fontSize = 50;
     sePuedeJugar = false;
-    var segundos = 3;
+    var segundos = 1;
     var imprimirSegundos;
     setTimeout(function () {
         mensaje.setText("La partida empieza en...");
