@@ -135,10 +135,10 @@ function pegar1(id, direccion) {
     jugadoresImprimidos.get(id).body.velocity.x = 0;
     if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(60, 58, 5, 22);
     else jugadoresImprimidos.get(id).body.setRectangle(60, 58, -5, 22);
-    quieto = false;
+    if(id == miid) quieto = false;
     jugadoresImprimidos.get(id).animations.play('hit1', 10, false);
     jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
-        quieto = true;
+        if(id == miid) quieto = true;
         if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
     }, this);
@@ -149,11 +149,10 @@ function pegar2(id, direccion) {
     //Client.pegar(data,"hit1");
     if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(70, 58, 10, 22);
     else jugadoresImprimidos.get(id).body.setRectangle(70, 58, -10, 22);
-    quieto = false;
-    quieto = false;
+    if(id == miid) quieto = false;
     jugadoresImprimidos.get(id).animations.play('hit2', 10, false);
     jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
-        quieto = true;
+        if(id == miid) quieto = true;
         if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
     }, this);
