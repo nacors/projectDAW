@@ -135,10 +135,10 @@ function pegar1(id, direccion) {
     jugadoresImprimidos.get(id).body.velocity.x = 0;
     if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(60, 58, 5, 22);
     else jugadoresImprimidos.get(id).body.setRectangle(60, 58, -5, 22);
-    if(id == miid) quieto = false;
+    if (id == miid) quieto = false;
     jugadoresImprimidos.get(id).animations.play('hit1', 10, false);
     jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
-        if(id == miid) quieto = true;
+        if (id == miid) quieto = true;
         if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
     }, this);
@@ -149,10 +149,10 @@ function pegar2(id, direccion) {
     //Client.pegar(data,"hit1");
     if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(70, 58, 10, 22);
     else jugadoresImprimidos.get(id).body.setRectangle(70, 58, -10, 22);
-    if(id == miid) quieto = false;
+    if (id == miid) quieto = false;
     jugadoresImprimidos.get(id).animations.play('hit2', 10, false);
     jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
-        if(id == miid) quieto = true;
+        if (id == miid) quieto = true;
         if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
     }, this);
@@ -199,11 +199,21 @@ function cuentaAtras(segundos) {
 function cargarMapa(numMapa) {
     //dibujamos el mapa para el jugador
     map = game.add.tilemap(`mapa${numMapa}`);
-    map.addTilesetImage('paisaje', `tileset${numMapa}`);
-    nocolision = map.createLayer('nocolision');
-    suelo = map.createLayer('suelo');
-    doblesuelo = map.createLayer('doblesuelo');
-    arboles = map.createLayer('arboles');
+    //por problemas con capas, en el mapa 1 el orden de carga es diferente
+    if (numMapa == 1) {
+        map.addTilesetImage('paisaje', `tileset${numMapa}`);
+        arboles = map.createLayer('arboles');
+        doblesuelo = map.createLayer('doblesuelo');
+        nocolision = map.createLayer('nocolision');
+        suelo = map.createLayer('suelo');
+    //otros mapas no presentan este problema
+    } else {
+        map.addTilesetImage('paisaje', `tileset${numMapa}`);
+        nocolision = map.createLayer('nocolision');
+        suelo = map.createLayer('suelo');
+        doblesuelo = map.createLayer('doblesuelo');
+        arboles = map.createLayer('arboles');
+    }
     map.setCollisionBetween(0, 1000, true, suelo);
     map.setCollisionBetween(40, 216, true, doblesuelo);
     game.physics.p2.convertTilemap(map, suelo);

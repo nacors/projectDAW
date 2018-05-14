@@ -33,7 +33,7 @@ Game.playerMap = new Map();
 Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     if (jugadoresImprimidos.size < 1) {
         miid = id;
-        cargarMapa(2);
+        cargarMapa(1);
     }
 
     let g = game.add.sprite(x, y, 'caballero');
@@ -164,9 +164,9 @@ Game.init = function () {
 };
 
 Game.preload = function () {
-    for (let numMapa = 1; numMapa < 4; numMapa++) {
+    for (let numMapa = 1; numMapa < 3; numMapa++) {
         game.load.tilemap(`mapa${numMapa}`, `assets/mapas/mapa${numMapa}/elMapa${numMapa}.json`, null, Phaser.Tilemap.TILED_JSON);
-        if(numMapa != 1)game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.png`, 16, 16);
+        if (numMapa != 1) game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.png`, 16, 16);
         else game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.gif`, 16, 16);
     }
     game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 80);
