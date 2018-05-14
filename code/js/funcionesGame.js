@@ -204,7 +204,7 @@ function cargarMapa(numMapa) {
     suelo = map.createLayer('suelo');
     doblesuelo = map.createLayer('doblesuelo');
     arboles = map.createLayer('arboles');
-    map.setCollisionBetween(40, 216, true, suelo);
+    map.setCollisionBetween(0, 1000, true, suelo);
     map.setCollisionBetween(40, 216, true, doblesuelo);
     game.physics.p2.convertTilemap(map, suelo);
     game.physics.p2.convertTilemap(map, doblesuelo);

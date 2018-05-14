@@ -33,7 +33,7 @@ Game.playerMap = new Map();
 Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     if (jugadoresImprimidos.size < 1) {
         miid = id;
-        cargarMapa(numMapa);
+        cargarMapa(2);
     }
 
     let g = game.add.sprite(x, y, 'caballero');
@@ -52,6 +52,9 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     //jugador.body.loadPolygon("ninja_escalado", "correr");
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
+    game.world.setBounds(0, 0, 6400, 900);
+    game.camera.follow(jugador);
+    game.renderer.renderSession.roundPixels = true
     jugadoresImprimidos.set(id, g);
     idJugadoresImprimidos.push(id);
     textoEspera();
@@ -163,7 +166,8 @@ Game.init = function () {
 Game.preload = function () {
     for (let numMapa = 1; numMapa < 4; numMapa++) {
         game.load.tilemap(`mapa${numMapa}`, `assets/mapas/mapa${numMapa}/elMapa${numMapa}.json`, null, Phaser.Tilemap.TILED_JSON);
-        game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.png`, 16, 16);
+        if(numMapa != 1)game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.png`, 16, 16);
+        else game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.gif`, 16, 16);
     }
     game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 80);
 };
