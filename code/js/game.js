@@ -164,6 +164,7 @@ Game.init = function () {
 };
 
 Game.preload = function () {
+    //cargamos los dos mapas
     for (let numMapa = 1; numMapa < 3; numMapa++) {
         game.load.tilemap(`mapa${numMapa}`, `assets/mapas/mapa${numMapa}/elMapa${numMapa}.json`, null, Phaser.Tilemap.TILED_JSON);
         if (numMapa != 1) game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.png`, 16, 16);

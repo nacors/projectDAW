@@ -97,6 +97,7 @@ function checkOverlap(body1, body2) {
             //no es exacta en la pantalla del enemigo
             if (jugadoresImprimidos.get(miid) == body1.sprite) {
                 body2.sprite.alpha = 0.2;
+                //crear funcion que elimine al jugador enemigo en su pantalla
             }
             volverTransparenciaNormal();
         } else if (body2.x > body1.x && direccion == "right") {
@@ -132,6 +133,7 @@ function nombreSprite(body) {
 }
 
 function pegar1(id, direccion) {
+    //quitar los magic numbers
     jugadoresImprimidos.get(id).body.velocity.x = 0;
     if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(60, 58, 5, 22);
     else jugadoresImprimidos.get(id).body.setRectangle(60, 58, -5, 22);

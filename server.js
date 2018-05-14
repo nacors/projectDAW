@@ -12,7 +12,7 @@ var jugadoresRoom = 0;
 var room = "sala";
 var roomcount = 0;
 server.lastPlayderID = 0;
-var numeroMapa = parseInt(Math.random() * (4 - 1) + 1);
+var numeroMapa = parseInt(Math.random() * (3 - 1) + 1);
 
 app.use('/css', express.static(__dirname + '/code/css'));
 app.use('/js', express.static(__dirname + '/code/js'));
@@ -82,7 +82,7 @@ io.on('connection', function (socket) {
         iniciarPartida(socket);
       }
     } else {
-      numeroMapa = parseInt(Math.random() * (4 - 1) + 1);
+      numeroMapa = parseInt(Math.random() * (3 - 1) + 1);
       roomcount++;
       socket.join(room + roomcount);
       jugadoresRoom = 1;
