@@ -1,6 +1,6 @@
 var frasesRius = ["El windows es una mierda!", "Usa un navegador de verdad!", "Viteh!", "Que eres, de Madrid?"];
 var frasesInma = ["Estamos a lo que estamos?", "Venga, vamos a ver el pdf", "Esto esta mal", "Me gusta mucho"];
-var frasesSamuel = ["Que tal vais?", "Chicos, hoy toca un tipo test", "Teneis la entrega de 'fora de termini'", "Si a mi me dicen que haces UML, te contrato"];
+var frasesSamuel = ["Que tal vais?", "Chicos, hoy toca un tipo test", "Teneis la entrega de 'fora de termini'", "Si a mi me dices que haces UML, te contrato"];
 
 //imprime jugadores si alguien se ha conectado
 function imprimirJugador(jugadorImprimir) {
@@ -91,19 +91,16 @@ function checkOverlap(body1, body2) {
         console.log("Ambos muertos");
     } else if (body1 != null && nombreSprite(body1) && (body1.sprite && body2.sprite)) {
         if (body2.x < body1.x && direccion == "left") {
-            // console.log("Muere " + body2.sprite.name);
-            // body2.sprite.tint = Math.random() * 0xffffff;
-            //solo hacemos que se ponga en opacity en el cliente que realiza la accion
-            //no es exacta en la pantalla del enemigo
             if (jugadoresImprimidos.get(miid) == body1.sprite) {
                 body2.sprite.alpha = 0.2;
-                //crear funcion que elimine al jugador enemigo en su pantalla
+                Client.opacityEnemigo("ocultar");
             }
             volverTransparenciaNormal();
         } else if (body2.x > body1.x && direccion == "right") {
             // console.log("Muere " + body2.sprite.name);
             if (jugadoresImprimidos.get(miid) == body1.sprite) {
                 body2.sprite.alpha = 0.2;
+                Client.opacityEnemigo("ocultar");
             }
             volverTransparenciaNormal();
         }
@@ -113,12 +110,14 @@ function checkOverlap(body1, body2) {
             // console.log("Muere " + body1.sprite.name);
             if (jugadoresImprimidos.get(miid) == body2.sprite) {
                 body1.sprite.alpha = 0.2;
+                Client.opacityEnemigo("ocultar");
             }
             volverTransparenciaNormal();
         } else if (body2.x < body1.x && direccion == "right") {
             // console.log("Muere " + body1.sprite.name);
             if (jugadoresImprimidos.get(miid) == body2.sprite) {
                 body1.sprite.alpha = 0.2;
+                Client.opacityEnemigo("ocultar");
             }
             volverTransparenciaNormal();
         }
@@ -208,7 +207,7 @@ function cargarMapa(numMapa) {
         doblesuelo = map.createLayer('doblesuelo');
         nocolision = map.createLayer('nocolision');
         suelo = map.createLayer('suelo');
-    //otros mapas no presentan este problema
+        //otros mapas no presentan este problema
     } else {
         map.addTilesetImage('paisaje', `tileset${numMapa}`);
         nocolision = map.createLayer('nocolision');
@@ -227,5 +226,15 @@ function volverTransparenciaNormal() {
         for (let ids of idJugadoresImprimidos) {
             jugadoresImprimidos.get(ids).alpha = 1;
         }
+        Client.opacityEnemigo("mostrar");
     }, 1000);
+}
+
+function opacityEnemigo(accion) {
+    if (accion == "ocultar") {
+        //cogemos nuestra id ya que se hace un broadcast del server
+        jugadoresImprimidos.get(miid).alpha = 0;
+    } else if (accion == "mostrar") {
+        jugadoresImprimidos.get(miid).alpha = 1;
+    }
 }

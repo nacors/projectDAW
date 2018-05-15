@@ -66,59 +66,37 @@ app.get('/iniciar', function (req, res) {
 });
 
 //FUNCIONES DE MULTIJUGADOR
-//funciones de peticion del lado cliente en el menu de incio
 io.on('connection', function (socket) {
   //crea un jugador nuevo
   socket.on('newplayer', function () {
     linea();
     console.log("--usuario conectado al inicio");
-    // console.log(jugadoresRoom);
     //jugadores room es un contador que guarda cuanjos jugadores hay en la última room creada
     //si hay mas de 2 se resetea y se crea una nueva room
-    if (jugadoresRoom < 2) {
-      socket.join(room + roomcount);
-      jugadoresRoom++;
-      if (jugadoresRoom == 2) {
-        iniciarPartida(socket);
-      }
-    } else {
-      numeroMapa = parseInt(Math.random() * (3 - 1) + 1);
-      roomcount++;
-      socket.join(room + roomcount);
-      jugadoresRoom = 1;
-    }
-    jugadoresTodos[socket.id] = funcion.getRoom(socket);
-    // console.log(funcion.getRoom(socket));
+    roomLlena(socket);
+
     socket.player = {
       id: server.lastPlayderID++,
       x: server.lastPlayderID % 2 == 0 ? 300 : 100,
       y: 700,
       numMap: numeroMapa
     };
-    // console.log(socket.player);
-    //creamos una objeto de jugadores donde la key es la room y el valor es una array de los jugadores que guarda todos aquellos que se han conectado
-    if (room + roomcount in jugadores) {
-      jugadores[room + roomcount].push(socket.player);
-    } else {
-      jugadores[room + roomcount] = [];
-      jugadores[room + roomcount].push(socket.player);
-    }
-    // console.log(jugadores);
+    guardarJugadresRoom(socket);
     nuevoJugador(socket, jugadores[room + roomcount]);
-    //al mover el personaje
-    socket.on('disconnect', function () {
-      linea();
-      console.log("--usuario desconectado del inico");
-      let id = socket.id;
-      let sala = jugadoresTodos[id];
-      delete jugadores[sala];
-      delete jugadoresTodos[id];
-      //reiniciamos las paginas de todos
-      socket.broadcast.to(sala).emit('finJuego');
-      jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
-    });
   });
 
+  //al desconectar del juego
+  socket.on('disconnect', function () {
+    linea();
+    console.log("--usuario desconectado del inico");
+    let id = socket.id;
+    let sala = jugadoresTodos[id];
+    delete jugadores[sala];
+    delete jugadoresTodos[id];
+    //reiniciamos las paginas de todos
+    socket.broadcast.to(sala).emit('finJuego');
+    jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
+  });
 
   //enviar moviemiento a los demas usuarios
   socket.on('presionar', function (data, direccion) {
@@ -151,6 +129,11 @@ io.on('connection', function (socket) {
     socket.broadcast.to(funcion.getRoom(socket)).emit('atacar', socket.player.id, ataque, direccion);
   });
 
+  //matar al enemigo contrario
+  socket.on("opacityEnemigo", function (accion) {
+    socket.broadcast.to(funcion.getRoom(socket)).emit('opacityEnemigo', accion);
+  });
+
 });
 
 //funciones del aldo cliente en el juego
@@ -178,9 +161,35 @@ function nuevoJugador(socket, jugadores) {
 
 //funcion que inicia la partida cuando hay 2 jugadores conectados
 function iniciarPartida(socket) {
-  console.log("inicar partida servidor");
+  //console.log("inicar partida servidor");
   io.sockets.in(funcion.getRoom(socket)).emit('inicarPartida');
 }
 
+//metodos de la room
+function roomLlena(socket) {
+  if (jugadoresRoom < 2) {
+    socket.join(room + roomcount);
+    jugadoresRoom++;
+    if (jugadoresRoom == 2) {
+      iniciarPartida(socket);
+    }
+  } else {
+    numeroMapa = parseInt(Math.random() * (3 - 1) + 1);
+    roomcount++;
+    socket.join(room + roomcount);
+    jugadoresRoom = 1;
+  }
+  jugadoresTodos[socket.id] = funcion.getRoom(socket);
+}
 
+function guardarJugadresRoom(socket) {
+  //creamos una objeto de jugadores donde la key es la room 
+  //y el valor es una array de los jugadores que guarda todos aquellos que se han conectado
+  if (room + roomcount in jugadores) {
+    jugadores[room + roomcount].push(socket.player);
+  } else {
+    jugadores[room + roomcount] = [];
+    jugadores[room + roomcount].push(socket.player);
+  }
+}
 

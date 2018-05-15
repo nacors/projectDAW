@@ -26,10 +26,15 @@ Client.soltar = function (data) {
     Client.socket.emit('soltar', data);
 }
 
+//metodos de ataque
 Client.ataque = function (ataque, direccion) {
     Client.socket.emit("atacar", ataque, direccion);
 }
 
+//metodo para elimianr el enemigo
+Client.opacityEnemigo = function(accion){
+    Client.socket.emit("opacityEnemigo", accion);
+}
 
 //FUNCIONES QUE SE RECIBEN DEL SERVIDOR***********************************************************
 Client.socket.on('malIniciado', function () {
@@ -85,3 +90,6 @@ Client.socket.on("atacar", function (id, ataque, direccion) {
     Game.ataqueEnemigo(id, ataque, direccion);
 });
 
+Client.socket.on("opacityEnemigo", function(accion){
+    Game.opacityEnemigo(accion);
+})

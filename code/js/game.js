@@ -78,6 +78,11 @@ Game.create = function () {
     hit2 = game.input.keyboard.addKey(Phaser.Keyboard.X);
     Client.askNewPlayer();
     game.physics.p2.setPostBroadphaseCallback(checkOverlap, this);
+
+    //contador fps
+    game.time.advancedTiming = true;
+    game.time.desiredFps = 30;
+    console.log(game.time);
 };
 
 Game.update = function () {
@@ -157,6 +162,7 @@ Game.update = function () {
 }
 
 Game.render = function () {
+    game.debug.text(game.time.desiredFps, 2, 14, "black");
 }
 
 Game.init = function () {
@@ -232,6 +238,10 @@ Game.ataqueEnemigo = function (id, ataque, direccion) {
     } else if (ataque == "hit2") {
         pegar2(id, direccion);
     }
+}
+
+Game.opacityEnemigo = function(accion){
+    opacityEnemigo(accion);
 }
 game.state.add('Game', Game);
 game.state.start('Game');
