@@ -47,14 +47,14 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     jugador.animations.add('stay', [1, 2, 3, 4], 60, true);
     jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
-    game.physics.p2.enable(jugador, true);
+    game.physics.p2.enable(jugador, /*true*/);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
     //jugador.body.loadPolygon("ninja_escalado", "correr");
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
     game.world.setBounds(0, 0, 6400, 900);
-    if(id == miid)game.camera.follow(jugador);
+    if (id == miid) game.camera.follow(jugador);
     jugadoresImprimidos.set(id, g);
     idJugadoresImprimidos.push(id);
     textoEspera();
@@ -98,14 +98,12 @@ Game.update = function () {
             direccion = "left";
             Client.presionar(data, "izquierda");
             moverJugador(miid, "izquierda");
-            fondo.x = game.camera.x * -0.1;
-            fondo.y = game.camera.y * -0.1;
+            movimientoFondo();
         } else if (cursors.right.isDown && quieto) {
             direccion = "right";
             Client.presionar(data, "derecha");
             moverJugador(miid, "derecha");
-            fondo.x = game.camera.x * -0.1;
-            fondo.y = game.camera.y * -0.1;
+            movimientoFondo();
         } else if (quieto) {
             if (jugadoresImprimidos.size != 0) {
                 Client.soltar(data);
@@ -127,42 +125,21 @@ Game.update = function () {
         if (hit1.isDown) {
             Client.ataque("hit1", direccion);
             pegar1(miid, direccion);
-        }
-        if (hit2.isDown) {
+        } else if (hit2.isDown) {
             Client.ataque("hit2", direccion);
             pegar2(miid, direccion);
         }
     }
     //parte de easter egg
-    if (game.input.keyboard.addKey(Phaser.Keyboard.R).isDown) {
-        contadorTecla += 1;
-        if (contadorTecla == 200) {
-            imprimirMensajeOculto("rius");
-            cuentaAtras(5);
-            mostrarMensajeOculto = true;
-        }
-    } else if (game.input.keyboard.addKey(Phaser.Keyboard.I).isDown) {
-        contadorTecla += 1;
-        if (contadorTecla == 200) {
-            imprimirMensajeOculto("inma");
-            cuentaAtras(5);
-            mostrarMensajeOculto = true;
-        }
-    } else if (game.input.keyboard.addKey(Phaser.Keyboard.S).isDown) {
-        contadorTecla += 1;
-        if (contadorTecla == 200) {
-            imprimirMensajeOculto("samuel");
-            cuentaAtras(5);
-            mostrarMensajeOculto = true;
-        }
-    }
-    //easter egg
-    if (mostrarMensajeOculto === true) {
-        mensajeOculto.position.x = jugadoresImprimidos.get(miid).x;
-        mensajeOculto.position.y = jugadoresImprimidos.get(miid).y - 20;
+    easterEgg();
 
-    }
-    
+    //revisar si se ha caido al vacio (INTENTO DE HACER PARA QEU SE CAIGA)
+    // revisarCaidoFueraMapa();
+    //COSAS QUE HACER MÑANA
+    // - QUE SE CAIGA CUANDO TOCA X=0
+    // - RESPAWN
+    // - MATAR
+
 }
 
 Game.render = function () {
@@ -181,7 +158,7 @@ Game.preload = function () {
         else game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.gif`, 16, 16);
     }
     game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 80);
-    game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`); 
+    game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`);
 };
 
 //movemos al jugadopr enemigo sincornizando los movimientos
@@ -219,7 +196,7 @@ Game.movimiento = function (id, data, accion, direccion) {
 Game.iniciarPartida = function () {
     propiedadesTexto.fontSize = 50;
     sePuedeJugar = false;
-    var segundos = 1;
+    var segundos = 5;
     var imprimirSegundos;
     setTimeout(function () {
         mensaje.setText("La partida empieza en...");
@@ -245,7 +222,7 @@ Game.ataqueEnemigo = function (id, ataque, direccion) {
     }
 }
 
-Game.opacityEnemigo = function(accion){
+Game.opacityEnemigo = function (accion) {
     opacityEnemigo(accion);
 }
 game.state.add('Game', Game);

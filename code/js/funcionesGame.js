@@ -21,7 +21,7 @@ function imprimirJugador(jugadorImprimir) {
     jugador.body.immovable = true;
     jugador.body.moves = false;
     jugador.name = "enemigo";
-    if(jugadorImprimir.id == miid)game.camera.follow(jugador);
+    if (jugadorImprimir.id == miid) game.camera.follow(jugador);
     jugadoresImprimidos.set(jugadorImprimir.id, g);
     //metemos la id del jugador imprimido
     idJugadoresImprimidos.push(jugadorImprimir.id);
@@ -209,9 +209,10 @@ function cargarMapa(numMapa) {
         doblesuelo = map.createLayer('doblesuelo');
         nocolision = map.createLayer('nocolision');
         suelo = map.createLayer('suelo');
-        
+
         //otros mapas no presentan este problema
     } else {
+        fondo = game.add.tileSprite(0, 0, 7000, 900, 'background');
         map.addTilesetImage('paisaje', `tileset${numMapa}`);
         nocolision = map.createLayer('nocolision');
         suelo = map.createLayer('suelo');
@@ -239,5 +240,54 @@ function opacityEnemigo(accion) {
         jugadoresImprimidos.get(miid).alpha = 0;
     } else if (accion == "mostrar") {
         jugadoresImprimidos.get(miid).alpha = 1;
+    }
+}
+
+//metodo que mueve el fondo del mapa para dar mas efecto de movimiento
+function movimientoFondo() {
+    fondo.x = game.camera.x * -0.1;
+    fondo.y = game.camera.y * -0.1;
+}
+
+//metodo de huevo de pascua
+function easterEgg() {
+    if (game.input.keyboard.addKey(Phaser.Keyboard.R).isDown) {
+        contadorTecla += 1;
+        if (contadorTecla == 200) {
+            imprimirMensajeOculto("rius");
+            cuentaAtras(5);
+            mostrarMensajeOculto = true;
+        }
+    } else if (game.input.keyboard.addKey(Phaser.Keyboard.I).isDown) {
+        contadorTecla += 1;
+        if (contadorTecla == 200) {
+            imprimirMensajeOculto("inma");
+            cuentaAtras(5);
+            mostrarMensajeOculto = true;
+        }
+    } else if (game.input.keyboard.addKey(Phaser.Keyboard.S).isDown) {
+        contadorTecla += 1;
+        if (contadorTecla == 200) {
+            imprimirMensajeOculto("samuel");
+            cuentaAtras(5);
+            mostrarMensajeOculto = true;
+        }
+    }
+    //easter egg
+    if (mostrarMensajeOculto === true) {
+        mensajeOculto.position.x = jugadoresImprimidos.get(miid).x;
+        mensajeOculto.position.y = jugadoresImprimidos.get(miid).y - 20;
+
+    }
+}
+
+//ejecutar esta funcion cada vez que el personaje se mueve
+function revisarCaidoFueraMapa() {
+    for (let jugador of idJugadoresImprimidos) {
+        // console.log(jugadoresImprimidos.get(jugador).y);
+        if (jugadoresImprimidos.get(jugador).y > 849) {
+            console.log(jugadoresImprimidos.get(jugador));
+            console.log("ha caido");
+        }
     }
 }

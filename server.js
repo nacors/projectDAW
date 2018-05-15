@@ -26,7 +26,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/juego', function (req, res) {
-  funcion.linea();
+  linea();
   console.log("--redireccionamos al juego");
   res.sendFile(__dirname + '/pages/game.html')
 });
