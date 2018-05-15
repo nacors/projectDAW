@@ -83,20 +83,21 @@ io.on('connection', function (socket) {
     };
     guardarJugadresRoom(socket);
     nuevoJugador(socket, jugadores[room + roomcount]);
+    //al desconectar del juego
+    socket.on('disconnect', function () {
+      linea();
+      console.log("--usuario desconectado del inico");
+      let id = socket.id;
+      let sala = jugadoresTodos[id];
+      delete jugadores[sala];
+      delete jugadoresTodos[id];
+      //reiniciamos las paginas de todos
+      socket.broadcast.to(sala).emit('finJuego');
+      jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
+    });
   });
 
-  //al desconectar del juego
-  socket.on('disconnect', function () {
-    linea();
-    console.log("--usuario desconectado del inico");
-    let id = socket.id;
-    let sala = jugadoresTodos[id];
-    delete jugadores[sala];
-    delete jugadoresTodos[id];
-    //reiniciamos las paginas de todos
-    socket.broadcast.to(sala).emit('finJuego');
-    jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
-  });
+  
 
   //enviar moviemiento a los demas usuarios
   socket.on('presionar', function (data, direccion) {
