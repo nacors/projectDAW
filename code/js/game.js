@@ -26,6 +26,7 @@ var direccion;
 var contadorTecla = 0;
 var mostrarMensajeOculto = false;
 var frase;
+var fondo;
 Game.playerMap = new Map();
 
 
@@ -80,6 +81,7 @@ Game.create = function () {
 
     //contador fps
     game.time.advancedTiming = true;
+    //game.time.desiredFps = 30;
 };
 
 Game.update = function () {
@@ -96,10 +98,14 @@ Game.update = function () {
             direccion = "left";
             Client.presionar(data, "izquierda");
             moverJugador(miid, "izquierda");
+            fondo.x = game.camera.x * -0.1;
+            fondo.y = game.camera.y * -0.1;
         } else if (cursors.right.isDown && quieto) {
             direccion = "right";
             Client.presionar(data, "derecha");
             moverJugador(miid, "derecha");
+            fondo.x = game.camera.x * -0.1;
+            fondo.y = game.camera.y * -0.1;
         } else if (quieto) {
             if (jugadoresImprimidos.size != 0) {
                 Client.soltar(data);
@@ -156,6 +162,7 @@ Game.update = function () {
         mensajeOculto.position.y = jugadoresImprimidos.get(miid).y - 20;
 
     }
+    
 }
 
 Game.render = function () {
@@ -174,6 +181,7 @@ Game.preload = function () {
         else game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.gif`, 16, 16);
     }
     game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 80);
+    game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`); 
 };
 
 //movemos al jugadopr enemigo sincornizando los movimientos

@@ -203,11 +203,13 @@ function cargarMapa(numMapa) {
     map = game.add.tilemap(`mapa${numMapa}`);
     //por problemas con capas, en el mapa 1 el orden de carga es diferente
     if (numMapa == 1) {
+        fondo = game.add.tileSprite(0, 0, 7000, 900, 'background');
         map.addTilesetImage('paisaje', `tileset${numMapa}`);
         arboles = map.createLayer('arboles');
         doblesuelo = map.createLayer('doblesuelo');
         nocolision = map.createLayer('nocolision');
         suelo = map.createLayer('suelo');
+        
         //otros mapas no presentan este problema
     } else {
         map.addTilesetImage('paisaje', `tileset${numMapa}`);
