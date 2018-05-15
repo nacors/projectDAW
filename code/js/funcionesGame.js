@@ -21,6 +21,7 @@ function imprimirJugador(jugadorImprimir) {
     jugador.body.immovable = true;
     jugador.body.moves = false;
     jugador.name = "enemigo";
+    if(jugadorImprimir.id == miid)game.camera.follow(jugador);
     jugadoresImprimidos.set(jugadorImprimir.id, g);
     //metemos la id del jugador imprimido
     idJugadoresImprimidos.push(jugadorImprimir.id);

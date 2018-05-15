@@ -53,8 +53,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
     game.world.setBounds(0, 0, 6400, 900);
-    game.camera.follow(jugador);
-    game.renderer.renderSession.roundPixels = true
+    if(id == miid)game.camera.follow(jugador);
     jugadoresImprimidos.set(id, g);
     idJugadoresImprimidos.push(id);
     textoEspera();
@@ -81,8 +80,6 @@ Game.create = function () {
 
     //contador fps
     game.time.advancedTiming = true;
-    game.time.desiredFps = 30;
-    console.log(game.time);
 };
 
 Game.update = function () {
