@@ -33,7 +33,7 @@ Game.playerMap = new Map();
 Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     if (jugadoresImprimidos.size < 1) {
         miid = id;
-        cargarMapa(1);
+        cargarMapa(numMapa);
     }
 
     let g = game.add.sprite(x, y, 'caballero');
