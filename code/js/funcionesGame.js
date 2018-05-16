@@ -68,11 +68,11 @@ if (window.performance.navigation.type == 1) {
 
 function iniciarPartida() {
     if (idJugadoresImprimidos[0] < idJugadoresImprimidos[1]) {
-        jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 10;
-        jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 20;
+        jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 2950;
+        jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 3450;
     } else {
-        jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 10;
-        jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 20;
+        jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 2950;
+        jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 3450;
     }
 }
 

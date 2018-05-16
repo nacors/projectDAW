@@ -21,6 +21,7 @@ var propiedadesTexto = {
     stroke: "black",
     fontSize: 40
 };
+var countSalto = 0;
 var quieto = true;
 var countCon = 0;
 var direccion;
@@ -119,11 +120,25 @@ Game.update = function () {
         }
         if (cursors.up.isDown) {
             while (salto) {
-                jugadoresImprimidos.get(miid).body.moveUp(1200);
+                console.log("pulsado");
+                if(countSalto < 2){
+                    console.log("saltando");
+                    jugadoresImprimidos.get(miid).body.moveUp(1200);   
+                }else if(jugadoresImprimidos.get(miid).body.velocity.y < 14 && jugadoresImprimidos.get(miid).body.velocity.y > -14){
+                    countSalto = 0;
+                }
                 salto = false;
             }
             Client.presionar(data, "salto");
         } else if (cursors.up.isUp) {
+            if(jugadoresImprimidos.get(miid) && jugadoresImprimidos.get(miid).body.velocity.y < 14 && jugadoresImprimidos.get(miid).body.velocity.y > -14){
+                countSalto = 0;
+            }
+            if(salto == false) {
+                countSalto++;
+                console.log(countSalto);
+            }
+
             salto = true;
         }
         if (hit1.isDown) {
