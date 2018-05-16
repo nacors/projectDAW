@@ -13,7 +13,7 @@ function imprimirJugador(jugadorImprimir) {
     jugador.animations.add('stay', [1, 2, 3, 4], 60, true);
     jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
-    game.physics.p2.enable(jugador, true);
+    game.physics.p2.enable(jugador);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
     jugador.body.fixedRotation = true;
@@ -93,7 +93,9 @@ function checkOverlap(body1, body2) {
     } else if (body1 != null && nombreSprite(body1) && (body1.sprite && body2.sprite)) {
         if (body2.x < body1.x && direccion == "left") {
             if (jugadoresImprimidos.get(miid) == body1.sprite) {
-                body2.sprite.alpha = 0.2;
+                body2.sprite.alpha = 0;
+                body2.sprite.velocity.x = 0;
+                body2.sprite.velocity.y = 0;
                 //ocultar al enemigo
                 Client.opacityEnemigo("ocultar");
             }
@@ -101,7 +103,9 @@ function checkOverlap(body1, body2) {
         } else if (body2.x > body1.x && direccion == "right") {
             // console.log("Muere " + body2.sprite.name);
             if (jugadoresImprimidos.get(miid) == body1.sprite) {
-                body2.sprite.alpha = 0.2;
+                body2.sprite.alpha = 0;
+                body2.sprite.velocity.x = 0;
+                body2.sprite.velocity.y = 0;
                 Client.opacityEnemigo("ocultar");
             }
             volverTransparenciaNormal();
@@ -111,14 +115,18 @@ function checkOverlap(body1, body2) {
         if (body2.x > body1.x && direccion == "left") {
             // console.log("Muere " + body1.sprite.name);
             if (jugadoresImprimidos.get(miid) == body2.sprite) {
-                body1.sprite.alpha = 0.2;
+                body1.sprite.alpha = 0;
+                body1.sprite.velocity.x = 0;
+                body1.sprite.velocity.y = 0;
                 Client.opacityEnemigo("ocultar");
             }
             volverTransparenciaNormal();
         } else if (body2.x < body1.x && direccion == "right") {
             // console.log("Muere " + body1.sprite.name);
             if (jugadoresImprimidos.get(miid) == body2.sprite) {
-                body1.sprite.alpha = 0.2;
+                body1.sprite.alpha = 0;
+                body1.sprite.velocity.x = 0;
+                body1.sprite.velocity.y = 0;
                 Client.opacityEnemigo("ocultar");
             }
             volverTransparenciaNormal();
@@ -232,18 +240,22 @@ function volverTransparenciaNormal() {
             jugadoresImprimidos.get(ids).alpha = 1;
         }
         Client.opacityEnemigo("mostrar");
-    }, 1000);
+    }, 3000);
 }
 
 function opacityJugador(accion) {
     if (accion == "ocultar") {
         //cogemos nuestra id ya que se hace un broadcast del server
         jugadoresImprimidos.get(miid).alpha = 0;
+        game.input.enabled = false;
     } else if (accion == "mostrar") {
+        game.input.enabled = true;
         jugadoresImprimidos.get(miid).alpha = 1;
-    }else if(accion == "fueraMapa"){
+    } else if (accion == "fueraMapa") {
         //hacemos desaparecer al enemigo que se ha caido en su pantalla
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 0;
+    }else if(accion == "reaparecer"){
+        jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 1;
     }
 }
 
@@ -288,15 +300,42 @@ function easterEgg() {
 //ejecutar esta funcion cada vez que el personaje se mueve
 function revisarCaidoFueraMapa() {
     //console.log("entramos a revisar");
-    //console.log(jugadoresImprimidos.get(jugador).y);
-    if (jugadoresImprimidos.get(miid).y > 849) {
+    //console.log(jugadoresImprimidos.get(miid).y);
+    //console.log(jugadoresImprimidos.get(miid).x);
+    if (jugadoresImprimidos.get(miid).y > 849 && !isFueraMapa) {
         //console.log(jugadoresImprimidos.get(jugador));
-        jugadoresImprimidos.get(miid).body.setRectangle(0, 0, 0, 0);
+        //jugadoresImprimidos.get(miid).body.setRectangle(0, 0, 0, 0);
         if (jugadoresImprimidos.get(miid).y > 890) {
             jugadoresImprimidos.get(miid).alpha = 0;
             game.input.enabled = false;
             Client.opacityEnemigo("fueraMapa");
+            isFueraMapa = true;
         }
+        jugadoresImprimidos.get(miid).alpha = 0;
+        game.input.enabled = false;
+        Client.opacityEnemigo("fueraMapa");
+        isFueraMapa = true;
         //console.log("ha caido");
     }
 }
+function reaparecerJugador() {
+    if (isFueraMapa) {
+        cont++;
+        if (cont == 200) {
+            jugadoresImprimidos.get(miid).body.x = 2800;
+            jugadoresImprimidos.get(miid).body.y = 500;
+            game.input.enabled = true;
+            isFueraMapa = false;
+            jugadoresImprimidos.get(miid).alpha = 1;
+            Client.opacityEnemigo("reaparecer");
+            cont = 0;
+        }
+
+    }
+
+}
+/*jugadoresImprimidos.get(miid).body.x = 2800;
+                jugadoresImprimidos.get(miid).body.y = 500;
+                game.input.enabled = true;
+                isFueraMapa = false;
+                jugadoresImprimidos.get(miid).alpha = 1;*/

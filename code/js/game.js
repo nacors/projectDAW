@@ -1,19 +1,28 @@
 //VARIABLES------------------------------------------------------------------------------------------------------------------------------------
-var suelo, arboles, jugador1, cursors, hit1;
-var Timer = 0;
-var salto = true;
+var game = new Phaser.Game(1910, 900, Phaser.CANVAS, document.getElementById('game'));
+var suelo, 
+    arboles, 
+    jugador1, 
+    cursors, 
+    hit1,
+    mensaje,
+    mensajeOculto,
+    map,
+    otromapa,
+    posx, posy,
+    direccion,
+    frase,
+    fondo;
+
 var jugadoresImprimidos = new Map();
 var idJugadoresImprimidos = [];
 var idJugadoresNoMover = [];
-var game = new Phaser.Game(1910, 900, Phaser.CANVAS, document.getElementById('game'));
-var idContactoPermitido = [5, 6, 19];
+
 var Game = {};
+
+var Timer = 0;
+var salto = true;
 var miid = 0;
-var mensaje;
-var mensajeOculto;
-var map;
-var otromapa;
-var posx, posy;
 var cantidadSalto = 0;
 var sePuedeJugar = true;
 var propiedadesTexto = {
@@ -24,11 +33,10 @@ var propiedadesTexto = {
 var countSalto = 0;
 var quieto = true;
 var countCon = 0;
-var direccion;
 var contadorTecla = 0;
 var mostrarMensajeOculto = false;
-var frase;
-var fondo;
+var isFueraMapa = false;
+var cont = 0;
 Game.playerMap = new Map();
 
 
@@ -49,7 +57,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
     jugador.animations.add('stay', [1, 2, 3, 4], 60, true);
     jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
-    game.physics.p2.enable(jugador, /*true*/);
+    game.physics.p2.enable(jugador, true);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
     //jugador.body.loadPolygon("ninja_escalado", "correr");
@@ -94,6 +102,12 @@ Game.update = function () {
                 x: jugadoresImprimidos.get(miid).x,
                 y: jugadoresImprimidos.get(miid).y
             };
+            for(let jugador of idJugadoresImprimidos){
+                if(jugador != miid){
+                    jugadoresImprimidos.get(jugador).tint = 0xFF5252;
+                }
+            }
+
         }
         //movimiento para el personaje que controla el jugador
         if (cursors.left.isDown && quieto) {
@@ -151,13 +165,9 @@ Game.update = function () {
     }
     //parte de easter egg
     easterEgg();
+    reaparecerJugador();
 
-    //revisar si se ha caido al vacio (INTENTO DE HACER PARA QEU SE CAIGA)
-    // revisarCaidoFueraMapa();
-    //COSAS QUE HACER MÑANA
-    // - QUE SE CAIGA CUANDO TOCA X=0
-    // - RESPAWN
-    // - MATAR
+    
 
 }
 
@@ -176,7 +186,7 @@ Game.preload = function () {
         if (numMapa != 1) game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.png`, 16, 16);
         else game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.gif`, 16, 16);
     }
-    game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 80);
+    game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 81);
     game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`);
 };
 
