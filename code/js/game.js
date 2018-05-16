@@ -37,11 +37,8 @@ var contadorTecla = 0;
 var mostrarMensajeOculto = false;
 var isFueraMapa = false;
 var cont = 0;
-<<<<<<< HEAD
 var murcielagos = [];
-=======
 var bordeMapa = 849;
->>>>>>> 672faa88c445f2a6732d4613b38ac425b3f5aba6
 Game.playerMap = new Map();
 
 
@@ -97,13 +94,8 @@ Game.create = function () {
     //contador fps
     game.time.advancedTiming = true;
     //game.time.desiredFps = 30;
-<<<<<<< HEAD
-    var fondo = game.add.audio("fondo");
-    fondo.loopFull(0.3);
-=======
     // var fondo = game.add.audio("fondo");
     // fondo.loopFull(0.6);
->>>>>>> 672faa88c445f2a6732d4613b38ac425b3f5aba6
 };
 
 Game.update = function () {
@@ -200,6 +192,7 @@ Game.preload = function () {
     game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 81);
     game.load.spritesheet('murcielago', 'assets/imagenes/murcielagos/murcielago.png', 32, 32);
     game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`);
+    game.load.image("pocion", `assets/imagenes/pociones/pocion.png`);
 };
 
 //movemos al jugadopr enemigo sincornizando los movimientos
@@ -267,34 +260,34 @@ Game.opacityEnemigo = function (accion) {
     opacityJugador(accion);
 }
 
-Game.crearMurcielagos = function(direccion, y){
+Game.crearMurcielagos = function (direccion, y) {
     var x;
     var sprite;
     var datosMurcielagos;
     var murcielagosDer = {
-        0: [y+0, 600],
-        1: [y+20, 500],
-        2: [y+60, 700],
-        3: [y+80, 400],
-        4: [y+90, 600]
+        0: [y + 0, 600],
+        1: [y + 20, 500],
+        2: [y + 60, 700],
+        3: [y + 80, 400],
+        4: [y + 90, 600]
     }
     var murcielagosIzq = {
-        0: [y+0, -600],
-        1: [y+20, -500],
-        2: [y+60, -700],
-        3: [y+80, -400],
-        4: [y+90, -600]
+        0: [y + 0, -600],
+        1: [y + 20, -500],
+        2: [y + 60, -700],
+        3: [y + 80, -400],
+        4: [y + 90, -600]
     }
-    if(direccion == "derecha"){
+    if (direccion == "derecha") {
         x = 50;
-        sprite = [4,5,6,7];
+        sprite = [4, 5, 6, 7];
         datosMurcielagos = murcielagosDer;
-    }else{
+    } else {
         x = 6400;
-        sprite = [12,13,14,15];
+        sprite = [12, 13, 14, 15];
         datosMurcielagos = murcielagosIzq;
     }
-    for(let i = 0; i < 5; i++){
+    for (let i = 0; i < 5; i++) {
         var murcielago = game.add.sprite(x, datosMurcielagos[i][0], 'murcielago');
         game.physics.p2.enable(murcielago, false);
         murcielago.body.kinematic = true;

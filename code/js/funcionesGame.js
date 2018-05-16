@@ -226,6 +226,9 @@ function cargarMapa(numMapa) {
     map.setCollisionBetween(40, 216, true, doblesuelo);
     game.physics.p2.convertTilemap(map, suelo);
     game.physics.p2.convertTilemap(map, doblesuelo);
+
+    //ponemos pociones aleatoriamente en el mapa
+    pocionesAleatorias();
 }
 
 function volverTransparenciaNormal() {
@@ -248,7 +251,7 @@ function opacityJugador(accion) {
     } else if (accion == "fueraMapa") {
         //hacemos desaparecer al enemigo que se ha caido en su pantalla
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 0;
-    }else if(accion == "reaparecer"){
+    } else if (accion == "reaparecer") {
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 1;
     }
 }
@@ -315,7 +318,22 @@ function reaparecerJugador() {
             Client.opacityEnemigo("reaparecer");
             cont = 0;
         }
-
     }
+}
 
+function pocionesAleatorias() {
+    for (let num = 0; num < 5; num++) {
+        var pocion = game.add.tileSprite(numeroRandom(100, 6900), numeroRandom(300, 700), 500, 500, 'pocion');
+        // pocion.body.x = ;
+        // pocion.body.y = 500;
+        pocion.anchor.setTo(0.5, 0.5);
+        pocion.scale.setTo(0.2);
+        
+        // game.physics.p2.enable(pocion);
+        // pocion.body.setRectangle(35, 58, -10, 22);
+    }
+}
+
+function numeroRandom(min, max){
+    return parseInt(Math.random() * (max - min) + min);
 }
