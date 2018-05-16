@@ -77,7 +77,7 @@ io.on('connection', function (socket) {
 
     socket.player = {
       id: server.lastPlayderID++,
-      x: server.lastPlayderID % 2 == 0 ? 300 : 100,
+      x: server.lastPlayderID % 2 == 0 ? 10 : 20,
       y: 700,
       numMap: numeroMapa
     };

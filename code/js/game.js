@@ -4,7 +4,8 @@ var Timer = 0;
 var salto = true;
 var jugadoresImprimidos = new Map();
 var idJugadoresImprimidos = [];
-var game = new Phaser.Game(1920, 900, Phaser.CANVAS, document.getElementById('game'));
+var idJugadoresNoMover = [];
+var game = new Phaser.Game(1910, 900, Phaser.CANVAS, document.getElementById('game'));
 var idContactoPermitido = [5, 6, 19];
 var Game = {};
 var miid = 0;
@@ -99,11 +100,13 @@ Game.update = function () {
             Client.presionar(data, "izquierda");
             moverJugador(miid, "izquierda");
             movimientoFondo();
+            revisarCaidoFueraMapa();
         } else if (cursors.right.isDown && quieto) {
             direccion = "right";
             Client.presionar(data, "derecha");
             moverJugador(miid, "derecha");
             movimientoFondo();
+            revisarCaidoFueraMapa();
         } else if (quieto) {
             if (jugadoresImprimidos.size != 0) {
                 Client.soltar(data);
@@ -111,6 +114,7 @@ Game.update = function () {
                     jugadoresImprimidos.get(miid).body.velocity.x = 0;
                     jugadoresImprimidos.get(miid).animations.play('stay', 10, true);
                 }
+                revisarCaidoFueraMapa();
             }
         }
         if (cursors.up.isDown) {
@@ -143,7 +147,7 @@ Game.update = function () {
 }
 
 Game.render = function () {
-    game.debug.text(game.time.desiredFps, 2, 14, "black");
+    //game.debug.text(game.time.desiredFps, 2, 14, "black");
 }
 
 Game.init = function () {
@@ -196,7 +200,7 @@ Game.movimiento = function (id, data, accion, direccion) {
 Game.iniciarPartida = function () {
     propiedadesTexto.fontSize = 50;
     sePuedeJugar = false;
-    var segundos = 5;
+    var segundos = 2;
     var imprimirSegundos;
     setTimeout(function () {
         mensaje.setText("La partida empieza en...");
@@ -223,7 +227,7 @@ Game.ataqueEnemigo = function (id, ataque, direccion) {
 }
 
 Game.opacityEnemigo = function (accion) {
-    opacityEnemigo(accion);
+    opacityJugador(accion);
 }
 game.state.add('Game', Game);
 game.state.start('Game');

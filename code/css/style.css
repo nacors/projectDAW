@@ -7,8 +7,10 @@ body {
     
 }
 #fondo{
-    background: url("../assets/imagenes/estilo/fondoVerano1.png");
-    background-size: 100%;
+    background: url("../assets/imagenes/estilo/fondoBosque2.jpg");
+    background-size: 150%;
+    background-repeat: no-repeat;
+    background-position: center;
     -webkit-filter: blur(5px);
     -moz-filter: blur(5px);
     -o-filter: blur(5px);
@@ -145,6 +147,8 @@ input[name=registrar] {
 
 #textErrorI, #textErrorR{
     text-shadow: 1px 1px 1px red;
+    opacity: 0;
+    transition: opacity 0.5s;
 }
 #jugarInvitadoForm{
     display: inline;

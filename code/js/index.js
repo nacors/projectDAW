@@ -9,6 +9,7 @@ window.onload = () => {
     var botonRegistrarse = document.getElementsByName("registrar")[0];
     var mensajeInicio = document.getElementById("textErrorI");
     var mensajeRegistro = document.getElementById("textErrorR");
+    cambiarFondoRegistro();
 
     //si queremos ir al apartado de registro
     botonIrRegistrar.addEventListener("click", function () {
@@ -25,24 +26,25 @@ window.onload = () => {
         var nombre = document.getElementsByName("usernameI")[0].value;
         var contr = document.getElementsByName("passwordI")[0].value;
         e.preventDefault();
-        $.ajax({
-            type: 'GET',
-            url: '/iniciar',
-            data: { nick: nombre, contr: contr },
-            success: function (taken) {
-                if (taken.ok === false) {
-                    console.log("false");
-                    malIniciado();
-                } else {
-
-                    window.location = "/juego";
-                }
-            }, error: function (xhr, status) {
-                console.log(status);
-                console.log(xhr);
-                alert('!!!!!!ajax!!!!!!!');
-            },
-        });
+        if (isInicioSesionCorrecto()) {
+            $.ajax({
+                type: 'GET',
+                url: '/iniciar',
+                data: { nick: nombre, contr: contr },
+                success: function (taken) {
+                    if (taken.ok === false) {
+                        console.log("false");
+                        malIniciado();
+                    } else {
+                        window.location = "/juego";
+                    }
+                }, error: function (xhr, status) {
+                    console.log(status);
+                    console.log(xhr);
+                    alert('!!!!!!ajax!!!!!!!');
+                },
+            });
+        }
     });
 
     //si nos queremos registrar
@@ -50,24 +52,26 @@ window.onload = () => {
         var nombre = document.getElementsByName("usernameR")[0].value;
         var contr = document.getElementsByName("passwordR")[0].value;
         e.preventDefault();
-        $.ajax({
-            type: 'GET',
-            url: '/registrar',
-            data: { nick: nombre, contr: contr },
-            success: function (taken) {
-                if (taken.ok === false) {
-                    console.log("false");
-                    nickExiste();
-                } else {
+        if (isRegistroCorrecto()) {
+            $.ajax({
+                type: 'GET',
+                url: '/registrar',
+                data: { nick: nombre, contr: contr },
+                success: function (taken) {
+                    if (taken.ok === false) {
+                        console.log("false");
+                        nickExiste();
+                    } else {
 
-                    window.location = "/juego";
-                }
-            }, error: function (xhr, status) {
-                console.log(status);
-                console.log(xhr);
-                alert('!!!!!!ajax!!!!!!!');
-            },
-        });
+                        window.location = "/juego";
+                    }
+                }, error: function (xhr, status) {
+                    console.log(status);
+                    console.log(xhr);
+                    alert('!!!!!!ajax!!!!!!!');
+                },
+            });
+        }
     });
 
     //si queremos volver a la ventan inicial
@@ -95,7 +99,7 @@ window.onload = () => {
         mensajeRegistro.innerHTML = "Este nick ya esta registrado";
         mensajeRegistro.style.transition = "0.5s";
         mensajeRegistro.style.color = "tomato";
-        zonaInvitado.style.marginTop = "160px";
+        zonaInvitado.style.marginTop = "164px";
         document.getElementsByName("usernameR")[0].focus();
         setTimeout(function () {
             mensajeRegistro.innerHTML = "";
@@ -105,7 +109,7 @@ window.onload = () => {
 
     function cambiarFondoRegistro() {
         var fondo = document.getElementById("fondo");
-        var fondos = ["fondoVerano1.png", "fondoNevado2.png", "fondoVerano2.png", "fondoPersonaje.png"];
+        var fondos = ["fondoVerano2.png", "fondoNevado2.png", "fondoBosque1.jpg", "fondoBosque2.jpg", "fondoCueva1.jpg", "fondoCueva2.jpg"];
         var pos = 0;
         setInterval(function () {
             fondo.style.backgroundImage = `url(../assets/imagenes/estilo/${fondos[pos]})`;
@@ -113,6 +117,43 @@ window.onload = () => {
         }, 10000);
     }
 
-    cambiarFondoRegistro();
+    function isInicioSesionCorrecto() {
+        var nombre = document.getElementsByName("usernameI")[0].value;
+        var contr = document.getElementsByName("passwordI")[0].value;
+        if (nombre != "" && contr != "") {
+            return true;
+        } else {
+            mensajeInicio.innerHTML = "Te faltan campos por rellenar";
+            mensajeInicio.style.opacity = "1";
+            zonaInvitado.style.marginTop = "164px";
+            setTimeout(function () {
+                mensajeInicio.style.opacity = "0";
+                //mensajeInicio.innerHTML = "";
+                //zonaInvitado.style.marginTop = "200px";
+            }, 3000);
+            return false;
+        }
+    }
+
+    function isRegistroCorrecto() {
+        var nombre = document.getElementsByName("usernameR")[0].value;
+        var contr = document.getElementsByName("passwordR")[0].value;
+        if (nombre != "" && contr != "") {
+            return true;
+        } else {
+            mensajeRegistro.innerHTML = "Te faltan campos por rellenar";
+            mensajeRegistro.style.opacity = "1";
+            
+            zonaInvitado.style.marginTop = "164px";
+            setTimeout(function () {
+                mensajeRegistro.style.opacity = "0";
+                //zonaInvitado.style.marginTop = "200px";
+                //mensajeRegistro.innerHTML = "";
+            }, 3000);
+            
+            
+            return false;
+        }
+    }
 
 }

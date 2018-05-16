@@ -68,11 +68,11 @@ if (window.performance.navigation.type == 1) {
 
 function iniciarPartida() {
     if (idJugadoresImprimidos[0] < idJugadoresImprimidos[1]) {
-        jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 200;
-        jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 400;
+        jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 10;
+        jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 20;
     } else {
-        jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 200;
-        jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 400;
+        jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 10;
+        jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 20;
     }
 }
 
@@ -94,6 +94,7 @@ function checkOverlap(body1, body2) {
         if (body2.x < body1.x && direccion == "left") {
             if (jugadoresImprimidos.get(miid) == body1.sprite) {
                 body2.sprite.alpha = 0.2;
+                //ocultar al enemigo
                 Client.opacityEnemigo("ocultar");
             }
             volverTransparenciaNormal();
@@ -234,12 +235,15 @@ function volverTransparenciaNormal() {
     }, 1000);
 }
 
-function opacityEnemigo(accion) {
+function opacityJugador(accion) {
     if (accion == "ocultar") {
         //cogemos nuestra id ya que se hace un broadcast del server
         jugadoresImprimidos.get(miid).alpha = 0;
     } else if (accion == "mostrar") {
         jugadoresImprimidos.get(miid).alpha = 1;
+    }else if(accion == "fueraMapa"){
+        //hacemos desaparecer al enemigo que se ha caido en su pantalla
+        jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 0;
     }
 }
 
@@ -283,11 +287,16 @@ function easterEgg() {
 
 //ejecutar esta funcion cada vez que el personaje se mueve
 function revisarCaidoFueraMapa() {
-    for (let jugador of idJugadoresImprimidos) {
-        // console.log(jugadoresImprimidos.get(jugador).y);
-        if (jugadoresImprimidos.get(jugador).y > 849) {
-            console.log(jugadoresImprimidos.get(jugador));
-            console.log("ha caido");
+    //console.log("entramos a revisar");
+    //console.log(jugadoresImprimidos.get(jugador).y);
+    if (jugadoresImprimidos.get(miid).y > 849) {
+        //console.log(jugadoresImprimidos.get(jugador));
+        jugadoresImprimidos.get(miid).body.setRectangle(0, 0, 0, 0);
+        if (jugadoresImprimidos.get(miid).y > 890) {
+            jugadoresImprimidos.get(miid).alpha = 0;
+            game.input.enabled = false;
+            Client.opacityEnemigo("fueraMapa");
         }
+        //console.log("ha caido");
     }
 }
