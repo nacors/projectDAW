@@ -84,6 +84,8 @@ Game.create = function () {
     //contador fps
     game.time.advancedTiming = true;
     //game.time.desiredFps = 30;
+    var fondo = game.add.audio("fondo");
+    fondo.loopFull(0.6);
 };
 
 Game.update = function () {
@@ -175,6 +177,7 @@ Game.preload = function () {
         game.load.tilemap(`mapa${numMapa}`, `assets/mapas/mapa${numMapa}/elMapa${numMapa}.json`, null, Phaser.Tilemap.TILED_JSON);
         if (numMapa != 1) game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.png`, 16, 16);
         else game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.gif`, 16, 16);
+        game.load.audio("fondo", `assets/sonidos/fondo/fondo1.wav`);
     }
     game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 80);
     game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`);
