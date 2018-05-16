@@ -11,6 +11,7 @@ var jugadores = {};
 var jugadoresRoom = 0;
 var room = "sala";
 var roomcount = 0;
+var time = require('cron').CronJob;
 server.lastPlayderID = 0;
 var numeroMapa = parseInt(Math.random() * (3 - 1) + 1);
 
@@ -193,4 +194,16 @@ function guardarJugadresRoom(socket) {
     jugadores[room + roomcount].push(socket.player);
   }
 }
-
+console.log(time);
+new time('* * * * *', function(){
+  var randDir = Math.round(Math.random());
+  var direccion = (randDir == 1) ? "derecha" : "izquierda";
+  var y = Math.floor(Math.random() * (400 - 100) + 400);
+  for(let room in io.sockets.adapter.rooms){
+    var sala = room.substring(0,4);
+    if(sala = "sala"){
+      io.sockets.in(room).emit("murcielagos", direccion, y);
+    }
+  }
+  console.log("Señal para murcielagos");
+}, null, true, 'America/Los_Angeles');

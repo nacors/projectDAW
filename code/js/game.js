@@ -37,6 +37,7 @@ var contadorTecla = 0;
 var mostrarMensajeOculto = false;
 var isFueraMapa = false;
 var cont = 0;
+var murcielagos = [];
 Game.playerMap = new Map();
 
 
@@ -93,7 +94,7 @@ Game.create = function () {
     game.time.advancedTiming = true;
     //game.time.desiredFps = 30;
     var fondo = game.add.audio("fondo");
-    fondo.loopFull(0.6);
+    fondo.loopFull(0.3);
 };
 
 Game.update = function () {
@@ -190,6 +191,7 @@ Game.preload = function () {
         game.load.audio("fondo", `assets/sonidos/fondo/fondo1.wav`);
     }
     game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 81);
+    game.load.spritesheet('murcielago', 'assets/imagenes/murcielagos/murcielago.png', 32, 32);
     game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`);
 };
 
@@ -256,6 +258,45 @@ Game.ataqueEnemigo = function (id, ataque, direccion) {
 
 Game.opacityEnemigo = function (accion) {
     opacityJugador(accion);
+}
+
+Game.crearMurcielagos = function(direccion, y){
+    var x;
+    var sprite;
+    var datosMurcielagos;
+    var murcielagosDer = {
+        0: [y+0, 600],
+        1: [y+20, 500],
+        2: [y+60, 700],
+        3: [y+80, 400],
+        4: [y+90, 600]
+    }
+    var murcielagosIzq = {
+        0: [y+0, -600],
+        1: [y+20, -500],
+        2: [y+60, -700],
+        3: [y+80, -400],
+        4: [y+90, -600]
+    }
+    if(direccion == "derecha"){
+        x = 50;
+        sprite = [4,5,6,7];
+        datosMurcielagos = murcielagosDer;
+    }else{
+        x = 6400;
+        sprite = [12,13,14,15];
+        datosMurcielagos = murcielagosIzq;
+    }
+    for(let i = 0; i < 5; i++){
+        var murcielago = game.add.sprite(x, datosMurcielagos[i][0], 'murcielago');
+        game.physics.p2.enable(murcielago, false);
+        murcielago.body.kinematic = true;
+        murcielago.body.velocity.x = datosMurcielagos[i][1];
+        murcielago.animations.add('murcielagosmov', sprite, 60, true);
+        murcielago.animations.play('murcielagosmov', 10, true);
+        murcielagos.push(murcielago);
+    }
+    console.log(murcielagos);
 }
 game.state.add('Game', Game);
 game.state.start('Game');

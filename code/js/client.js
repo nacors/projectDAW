@@ -93,3 +93,8 @@ Client.socket.on("atacar", function (id, ataque, direccion) {
 Client.socket.on("opacityEnemigo", function(accion){
     Game.opacityEnemigo(accion);
 })
+
+Client.socket.on("murcielagos", function(direccion, y){
+    console.log("recibe el cliente");
+    Game.crearMurcielagos(direccion, y);
+});
