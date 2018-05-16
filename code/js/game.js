@@ -1,9 +1,9 @@
 //VARIABLES------------------------------------------------------------------------------------------------------------------------------------
 var game = new Phaser.Game(1910, 900, Phaser.CANVAS, document.getElementById('game'));
-var suelo, 
-    arboles, 
-    jugador1, 
-    cursors, 
+var suelo,
+    arboles,
+    jugador1,
+    cursors,
     hit1,
     mensaje,
     mensajeOculto,
@@ -37,6 +37,7 @@ var contadorTecla = 0;
 var mostrarMensajeOculto = false;
 var isFueraMapa = false;
 var cont = 0;
+var bordeMapa = 849;
 Game.playerMap = new Map();
 
 
@@ -92,8 +93,8 @@ Game.create = function () {
     //contador fps
     game.time.advancedTiming = true;
     //game.time.desiredFps = 30;
-    var fondo = game.add.audio("fondo");
-    fondo.loopFull(0.6);
+    // var fondo = game.add.audio("fondo");
+    // fondo.loopFull(0.6);
 };
 
 Game.update = function () {
@@ -104,12 +105,11 @@ Game.update = function () {
                 x: jugadoresImprimidos.get(miid).x,
                 y: jugadoresImprimidos.get(miid).y
             };
-            for(let jugador of idJugadoresImprimidos){
-                if(jugador != miid){
+            for (let jugador of idJugadoresImprimidos) {
+                if (jugador != miid) {
                     jugadoresImprimidos.get(jugador).tint = 0xFF5252;
                 }
             }
-
         }
         //movimiento para el personaje que controla el jugador
         if (cursors.left.isDown && quieto) {
@@ -136,25 +136,24 @@ Game.update = function () {
         }
         if (cursors.up.isDown) {
             while (salto) {
-                console.log("pulsado");
-                if(countSalto < 2){
-                    console.log("saltando");
-                    jugadoresImprimidos.get(miid).body.moveUp(1200);   
-                }else if(jugadoresImprimidos.get(miid).body.velocity.y < 14 && jugadoresImprimidos.get(miid).body.velocity.y > -14){
+                // console.log("pulsado");
+                if (countSalto < 2) {
+                    // console.log("saltando");
+                    jugadoresImprimidos.get(miid).body.moveUp(1200);
+                } else if (jugadoresImprimidos.get(miid).body.velocity.y < 14 && jugadoresImprimidos.get(miid).body.velocity.y > -14) {
                     countSalto = 0;
                 }
                 salto = false;
             }
             Client.presionar(data, "salto");
         } else if (cursors.up.isUp) {
-            if(jugadoresImprimidos.get(miid) && jugadoresImprimidos.get(miid).body.velocity.y < 14 && jugadoresImprimidos.get(miid).body.velocity.y > -14){
+            if (jugadoresImprimidos.get(miid) && jugadoresImprimidos.get(miid).body.velocity.y < 14 && jugadoresImprimidos.get(miid).body.velocity.y > -14) {
                 countSalto = 0;
             }
-            if(salto == false) {
+            if (salto == false) {
                 countSalto++;
-                console.log(countSalto);
+                // console.log(countSalto);
             }
-
             salto = true;
         }
         if (hit1.isDown) {
@@ -169,7 +168,7 @@ Game.update = function () {
     easterEgg();
     reaparecerJugador();
 
-    
+
 
 }
 

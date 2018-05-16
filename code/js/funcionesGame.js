@@ -104,8 +104,6 @@ function checkOverlap(body1, body2) {
             // console.log("Muere " + body2.sprite.name);
             if (jugadoresImprimidos.get(miid) == body1.sprite) {
                 body2.sprite.alpha = 0;
-                body2.sprite.velocity.x = 0;
-                body2.sprite.velocity.y = 0;
                 Client.opacityEnemigo("ocultar");
             }
             volverTransparenciaNormal();
@@ -116,8 +114,6 @@ function checkOverlap(body1, body2) {
             // console.log("Muere " + body1.sprite.name);
             if (jugadoresImprimidos.get(miid) == body2.sprite) {
                 body1.sprite.alpha = 0;
-                body1.sprite.velocity.x = 0;
-                body1.sprite.velocity.y = 0;
                 Client.opacityEnemigo("ocultar");
             }
             volverTransparenciaNormal();
@@ -125,8 +121,6 @@ function checkOverlap(body1, body2) {
             // console.log("Muere " + body1.sprite.name);
             if (jugadoresImprimidos.get(miid) == body2.sprite) {
                 body1.sprite.alpha = 0;
-                body1.sprite.velocity.x = 0;
-                body1.sprite.velocity.y = 0;
                 Client.opacityEnemigo("ocultar");
             }
             volverTransparenciaNormal();
@@ -299,32 +293,23 @@ function easterEgg() {
 
 //ejecutar esta funcion cada vez que el personaje se mueve
 function revisarCaidoFueraMapa() {
-    //console.log("entramos a revisar");
-    //console.log(jugadoresImprimidos.get(miid).y);
-    //console.log(jugadoresImprimidos.get(miid).x);
-    if (jugadoresImprimidos.get(miid).y > 849 && !isFueraMapa) {
-        //console.log(jugadoresImprimidos.get(jugador));
-        //jugadoresImprimidos.get(miid).body.setRectangle(0, 0, 0, 0);
-        if (jugadoresImprimidos.get(miid).y > 890) {
-            jugadoresImprimidos.get(miid).alpha = 0;
-            game.input.enabled = false;
-            Client.opacityEnemigo("fueraMapa");
-            isFueraMapa = true;
-        }
+    if (jugadoresImprimidos.get(miid).y > bordeMapa && !isFueraMapa) {
         jugadoresImprimidos.get(miid).alpha = 0;
-        game.input.enabled = false;
+        //no le permitimos el movimiento al jugador con esa variable
+        sePuedeJugar = false;
         Client.opacityEnemigo("fueraMapa");
         isFueraMapa = true;
-        //console.log("ha caido");
     }
 }
+
+//reaparecemos al jugador que se habia caido fuera del mapa
 function reaparecerJugador() {
     if (isFueraMapa) {
         cont++;
         if (cont == 200) {
             jugadoresImprimidos.get(miid).body.x = 2800;
             jugadoresImprimidos.get(miid).body.y = 500;
-            game.input.enabled = true;
+            sePuedeJugar = true;
             isFueraMapa = false;
             jugadoresImprimidos.get(miid).alpha = 1;
             Client.opacityEnemigo("reaparecer");
@@ -334,8 +319,3 @@ function reaparecerJugador() {
     }
 
 }
-/*jugadoresImprimidos.get(miid).body.x = 2800;
-                jugadoresImprimidos.get(miid).body.y = 500;
-                game.input.enabled = true;
-                isFueraMapa = false;
-                jugadoresImprimidos.get(miid).alpha = 1;*/
