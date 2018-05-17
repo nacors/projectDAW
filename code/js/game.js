@@ -41,6 +41,7 @@ var cont = 0;
 var murcielagos = [];
 var bordeMapa = 849;
 var pociones = [];
+var sumarVelocidad = 0;
 Game.playerMap = new Map();
 
 

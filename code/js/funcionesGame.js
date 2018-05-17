@@ -88,7 +88,7 @@ function textoEspera() {
 var prueba = false;
 //comprobacion de pegar
 function checkOverlap(body1, body2) {
-    if(body1 != null && body2 != null){
+    if (body1 != null && body2 != null) {
         if ((body1.sprite && body2.sprite) && (nombreSprite(body1) && nombreSprite(body2))) {
             console.log("Ambos muertos");
         } else if (nombreSprite(body1) && (body1.sprite && body2.sprite)) {
@@ -107,7 +107,6 @@ function checkOverlap(body1, body2) {
                 }
                 volverTransparenciaNormal();
             }
-    
         } else if (nombreSprite(body2) && (body1.sprite && body2.sprite)) {
             if (body2.x > body1.x && direccion == "left") {
                 // console.log("Muere " + body1.sprite.name);
@@ -125,20 +124,19 @@ function checkOverlap(body1, body2) {
                 volverTransparenciaNormal();
             }
         }
-        
-        if(body1.sprite && body2.sprite){
-            if(nombreSprite(body1) == "murcielago"){
+        if (body1.sprite && body2.sprite) {
+            if (nombreSprite(body1) == "murcielago") {
                 console.log("has chocado con un murcielago");
-                if(jugadoresImprimidos.get(miid) == body2.sprite){
+                if (jugadoresImprimidos.get(miid) == body2.sprite) {
                     body2.sprite.alpha = 0;
                     //no le permitimos el movimiento al jugador con esa variable
                     sePuedeJugar = false;
                     Client.opacityEnemigo("fueraMapa");
                     isFueraMapa = true;
                 }
-            }else if(nombreSprite(body2) == "murcielago"){
+            } else if (nombreSprite(body2) == "murcielago") {
                 console.log("has chocado con un murcielago");
-                if(jugadoresImprimidos.get(miid) == body1.sprite){
+                if (jugadoresImprimidos.get(miid) == body1.sprite) {
                     body1.sprite.alpha = 0;
                     //no le permitimos el movimiento al jugador con esa variable
                     sePuedeJugar = false;
@@ -146,24 +144,29 @@ function checkOverlap(body1, body2) {
                     isFueraMapa = true;
                 }
             }
+            if (nombreSprite(body1) == "pocion" && body2.sprite.key == "caballero") {
+                console.log("contacto con pocion");
+                masVelocidad(body2.sprite, 3);
+                body1.sprite.destroy();
+
+            } else if (nombreSprite(body2) == "pocion" && body1.sprite.key == "caballero") {
+                console.log("contacto con pocion");
+                masVelocidad(body2.sprite, 3);
+                body2.sprite.destroy();
+            }
         }
         if ((body1.sprite && body2.sprite)) return false;
     }
-    
     return true;
 }
 
 function nombreSprite(body) {
     //console.log(body.sprite);
-<<<<<<< HEAD
-    if (body.sprite && body.sprite.key == "caballero" && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
-    
-=======
-    if (body.sprite){
-        if(body.sprite.key == "caballero" && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
-        else if(body.sprite.key == "murcielago") return "murcielago"; 
-    } 
->>>>>>> ad071c903c46e420fdc55da0f75df9057785dc81
+    if (body.sprite) {
+        if (body.sprite.key == "caballero" && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
+        else if (body.sprite.key == "murcielago") return "murcielago";
+        else if (body.sprite.key == "pocion") return "pocion";
+    }
     return false;
 }
 
@@ -199,12 +202,12 @@ function moverJugador(id, direccion) {
     if (direccion == "izquierda") {
         jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
         jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
-        jugadoresImprimidos.get(id).body.moveLeft(700);
+        jugadoresImprimidos.get(id).body.moveLeft(700 + sumarVelocidad);
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
     } else if (direccion == "derecha") {
         jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
-        jugadoresImprimidos.get(id).body.moveRight(700);
+        jugadoresImprimidos.get(id).body.moveRight(700 + sumarVelocidad);
         jugadoresImprimidos.get(id).animations.play('right', 10, true);
     }
 }
@@ -230,7 +233,7 @@ function cuentaAtras(segundos) {
         mostrarMensajeOculto = false;
         mensajeOculto.destroy();
         contadorTecla = 0;
-    }, segundos * 1000)
+    }, segundos * 1000);
 }
 
 function cargarMapa(numMapa, pociones) {
@@ -244,7 +247,6 @@ function cargarMapa(numMapa, pociones) {
         doblesuelo = map.createLayer('doblesuelo');
         nocolision = map.createLayer('nocolision');
         suelo = map.createLayer('suelo');
-
         //otros mapas no presentan este problema
     } else {
         fondo = game.add.tileSprite(0, 0, 7000, 900, 'background');
@@ -322,7 +324,6 @@ function easterEgg() {
     if (mostrarMensajeOculto === true) {
         mensajeOculto.position.x = jugadoresImprimidos.get(miid).x;
         mensajeOculto.position.y = jugadoresImprimidos.get(miid).y - 20;
-
     }
 }
 
@@ -369,28 +370,39 @@ function numeroRandom(min, max) {
     return parseInt(Math.random() * (max - min) + min);
 }
 
-<<<<<<< HEAD
 function revisarPocionFueraMapa() {
     let fuera;
     if (!isNingunaPocionaFuera) {
         for (let pocion in pociones) {
             if (pociones[pocion].y > bordeMapa) {
                 console.log("eliminada una pocion");
-                fuera ++;
+                fuera++;
                 pociones[pocion].destroy();
                 pociones.splice(pocion, 1);
             }
         }
-        if(fuera == 0){
+        if (fuera == 0) {
             isNingunaPocionaFuera = true;
         }
-=======
-function murcielagos(){
-    if(murcielagos.length != 0){
+    }
+}
+function murcielagos() {
+    if (murcielagos.length != 0) {
         var murcielagoX = murcielagos[0].body.x;
         var murcielagoy = murcielagos[0].body.y;
         var personajeX = jugadoresImprimidos.get(miid).body.x;
         var personajeY = jugadoresImprimidos.get(miid).body.y;
->>>>>>> ad071c903c46e420fdc55da0f75df9057785dc81
     }
+}
+
+function masVelocidad(jugador, segundos) {
+    var tiempo = 0;
+    sumarVelocidad = 100;
+    var intervalo = setInterval(function () {
+        tiempo++;
+        if (tiempo == segundos) {
+            clearInterval(intervalo);
+            sumarVelocidad = 0;
+        }
+    }, 1000);
 }
