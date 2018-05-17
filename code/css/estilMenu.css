@@ -1,0 +1,45 @@
+body{
+    width: 90%;
+    margin: auto;
+    margin: auto;
+    text-align: center;
+    font-family: 'Merriweather Sans', sans-serif;
+    color: white;
+    text-shadow: 1px 1px 3px black;
+}
+
+#menu{
+    display: grid;
+    grid-template-areas: "menu info";
+    grid-template-columns: 1fr 6fr;
+    background: tomato;
+}
+
+#navegacion{
+    grid-area: menu;
+    display: grid;
+    grid-template-areas:    "jugar"
+                            "clas"
+                            "reglas"
+                            "info"
+                            "cread"
+                            "salir";
+}
+#jugarJuego{
+    grid-area: jugar;
+}
+#clasificacion{
+    grid-area: clas;
+}
+#reglas{
+    grid-area: reglas;
+}
+#info{
+    grid-area: info;
+}
+#creadores{
+    grid-area: cread;
+}
+#cerrarSesion{
+    grid-area: salir;
+}
