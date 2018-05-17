@@ -90,7 +90,7 @@ var prueba = false;
 function checkOverlap(body1, body2) {
     if (body1 != null && body2 != null) {
         if ((body1.sprite && body2.sprite) && (nombreSprite(body1) && nombreSprite(body2))) {
-            console.log("Ambos muertos");
+            //console.log("Ambos muertos");
         } else if (nombreSprite(body1) && (body1.sprite && body2.sprite)) {
             if (body2.x < body1.x && direccion == "left") {
                 if (jugadoresImprimidos.get(miid) == body1.sprite) {
@@ -148,11 +148,12 @@ function checkOverlap(body1, body2) {
                 console.log("contacto con pocion");
                 masVelocidad(body2.sprite, 3);
                 body1.sprite.destroy();
-
+                audioPocion.play();
             } else if (nombreSprite(body2) == "pocion" && body1.sprite.key == "caballero") {
                 console.log("contacto con pocion");
                 masVelocidad(body2.sprite, 3);
                 body2.sprite.destroy();
+                audioPocion.play();
             }
         }
         if ((body1.sprite && body2.sprite)) return false;
@@ -285,6 +286,12 @@ function opacityJugador(accion) {
     } else if (accion == "fueraMapa") {
         //hacemos desaparecer al enemigo que se ha caido en su pantalla
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 0;
+        if (jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(idJugadoresImprimidos[1]).x < 1000
+            && jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(idJugadoresImprimidos[1]).x > -1000) {
+            audioCaida.play();
+        }
+
+
     } else if (accion == "reaparecer") {
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 1;
     }
@@ -330,6 +337,7 @@ function easterEgg() {
 //ejecutar esta funcion cada vez que el personaje se mueve
 function revisarCaidoFueraMapa() {
     if (jugadoresImprimidos.get(miid).y > bordeMapa && !isFueraMapa) {
+        audioCaida.play();
         jugadoresImprimidos.get(miid).alpha = 0;
         //no le permitimos el movimiento al jugador con esa variable
         sePuedeJugar = false;
@@ -395,22 +403,22 @@ function murcielagosVolumen() {
         var posX = (murcielagoX - personajeX < 0) ? (murcielagoX - personajeX) * -1 : murcielagoX - personajeX;
         var posY = (murcielagoY - personajeY < 0) ? (murcielagoY - personajeY) * -1 : murcielagoY - personajeY;
         var distancia = Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2));
-        var volumen = 1 - (distancia/3000);
+        var volumen = 1 - (distancia / 3000);
         volumen = (volumen < 0) ? 0 : volumen;
         audioMurcielagos.play();
         audioMurcielagos.volume = volumen;
-        if(direccionMurcielagos == "derecha"){
-            if(murcielagos[0].body.x == 7000){
-                for(SpriteMurc of murcielagos){
+        if (direccionMurcielagos == "derecha") {
+            if (murcielagos[0].body.x == 7000) {
+                for (SpriteMurc of murcielagos) {
                     SpriteMurc.destroy();
                 }
                 audioMurcielagos.stop();
                 murcielagos = [];
             }
         }
-        if(direccionMurcielagos == "izquierda"){
-            if(murcielagos[0].body.x == -500){
-                for(SpriteMurc of murcielagos){
+        if (direccionMurcielagos == "izquierda") {
+            if (murcielagos[0].body.x == -500) {
+                for (SpriteMurc of murcielagos) {
                     SpriteMurc.destroy();
                 }
                 audioMurcielagos.stop();
@@ -431,3 +439,9 @@ function masVelocidad(jugador, segundos) {
         }
     }, 1000);
 }
+
+function sonidoSaltar() {
+    sonidosSalto[1].play();
+
+}
+

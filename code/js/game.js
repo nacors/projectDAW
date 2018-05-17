@@ -12,7 +12,9 @@ var suelo,
     posx, posy,
     direccion,
     frase,
-    fondo;
+    fondo,
+    audioCaida,
+    audioPocion;
 
 var jugadoresImprimidos = new Map();
 var idJugadoresImprimidos = [];
@@ -44,6 +46,7 @@ var pociones = [];
 var audioMurcielagos;
 var direccionMurcielagos;
 var sumarVelocidad = 0;
+var sonidosSalto = [];
 Game.playerMap = new Map();
 
 
@@ -63,7 +66,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
     jugador.animations.add('stay', [1, 2, 3, 4], 60, true);
     jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
-    game.physics.p2.enable(jugador, true);
+    game.physics.p2.enable(jugador, false);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
     //jugador.body.loadPolygon("ninja_escalado", "correr");
@@ -100,6 +103,13 @@ Game.create = function () {
     //game.time.desiredFps = 30;
     var fondo = game.add.audio("fondo");
     audioMurcielagos = game.add.audio("audioMurcielagos");
+    audioMurcielagos = game.add.audio("audioMurcielagos");
+    for (let i = 1; i < 3; i++) {
+        sonidosSalto.push(game.add.audio("salto" + i));
+    }
+    audioCaida = game.add.audio("caida");
+    audioPocion = game.add.audio("pocion");
+
     fondo.loopFull(0.6);
 };
 
@@ -146,12 +156,14 @@ Game.update = function () {
                 if (countSalto < 2) {
                     // console.log("saltando");
                     jugadoresImprimidos.get(miid).body.moveUp(1200);
+                    sonidoSaltar();
                 } else if (jugadoresImprimidos.get(miid).body.velocity.y < 14 && jugadoresImprimidos.get(miid).body.velocity.y > -14) {
                     countSalto = 0;
                 }
+                Client.presionar(data, "salto");
                 salto = false;
             }
-            Client.presionar(data, "salto");
+            
         } else if (cursors.up.isUp) {
             if (jugadoresImprimidos.get(miid) && jugadoresImprimidos.get(miid).body.velocity.y < 14 && jugadoresImprimidos.get(miid).body.velocity.y > -14) {
                 countSalto = 0;
@@ -193,7 +205,11 @@ Game.preload = function () {
         else game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.gif`, 16, 16);
     }
     game.load.audio("fondo", `assets/sonidos/fondo/fondo1.wav`);
+    game.load.audio("salto1", `assets/sonidos/salto/salto1.mp3`);
+    game.load.audio("salto2", `assets/sonidos/salto/salto2.mp3`);
     game.load.audio("audioMurcielagos", `assets/sonidos/murcielagos/murcielagos.mp3`);
+    game.load.audio("caida", `assets/sonidos/salto/caida.wav`);
+    game.load.audio("pocion", `assets/sonidos/pocion/pocion.wav`);
     game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 81);
     game.load.spritesheet('murcielago', 'assets/imagenes/murcielagos/murcielago.png', 32, 32);
     game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`);
@@ -224,6 +240,13 @@ Game.movimiento = function (id, data, accion, direccion) {
             jugadoresImprimidos.get(id).animations.play('right', 10, true);
         } else if (direccion == "salto") {
             jugadoresImprimidos.get(id).animations.play('stay', 10, true);
+            console.log(jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x);
+            if (jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x < 1000
+                && jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x > -1000) {
+                
+                    sonidosSalto[0].play();
+                
+            }
         }
     } else if (accion == "soltar") {
         if (jugadoresImprimidos.size != 0) {
@@ -302,7 +325,7 @@ Game.crearMurcielagos = function (direccion, y) {
         murcielago.animations.play('murcielagosmov', 10, true);
         murcielagos.push(murcielago);
     }
-    
+
     //console.log(murcielagos);
 }
 game.state.add('Game', Game);
