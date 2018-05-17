@@ -194,11 +194,11 @@ function guardarJugadresRoom(socket) {
     jugadores[room + roomcount].push(socket.player);
   }
 }
-console.log(time);
+
 new time('* * * * *', function(){
   var randDir = Math.round(Math.random());
   var direccion = (randDir == 1) ? "derecha" : "izquierda";
-  var y = Math.floor(Math.random() * (400 - 100) + 400);
+  var y = Math.floor(Math.random() * (300 - 100) + 400);
   for(let room in io.sockets.adapter.rooms){
     var sala = room.substring(0,4);
     if(sala = "sala"){
