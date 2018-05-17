@@ -94,8 +94,6 @@ function checkOverlap(body1, body2) {
         if (body2.x < body1.x && direccion == "left") {
             if (jugadoresImprimidos.get(miid) == body1.sprite) {
                 body2.sprite.alpha = 0;
-                body2.sprite.velocity.x = 0;
-                body2.sprite.velocity.y = 0;
                 //ocultar al enemigo
                 Client.opacityEnemigo("ocultar");
             }
@@ -131,7 +129,8 @@ function checkOverlap(body1, body2) {
 }
 
 function nombreSprite(body) {
-    if (body.sprite && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
+    //console.log(body.sprite);
+    if (body.sprite && body.sprite.key == "caballero" && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
     return false;
 }
 
@@ -328,9 +327,10 @@ function pocionesAleatorias() {
         // pocion.body.y = 500;
         pocion.anchor.setTo(0.5, 0.5);
         pocion.scale.setTo(0.2);
+        game.physics.p2.enable(pocion);
+        pocion.body.fixedRotation = true;
         
-        // game.physics.p2.enable(pocion);
-        // pocion.body.setRectangle(35, 58, -10, 22);
+        pocion.body.setRectangle(40, 35, 0, 0);
     }
 }
 
