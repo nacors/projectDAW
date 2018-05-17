@@ -386,7 +386,7 @@ function revisarPocionFueraMapa() {
         }
     }
 }
-function murcielagos() {
+function murcielagosVolumen() {
     if (murcielagos.length != 0) {
         var murcielagoX = murcielagos[0].body.x;
         var murcielagoY = murcielagos[0].body.y;
@@ -400,7 +400,7 @@ function murcielagos() {
         audioMurcielagos.play();
         audioMurcielagos.volume = volumen;
         if(direccionMurcielagos == "derecha"){
-            if(dmurcielagos[0].body.x == 7000){
+            if(murcielagos[0].body.x == 7000){
                 for(SpriteMurc of murcielagos){
                     SpriteMurc.destroy();
                 }
