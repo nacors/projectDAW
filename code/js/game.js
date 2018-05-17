@@ -35,20 +35,21 @@ var quieto = true;
 var countCon = 0;
 var contadorTecla = 0;
 var mostrarMensajeOculto = false;
+var isNingunaPocionaFuera = false;
 var isFueraMapa = false;
 var cont = 0;
 var murcielagos = [];
 var bordeMapa = 849;
+var pociones = [];
 Game.playerMap = new Map();
 
 
 //FUNCIONES GAME---------------------------------------------------------------------------------------------------------------------------------
-Game.addNewPlayer = function (id, x, y, jugadores, numMapa) {
+Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
     if (jugadoresImprimidos.size < 1) {
         miid = id;
-        cargarMapa(numMapa);
+        cargarMapa(numMapa, pociones);
     }
-
     let g = game.add.sprite(x, y, 'caballero');
     Game.playerMap.set(id, g);
     var jugador = Game.playerMap.get(id);
@@ -168,9 +169,7 @@ Game.update = function () {
     //parte de easter egg
     easterEgg();
     reaparecerJugador();
-
-
-
+    revisarPocionFueraMapa();
 }
 
 Game.render = function () {
@@ -296,7 +295,7 @@ Game.crearMurcielagos = function (direccion, y) {
         murcielago.animations.play('murcielagosmov', 10, true);
         murcielagos.push(murcielago);
     }
-    console.log(murcielagos);
+    //console.log(murcielagos);
 }
 game.state.add('Game', Game);
 game.state.start('Game');

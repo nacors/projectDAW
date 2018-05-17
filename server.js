@@ -13,7 +13,8 @@ var room = "sala";
 var roomcount = 0;
 var time = require('cron').CronJob;
 server.lastPlayderID = 0;
-var numeroMapa = parseInt(Math.random() * (3 - 1) + 1);
+var numeroMapa = numeroRandom(3, 1);
+var posicionPociones = generarPosicionesPociones(5);
 
 app.use('/css', express.static(__dirname + '/code/css'));
 app.use('/js', express.static(__dirname + '/code/js'));
@@ -80,7 +81,8 @@ io.on('connection', function (socket) {
       id: server.lastPlayderID++,
       x: server.lastPlayderID % 2 == 0 ? 3450 : 2950,
       y: 700,
-      numMap: numeroMapa
+      numMap: numeroMapa,
+      pociones: posicionPociones
     };
     guardarJugadresRoom(socket);
     nuevoJugador(socket, jugadores[room + roomcount]);
@@ -98,7 +100,7 @@ io.on('connection', function (socket) {
     });
   });
 
-  
+
 
   //enviar moviemiento a los demas usuarios
   socket.on('presionar', function (data, direccion) {
@@ -176,7 +178,8 @@ function roomLlena(socket) {
       iniciarPartida(socket);
     }
   } else {
-    numeroMapa = parseInt(Math.random() * (3 - 1) + 1);
+    numeroMapa = numeroRandom(3, 1);
+    posicionPociones = generarPosicionesPociones(5);
     roomcount++;
     socket.join(room + roomcount);
     jugadoresRoom = 1;
@@ -194,16 +197,32 @@ function guardarJugadresRoom(socket) {
     jugadores[room + roomcount].push(socket.player);
   }
 }
-console.log(time);
-new time('* * * * *', function(){
+
+new time('* * * * *', function () {
   var randDir = Math.round(Math.random());
   var direccion = (randDir == 1) ? "derecha" : "izquierda";
   var y = Math.floor(Math.random() * (400 - 100) + 400);
-  for(let room in io.sockets.adapter.rooms){
-    var sala = room.substring(0,4);
-    if(sala = "sala"){
+  for (let room in io.sockets.adapter.rooms) {
+    var sala = room.substring(0, 4);
+    if (sala = "sala") {
       io.sockets.in(room).emit("murcielagos", direccion, y);
     }
   }
   console.log("Señal para murcielagos");
 }, null, true, 'America/Los_Angeles');
+
+function generarPosicionesPociones(cant) {
+  var posicionesPociones = [];
+  for (let i = 0; i < cant; i++) {
+    let pocion = {
+      x: numeroRandom(100, 6900),
+      y: 100
+    };
+    posicionesPociones.push(pocion);
+  }
+  return posicionesPociones;
+}
+
+function numeroRandom(min, max) {
+  return parseInt(Math.random() * (max - min) + min);
+}

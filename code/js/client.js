@@ -63,7 +63,7 @@ Client.socket.on('nickExiste', function () {
 });
 
 Client.socket.on('newplayer', function (data, jugadores) {
-    Game.addNewPlayer(data.id, data.x, data.y, jugadores, data.numMap);
+    Game.addNewPlayer(data.id, data.x, data.y, jugadores, data.numMap, data.pociones);
 });
 
 Client.socket.on('inicarPartida', function () {
@@ -95,6 +95,6 @@ Client.socket.on("opacityEnemigo", function(accion){
 })
 
 Client.socket.on("murcielagos", function(direccion, y){
-    console.log("recibe el cliente");
+    //console.log("recibe el cliente");
     Game.crearMurcielagos(direccion, y);
 });

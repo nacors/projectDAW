@@ -131,6 +131,7 @@ function checkOverlap(body1, body2) {
 function nombreSprite(body) {
     //console.log(body.sprite);
     if (body.sprite && body.sprite.key == "caballero" && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
+    
     return false;
 }
 
@@ -200,7 +201,7 @@ function cuentaAtras(segundos) {
     }, segundos * 1000)
 }
 
-function cargarMapa(numMapa) {
+function cargarMapa(numMapa, pociones) {
     //dibujamos el mapa para el jugador
     map = game.add.tilemap(`mapa${numMapa}`);
     //por problemas con capas, en el mapa 1 el orden de carga es diferente
@@ -227,7 +228,7 @@ function cargarMapa(numMapa) {
     game.physics.p2.convertTilemap(map, doblesuelo);
 
     //ponemos pociones aleatoriamente en el mapa
-    pocionesAleatorias();
+    imprimirPociones(pociones);
 }
 
 function volverTransparenciaNormal() {
@@ -320,20 +321,35 @@ function reaparecerJugador() {
     }
 }
 
-function pocionesAleatorias() {
-    for (let num = 0; num < 5; num++) {
-        var pocion = game.add.tileSprite(numeroRandom(100, 6900), numeroRandom(300, 700), 500, 500, 'pocion');
-        // pocion.body.x = ;
-        // pocion.body.y = 500;
+function imprimirPociones(data) {
+    for (let objeto of data) {
+        var pocion = game.add.tileSprite(objeto.x, objeto.y, 500, 500, 'pocion');
         pocion.anchor.setTo(0.5, 0.5);
         pocion.scale.setTo(0.2);
         game.physics.p2.enable(pocion);
         pocion.body.fixedRotation = true;
-        
         pocion.body.setRectangle(40, 35, 0, 0);
+        pociones.push(pocion);
     }
 }
 
-function numeroRandom(min, max){
+function numeroRandom(min, max) {
     return parseInt(Math.random() * (max - min) + min);
+}
+
+function revisarPocionFueraMapa() {
+    let fuera;
+    if (!isNingunaPocionaFuera) {
+        for (let pocion in pociones) {
+            if (pociones[pocion].y > bordeMapa) {
+                console.log("eliminada una pocion");
+                fuera ++;
+                pociones[pocion].destroy();
+                pociones.splice(pocion, 1);
+            }
+        }
+        if(fuera == 0){
+            isNingunaPocionaFuera = true;
+        }
+    }
 }
