@@ -53,11 +53,13 @@ Game.playerMap = new Map();
 
 //FUNCIONES GAME---------------------------------------------------------------------------------------------------------------------------------
 Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
+    console.log(jugadores);
+    //imprimios al jugador principal
     if (jugadoresImprimidos.size < 1) {
         miid = id;
         cargarMapa(numMapa, pociones);
     }
-    
+    console.log(miid);
     let g = game.add.sprite(x, y, 'caballero');
     Game.playerMap.set(id, g);
     var jugador = Game.playerMap.get(id);
@@ -88,6 +90,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
             imprimirJugador(player);
         }
     }
+    //metemos el nombre de nuestro id
     if (jugadoresImprimidos.size < 2) {
         añadirNombreUsuario();
     }
@@ -126,11 +129,13 @@ Game.update = function () {
                 x: jugadoresImprimidos.get(miid).x,
                 y: jugadoresImprimidos.get(miid).y
             };
+            //damos color al personaje enemigo
             for (let jugador of idJugadoresImprimidos) {
                 if (jugador != miid) {
                     jugadoresImprimidos.get(jugador).tint = 0xFF5252;
                 }
             }
+            //damos movimiento del jugador al personaje
             movimientoNombreJugador();
         }
         //movimiento para el personaje que controla el jugador
