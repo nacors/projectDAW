@@ -36,7 +36,7 @@ window.onload = () => {
                         console.log("false");
                         malIniciado();
                     } else {
-                        window.location = "/juego";
+                        window.location = "/menu";
                     }
                 }, error: function (xhr, status) {
                     console.log(status);
@@ -62,8 +62,7 @@ window.onload = () => {
                         console.log("false");
                         nickExiste();
                     } else {
-
-                        window.location = "/juego";
+                        window.location = "/menu";
                     }
                 }, error: function (xhr, status) {
                     console.log(status);
@@ -155,5 +154,9 @@ window.onload = () => {
             return false;
         }
     }
+
+    botonesInvitado.addEventListener("click", function(e){
+        localStorage.setItem('usuario', 'Invitado');
+    });
 
 }

@@ -25,6 +25,7 @@ function imprimirJugador(jugadorImprimir) {
     jugadoresImprimidos.set(jugadorImprimir.id, g);
     //metemos la id del jugador imprimido
     idJugadoresImprimidos.push(jugadorImprimir.id);
+    añadirNombreUsuario();
 }
 
 
@@ -443,5 +444,28 @@ function masVelocidad(jugador, segundos) {
 function sonidoSaltar() {
     sonidosSalto[1].play();
 
+}
+
+function añadirNombreUsuario() {
+    
+        nombreJugador = game.add.text(jugadoresImprimidos.get(miid).x, jugadoresImprimidos.get(miid).y - 20, localStorage.getItem("usuario"), {
+            fill: "white",
+            stroke: "black",
+            fontSize: 15
+        });
+    
+
+}
+
+function movimientoNombreJugador(){
+    if(nombreJugador != null){
+        if(direccion == "right"){
+            nombreJugador.position.x = jugadoresImprimidos.get(miid).x - 35;
+        }else{
+            nombreJugador.position.x = jugadoresImprimidos.get(miid).x - 20;
+        }
+        nombreJugador.position.y = jugadoresImprimidos.get(miid).y - 30;
+    }
+    
 }
 

@@ -27,6 +27,10 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
+app.get('/menu', function (req, res) {
+  res.sendFile(__dirname + '/pages/menu.html');
+});
+
 app.get('/juego', function (req, res) {
   linea();
   console.log("--redireccionamos al juego");
@@ -37,7 +41,8 @@ app.get('/invitado', function (req, res) {
   //funcion que hace redirect al juego porque jugamos como invitado
   linea();
   console.log("--jugamos como invitado");
-  res.sendFile(__dirname + '/pages/game.html');
+  res.sendFile(__dirname + '/pages/menu.html');
+  // res.sendFile(__dirname + '/pages/game.html');
 });
 
 app.get('/registrar', function (req, res) {

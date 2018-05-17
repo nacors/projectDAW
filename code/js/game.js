@@ -14,7 +14,8 @@ var suelo,
     frase,
     fondo,
     audioCaida,
-    audioPocion;
+    audioPocion,
+    nombreJugador = null;
 
 var jugadoresImprimidos = new Map();
 var idJugadoresImprimidos = [];
@@ -56,6 +57,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
         miid = id;
         cargarMapa(numMapa, pociones);
     }
+    
     let g = game.add.sprite(x, y, 'caballero');
     Game.playerMap.set(id, g);
     var jugador = Game.playerMap.get(id);
@@ -85,6 +87,9 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
         if (player.id != id && idJugadoresImprimidos.indexOf(player.id) == -1) {
             imprimirJugador(player);
         }
+    }
+    if (jugadoresImprimidos.size < 2) {
+        añadirNombreUsuario();
     }
 };
 
@@ -126,6 +131,7 @@ Game.update = function () {
                     jugadoresImprimidos.get(jugador).tint = 0xFF5252;
                 }
             }
+            movimientoNombreJugador();
         }
         //movimiento para el personaje que controla el jugador
         if (cursors.left.isDown && quieto) {
