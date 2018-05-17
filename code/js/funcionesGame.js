@@ -88,49 +88,77 @@ function textoEspera() {
 var prueba = false;
 //comprobacion de pegar
 function checkOverlap(body1, body2) {
-    if ((body1 != null && body2 != null) && (body1.sprite && body2.sprite) && (nombreSprite(body1) && nombreSprite(body2))) {
-        console.log("Ambos muertos");
-    } else if (body1 != null && nombreSprite(body1) && (body1.sprite && body2.sprite)) {
-        if (body2.x < body1.x && direccion == "left") {
-            if (jugadoresImprimidos.get(miid) == body1.sprite) {
-                body2.sprite.alpha = 0;
-                //ocultar al enemigo
-                Client.opacityEnemigo("ocultar");
+    if(body1 != null && body2 != null){
+        if ((body1.sprite && body2.sprite) && (nombreSprite(body1) && nombreSprite(body2))) {
+            console.log("Ambos muertos");
+        } else if (nombreSprite(body1) && (body1.sprite && body2.sprite)) {
+            if (body2.x < body1.x && direccion == "left") {
+                if (jugadoresImprimidos.get(miid) == body1.sprite) {
+                    body2.sprite.alpha = 0;
+                    //ocultar al enemigo
+                    Client.opacityEnemigo("ocultar");
+                }
+                volverTransparenciaNormal();
+            } else if (body2.x > body1.x && direccion == "right") {
+                // console.log("Muere " + body2.sprite.name);
+                if (jugadoresImprimidos.get(miid) == body1.sprite) {
+                    body2.sprite.alpha = 0;
+                    Client.opacityEnemigo("ocultar");
+                }
+                volverTransparenciaNormal();
             }
-            volverTransparenciaNormal();
-        } else if (body2.x > body1.x && direccion == "right") {
-            // console.log("Muere " + body2.sprite.name);
-            if (jugadoresImprimidos.get(miid) == body1.sprite) {
-                body2.sprite.alpha = 0;
-                Client.opacityEnemigo("ocultar");
+    
+        } else if (nombreSprite(body2) && (body1.sprite && body2.sprite)) {
+            if (body2.x > body1.x && direccion == "left") {
+                // console.log("Muere " + body1.sprite.name);
+                if (jugadoresImprimidos.get(miid) == body2.sprite) {
+                    body1.sprite.alpha = 0;
+                    Client.opacityEnemigo("ocultar");
+                }
+                volverTransparenciaNormal();
+            } else if (body2.x < body1.x && direccion == "right") {
+                // console.log("Muere " + body1.sprite.name);
+                if (jugadoresImprimidos.get(miid) == body2.sprite) {
+                    body1.sprite.alpha = 0;
+                    Client.opacityEnemigo("ocultar");
+                }
+                volverTransparenciaNormal();
             }
-            volverTransparenciaNormal();
         }
-
-    } else if (body2 != null && nombreSprite(body2) && (body1.sprite && body2.sprite)) {
-        if (body2.x > body1.x && direccion == "left") {
-            // console.log("Muere " + body1.sprite.name);
-            if (jugadoresImprimidos.get(miid) == body2.sprite) {
-                body1.sprite.alpha = 0;
-                Client.opacityEnemigo("ocultar");
+        
+        if(body1.sprite && body2.sprite){
+            if(nombreSprite(body1) == "murcielago"){
+                console.log("has chocado con un murcielago");
+                if(jugadoresImprimidos.get(miid) == body2.sprite){
+                    body2.sprite.alpha = 0;
+                    //no le permitimos el movimiento al jugador con esa variable
+                    sePuedeJugar = false;
+                    Client.opacityEnemigo("fueraMapa");
+                    isFueraMapa = true;
+                }
+            }else if(nombreSprite(body2) == "murcielago"){
+                console.log("has chocado con un murcielago");
+                if(jugadoresImprimidos.get(miid) == body1.sprite){
+                    body1.sprite.alpha = 0;
+                    //no le permitimos el movimiento al jugador con esa variable
+                    sePuedeJugar = false;
+                    Client.opacityEnemigo("fueraMapa");
+                    isFueraMapa = true;
+                }
             }
-            volverTransparenciaNormal();
-        } else if (body2.x < body1.x && direccion == "right") {
-            // console.log("Muere " + body1.sprite.name);
-            if (jugadoresImprimidos.get(miid) == body2.sprite) {
-                body1.sprite.alpha = 0;
-                Client.opacityEnemigo("ocultar");
-            }
-            volverTransparenciaNormal();
         }
+        if ((body1.sprite && body2.sprite)) return false;
     }
-    if ((body1 != null && body2 != null) && (body1.sprite && body2.sprite)) return false;
+    
     return true;
 }
 
 function nombreSprite(body) {
     //console.log(body.sprite);
-    if (body.sprite && body.sprite.key == "caballero" && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
+    if (body.sprite){
+        if(body.sprite.key == "caballero" && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
+        else if(body.sprite.key == "murcielago") return "murcielago"; 
+    } 
     return false;
 }
 
@@ -336,4 +364,13 @@ function pocionesAleatorias() {
 
 function numeroRandom(min, max){
     return parseInt(Math.random() * (max - min) + min);
+}
+
+function murcielagos(){
+    if(murcielagos.length != 0){
+        var murcielagoX = murcielagos[0].body.x;
+        var murcielagoy = murcielagos[0].body.y;
+        var personajeX = jugadoresImprimidos.get(miid).body.x;
+        var personajeY = jugadoresImprimidos.get(miid).body.y;
+    }
 }

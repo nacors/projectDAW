@@ -94,8 +94,8 @@ Game.create = function () {
     //contador fps
     game.time.advancedTiming = true;
     //game.time.desiredFps = 30;
-    // var fondo = game.add.audio("fondo");
-    // fondo.loopFull(0.6);
+    var fondo = game.add.audio("fondo");
+    fondo.loopFull(0.6);
 };
 
 Game.update = function () {
@@ -289,7 +289,7 @@ Game.crearMurcielagos = function (direccion, y) {
     }
     for (let i = 0; i < 5; i++) {
         var murcielago = game.add.sprite(x, datosMurcielagos[i][0], 'murcielago');
-        game.physics.p2.enable(murcielago, false);
+        game.physics.p2.enable(murcielago, true);
         murcielago.body.kinematic = true;
         murcielago.body.velocity.x = datosMurcielagos[i][1];
         murcielago.animations.add('murcielagosmov', sprite, 60, true);
