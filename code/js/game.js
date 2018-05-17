@@ -43,6 +43,7 @@ var bordeMapa = 849;
 var pociones = [];
 var audioMurcielagos;
 var direccionMurcielagos;
+var sumarVelocidad = 0;
 Game.playerMap = new Map();
 
 
