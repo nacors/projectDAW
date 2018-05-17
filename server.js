@@ -198,23 +198,13 @@ function guardarJugadresRoom(socket) {
   }
 }
 
-<<<<<<< HEAD
-new time('* * * * *', function () {
-  var randDir = Math.round(Math.random());
-  var direccion = (randDir == 1) ? "derecha" : "izquierda";
-  var y = Math.floor(Math.random() * (400 - 100) + 400);
-  for (let room in io.sockets.adapter.rooms) {
-    var sala = room.substring(0, 4);
-    if (sala = "sala") {
-=======
 new time('* * * * *', function(){
   var randDir = Math.round(Math.random());
   var direccion = (randDir == 1) ? "derecha" : "izquierda";
-  var y = Math.floor(Math.random() * (250 - 50) + 400);
+  var y = Math.floor(Math.random() * (300 - 100) + 100);
   for(let room in io.sockets.adapter.rooms){
     var sala = room.substring(0,4);
     if(sala = "sala"){
->>>>>>> ad071c903c46e420fdc55da0f75df9057785dc81
       io.sockets.in(room).emit("murcielagos", direccion, y);
     }
   }

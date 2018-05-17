@@ -41,6 +41,8 @@ var cont = 0;
 var murcielagos = [];
 var bordeMapa = 849;
 var pociones = [];
+var audioMurcielagos;
+var direccionMurcielagos;
 Game.playerMap = new Map();
 
 
@@ -96,6 +98,7 @@ Game.create = function () {
     game.time.advancedTiming = true;
     //game.time.desiredFps = 30;
     var fondo = game.add.audio("fondo");
+    audioMurcielagos = game.add.audio("audioMurcielagos");
     fondo.loopFull(0.6);
 };
 
@@ -170,6 +173,7 @@ Game.update = function () {
     easterEgg();
     reaparecerJugador();
     revisarPocionFueraMapa();
+    murcielagosVolumen();
 }
 
 Game.render = function () {
@@ -186,8 +190,9 @@ Game.preload = function () {
         game.load.tilemap(`mapa${numMapa}`, `assets/mapas/mapa${numMapa}/elMapa${numMapa}.json`, null, Phaser.Tilemap.TILED_JSON);
         if (numMapa != 1) game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.png`, 16, 16);
         else game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.gif`, 16, 16);
-        game.load.audio("fondo", `assets/sonidos/fondo/fondo1.wav`);
     }
+    game.load.audio("fondo", `assets/sonidos/fondo/fondo1.wav`);
+    game.load.audio("audioMurcielagos", `assets/sonidos/murcielagos/murcielagos.mp3`);
     game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 81);
     game.load.spritesheet('murcielago', 'assets/imagenes/murcielagos/murcielago.png', 32, 32);
     game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`);
@@ -277,6 +282,7 @@ Game.crearMurcielagos = function (direccion, y) {
         3: [y + 80, -400],
         4: [y + 90, -600]
     }
+    direccionMurcielagos = direccion;
     if (direccion == "derecha") {
         x = 50;
         sprite = [4, 5, 6, 7];
@@ -288,13 +294,14 @@ Game.crearMurcielagos = function (direccion, y) {
     }
     for (let i = 0; i < 5; i++) {
         var murcielago = game.add.sprite(x, datosMurcielagos[i][0], 'murcielago');
-        game.physics.p2.enable(murcielago, true);
+        game.physics.p2.enable(murcielago, false);
         murcielago.body.kinematic = true;
         murcielago.body.velocity.x = datosMurcielagos[i][1];
         murcielago.animations.add('murcielagosmov', sprite, 60, true);
         murcielago.animations.play('murcielagosmov', 10, true);
         murcielagos.push(murcielago);
     }
+    
     //console.log(murcielagos);
 }
 game.state.add('Game', Game);

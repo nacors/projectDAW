@@ -155,15 +155,10 @@ function checkOverlap(body1, body2) {
 
 function nombreSprite(body) {
     //console.log(body.sprite);
-<<<<<<< HEAD
-    if (body.sprite && body.sprite.key == "caballero" && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
-    
-=======
     if (body.sprite){
         if(body.sprite.key == "caballero" && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
         else if(body.sprite.key == "murcielago") return "murcielago"; 
     } 
->>>>>>> ad071c903c46e420fdc55da0f75df9057785dc81
     return false;
 }
 
@@ -369,7 +364,6 @@ function numeroRandom(min, max) {
     return parseInt(Math.random() * (max - min) + min);
 }
 
-<<<<<<< HEAD
 function revisarPocionFueraMapa() {
     let fuera;
     if (!isNingunaPocionaFuera) {
@@ -384,13 +378,39 @@ function revisarPocionFueraMapa() {
         if(fuera == 0){
             isNingunaPocionaFuera = true;
         }
-=======
-function murcielagos(){
+    }
+}
+
+function murcielagosVolumen(){
     if(murcielagos.length != 0){
         var murcielagoX = murcielagos[0].body.x;
-        var murcielagoy = murcielagos[0].body.y;
+        var murcielagoY = murcielagos[0].body.y;
         var personajeX = jugadoresImprimidos.get(miid).body.x;
         var personajeY = jugadoresImprimidos.get(miid).body.y;
->>>>>>> ad071c903c46e420fdc55da0f75df9057785dc81
+        var posX = (murcielagoX - personajeX < 0) ? (murcielagoX - personajeX) * -1 : murcielagoX - personajeX;
+        var posY = (murcielagoY - personajeY < 0) ? (murcielagoY - personajeY) * -1 : murcielagoY - personajeY;
+        var distancia = Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2));
+        var volumen = 1 - (distancia/3000);
+        volumen = (volumen < 0) ? 0 : volumen;
+        audioMurcielagos.play();
+        audioMurcielagos.volume = volumen;
+        if(direccionMurcielagos == "derecha"){
+            if(dmurcielagos[0].body.x == 7000){
+                for(SpriteMurc of murcielagos){
+                    SpriteMurc.destroy();
+                }
+                audioMurcielagos.stop();
+                murcielagos = [];
+            }
+        }
+        if(direccionMurcielagos == "izquierda"){
+            if(murcielagos[0].body.x == -500){
+                for(SpriteMurc of murcielagos){
+                    SpriteMurc.destroy();
+                }
+                audioMurcielagos.stop();
+                murcielagos = [];
+            }
+        }
     }
 }
