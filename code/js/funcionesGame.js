@@ -162,18 +162,11 @@ function checkOverlap(body1, body2) {
 
 function nombreSprite(body) {
     //console.log(body.sprite);
-<<<<<<< HEAD
-    if (body.sprite){
-        if(body.sprite.key == "caballero" && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
-        else if(body.sprite.key == "murcielago") return "murcielago"; 
-    } 
-=======
     if (body.sprite) {
         if (body.sprite.key == "caballero" && (body.sprite.animations.currentAnim.name == "hit1" || body.sprite.animations.currentAnim.name == "hit2")) return true;
         else if (body.sprite.key == "murcielago") return "murcielago";
         else if (body.sprite.key == "pocion") return "pocion";
     }
->>>>>>> 02fa01fe81fad08d9289c991ee28169cddcbb037
     return false;
 }
 
@@ -393,19 +386,12 @@ function revisarPocionFueraMapa() {
         }
     }
 }
-<<<<<<< HEAD
-
-function murcielagosVolumen(){
-    if(murcielagos.length != 0){
-=======
 function murcielagos() {
     if (murcielagos.length != 0) {
->>>>>>> 02fa01fe81fad08d9289c991ee28169cddcbb037
         var murcielagoX = murcielagos[0].body.x;
         var murcielagoY = murcielagos[0].body.y;
         var personajeX = jugadoresImprimidos.get(miid).body.x;
         var personajeY = jugadoresImprimidos.get(miid).body.y;
-<<<<<<< HEAD
         var posX = (murcielagoX - personajeX < 0) ? (murcielagoX - personajeX) * -1 : murcielagoX - personajeX;
         var posY = (murcielagoY - personajeY < 0) ? (murcielagoY - personajeY) * -1 : murcielagoY - personajeY;
         var distancia = Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2));
@@ -431,8 +417,6 @@ function murcielagos() {
                 murcielagos = [];
             }
         }
-=======
->>>>>>> 02fa01fe81fad08d9289c991ee28169cddcbb037
     }
 }
 
