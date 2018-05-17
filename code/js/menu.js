@@ -28,6 +28,9 @@ window.onload = () => {
             info.innerHTML = "<h3>Atención, el emparejamiento es aleatorio. Para buscar una sesión presiona el botón de abajo</h3><br>";
             info.innerHTML += "<a id='enlacePartida' href='/jugar'>JUGAR</a>";
         });
+        document.getElementById("salir").addEventListener("click", function (e) {
+            localStorage.setItem('usuario', "invitado");
+        });
     });
 
     document.getElementById("clasificacion").addEventListener("click", function () {
@@ -39,7 +42,13 @@ window.onload = () => {
     document.getElementById("reglas").addEventListener("click", function () {
         reiniciarColoresBotones();
         this.style.background = "#6c5ce7";
-        info.innerHTML = "<h3>Aqui hay que describir las reglas del juego</h3><br>";
+        info.innerHTML = "<h3>1. Debes de llegar al final del mapa del lado enemigo para ganar la partida</h3>";
+        info.innerHTML += "<h3>2. Para avanzar debes eliminar a tu enemigo</h3>";
+        info.innerHTML += "<h3>3. Puedes utilizar pociones para ganar más velocidad o ser invencible</h3>";
+        info.innerHTML += "<h3>4. Ten cuidado al no caerte fuera del mapa!</h3>";
+        info.innerHTML += "<h3>5. Control muy fácil, muevete con las flechas <- ^ -></h3>";
+        info.innerHTML += "<h3>6. Pega con X y C</h3>";
+        info.innerHTML += "<h3>7. Disfruta!!!</h3><br>";
     });
     document.getElementById("info").addEventListener("click", function () {
         reiniciarColoresBotones();

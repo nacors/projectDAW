@@ -87,7 +87,7 @@ exports.insertarMongo = function (nick, contr) {
                 } else {
                     console.log("--este usuario ya existe");
                     //ejecutamos un metodo del lado cliente
-                    io.emit('nickExiste');
+                    // io.emit('nickExiste');
                     //si ya existe, devolvemos un false
                     resolve(false);
                 }

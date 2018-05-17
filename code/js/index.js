@@ -36,6 +36,7 @@ window.onload = () => {
                         console.log("false");
                         malIniciado();
                     } else {
+                        localStorage.setItem('usuario', nombre);
                         window.location = "/menu";
                     }
                 }, error: function (xhr, status) {
@@ -62,6 +63,7 @@ window.onload = () => {
                         console.log("false");
                         nickExiste();
                     } else {
+                        localStorage.setItem('usuario', nombre);
                         window.location = "/menu";
                     }
                 }, error: function (xhr, status) {
@@ -85,24 +87,26 @@ window.onload = () => {
     function malIniciado() {
         console.log("iniciamos el metodo del mal logeo");
         mensajeInicio.innerHTML = "El correo o la contraseña no son correctos";
-        mensajeInicio.style.transition = "0.5s";
-        mensajeInicio.style.color = "tomato";
+        mensajeInicio.style.opacity = "1";
+        // mensajeInicio.style.transition = "0.5s";
+        // mensajeInicio.style.color = "tomato";
         zonaInvitado.style.marginTop = "144px";
         setTimeout(function () {
-            mensajeInicio.innerHTML = "";
-            zonaInvitado.style.marginTop = "200px";
+            mensajeInicio.style.opacity = "0";
+            mensajeInicio.innerHTML = "Vuelve a intentarlo";
+            // zonaInvitado.style.marginTop = "200px";
         }, 5000);
     }
 
     function nickExiste() {
         mensajeRegistro.innerHTML = "Este nick ya esta registrado";
-        mensajeRegistro.style.transition = "0.5s";
-        mensajeRegistro.style.color = "tomato";
+        mensajeRegistro.style.opacity = "1";
         zonaInvitado.style.marginTop = "164px";
         document.getElementsByName("usernameR")[0].focus();
         setTimeout(function () {
-            mensajeRegistro.innerHTML = "";
-            zonaInvitado.style.marginTop = "200px";
+            mensajeRegistro.style.opacity = "0";
+            // mensajeRegistro.innerHTML = "";
+            // zonaInvitado.style.marginTop = "200px";
         }, 3000);
     }
 
@@ -142,7 +146,6 @@ window.onload = () => {
         } else {
             mensajeRegistro.innerHTML = "Te faltan campos por rellenar";
             mensajeRegistro.style.opacity = "1";
-            
             zonaInvitado.style.marginTop = "164px";
             setTimeout(function () {
                 mensajeRegistro.style.opacity = "0";
