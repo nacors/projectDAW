@@ -4,8 +4,6 @@ var frasesSamuel = ["Que tal vais?", "Chicos, hoy toca un tipo test", "Teneis la
 
 //imprime jugadores si alguien se ha conectado
 function imprimirJugador(jugadorImprimir) {
-    console.log("////////////////////");
-    console.log(jugadorImprimir);
     let g = game.add.sprite(jugadorImprimir.x, jugadorImprimir.y, 'caballero');
     Game.playerMap.set(jugadorImprimir.id, g);
     var jugador = Game.playerMap.get(jugadorImprimir.id);
@@ -28,7 +26,7 @@ function imprimirJugador(jugadorImprimir) {
     //metemos la id del jugador imprimido
     idJugadoresImprimidos.push(jugadorImprimir.id);
     //metemos el nombre del jugador
-    añadirNombreUsuario();
+    //si creamos copia imprimimos el nombre de miid
 }
 
 

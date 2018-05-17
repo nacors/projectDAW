@@ -81,6 +81,10 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
     jugadoresImprimidos.set(id, g);
     idJugadoresImprimidos.push(id);
     textoEspera();
+    //metemos el nombre de nuestro id antes de que se crean copiaso se impriman otros jugadores
+    if (jugadoresImprimidos.size < 2) {
+        añadirNombreUsuario();
+    }
     //imprimimos los juagdores que no se muestran 
     //recorremos la array de jugadores que hemos pasado desde el servidor 
     //el servidor nos devuelve la array de todos los jugadores que se han conectado
@@ -89,10 +93,6 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
         if (player.id != id && idJugadoresImprimidos.indexOf(player.id) == -1) {
             imprimirJugador(player);
         }
-    }
-    //metemos el nombre de nuestro id
-    if (jugadoresImprimidos.size < 2) {
-        añadirNombreUsuario();
     }
 };
 
