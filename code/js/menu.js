@@ -1,5 +1,5 @@
 window.onload = () => {
-    document.getElementById("nickJugador").innerHTML = localStorage.getItem("usuario"); 
+    document.getElementById("nickJugador").innerHTML = sessionStorage.getItem("usuario");
 
     cambiarFondoRegistro();
 
@@ -8,6 +8,7 @@ window.onload = () => {
         reiniciarColoresBotones();
         this.style.background = "#6c5ce7";
         info.innerHTML = "<h3>Atención, el emparejamiento es aleatorio. Para buscar una sesión presiona el botón de abajo</h3><br>";
+        info.innerHTML += "<div id='imagenJuego'></div>";
         info.innerHTML += "<a id='enlacePartida' href='/jugar'>JUGAR</a>";
         document.getElementById("enlacePartida").addEventListener("click", function (e) {
             e.preventDefault();
@@ -26,11 +27,17 @@ window.onload = () => {
             document.getElementById("jugarJuego").style.background = "#6c5ce7";
             document.getElementById("cerrarSesion").style.background = "#a29bfe";
             info.innerHTML = "<h3>Atención, el emparejamiento es aleatorio. Para buscar una sesión presiona el botón de abajo</h3><br>";
-            info.innerHTML += "<a id='enlacePartida' href='/jugar'>JUGAR</a>";
+            info.innerHTML += "<div id='imagenJuego'></div>";
+            info.innerHTML += "<a id='enlacePartidaJ' href='/jugar'>JUGAR</a>";
+            document.getElementById("enlacePartidaJ").addEventListener("click", function (e) {
+                e.preventDefault();
+                window.location = "/juego";
+            });
         });
         document.getElementById("salir").addEventListener("click", function (e) {
-            localStorage.setItem('usuario', "invitado");
+            sessionStorage.setItem('usuario', "invitado");
         });
+
     });
 
     document.getElementById("clasificacion").addEventListener("click", function () {
@@ -46,7 +53,7 @@ window.onload = () => {
         info.innerHTML += "<h3>2. Para avanzar debes eliminar a tu enemigo</h3>";
         info.innerHTML += "<h3>3. Puedes utilizar pociones para ganar más velocidad o ser invencible</h3>";
         info.innerHTML += "<h3>4. Ten cuidado al no caerte fuera del mapa!</h3>";
-        info.innerHTML += "<h3>5. Control muy fácil, muevete con las flechas <- ^ -></h3>";
+        info.innerHTML += "<h3>5. Control muy fácil, muevete con las flechas <div id='imagenFlechas'></div></h3>";
         info.innerHTML += "<h3>6. Pega con X y C</h3>";
         info.innerHTML += "<h3>7. Disfruta!!!</h3><br>";
     });

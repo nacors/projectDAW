@@ -36,6 +36,11 @@ Client.opacityEnemigo = function(accion){
     Client.socket.emit("opacityEnemigo", accion);
 }
 
+//metodo para coger el nick del contrincante
+Client.nickEnemigo = function(nombre){
+    Client.socket.emit("nickEnemigo", nombre);
+}
+
 //FUNCIONES QUE SE RECIBEN DEL SERVIDOR***********************************************************
 Client.socket.on('malIniciado', function () {
     console.log("iniciamos el metodo del mal logeo");
@@ -83,7 +88,7 @@ Client.socket.on('soltar', function (id, data) {
 
 //redirecciona al menu si algun jugador ser va de la partida
 Client.socket.on("finJuego", function () {
-    location.href = "/";
+    location.href = "/menu";
 });
 
 Client.socket.on("atacar", function (id, ataque, direccion) {
@@ -97,4 +102,9 @@ Client.socket.on("opacityEnemigo", function(accion){
 Client.socket.on("murcielagos", function(direccion, y){
     //console.log("recibe el cliente");
     Game.crearMurcielagos(direccion, y);
+});
+
+Client.socket.on("nickEnemigo", function(nombre){
+    //console.log("recibe el cliente");
+    Game.nickEnemigo(nombre);
 });

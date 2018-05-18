@@ -26,6 +26,8 @@ function imprimirJugador(jugadorImprimir) {
     idJugadoresImprimidos.push(jugadorImprimir.id);
     //metemos el nombre del jugador
     //si creamos copia imprimimos el nombre de miid
+    //añadirNombreUsuario();
+    //enviarMiNombreUsuario();
 }
 
 
@@ -392,7 +394,7 @@ function revisarPocionFueraMapa() {
     if (!isNingunaPocionaFuera) {
         for (let pocion in pociones) {
             if (pociones[pocion].y > bordeMapa) {
-                console.log("eliminada una pocion");
+                //console.log("eliminada una pocion");
                 fuera++;
                 pociones[pocion].destroy();
                 pociones.splice(pocion, 1);
@@ -455,26 +457,36 @@ function sonidoSaltar() {
 }
 
 function añadirNombreUsuario() {
-    
-        nombreJugador = game.add.text(jugadoresImprimidos.get(miid).x, jugadoresImprimidos.get(miid).y - 20, localStorage.getItem("usuario"), {
-            fill: "white",
-            stroke: "black",
-            fontSize: 15
-        });
-    
-
+    nombreJugador = game.add.text(jugadoresImprimidos.get(miid).x, jugadoresImprimidos.get(miid).y - 20, sessionStorage.getItem("usuario"), {
+        fill: "white",
+        stroke: "black",
+        fontSize: 15
+    });
 }
 
-function movimientoNombreJugador(){
-    if(nombreJugador != null){
-        if(direccion == "right"){
-            nombreJugador.position.x = jugadoresImprimidos.get(miid).x - 35;
-        }else{
-            nombreJugador.position.x = jugadoresImprimidos.get(miid).x - 20;
-        }
-        nombreJugador.position.y = jugadoresImprimidos.get(miid).y - 30;
+function movimientoNombreJugador(jugador = "yo") {
+    let jugadorNombre;
+    let id;
+    if (jugador != "enemigo") {
+        jugadorNombre = nombreJugador;
+        id = miid;
+    } else {
+        jugadorNombre = nombreEnemigo;
+        id = idJugadoresImprimidos[1];
     }
-    
+    if (jugadorNombre != null) {
+        if (direccion == "right") {
+            jugadorNombre.position.x = jugadoresImprimidos.get(id).x - 35;
+        } else {
+            jugadorNombre.position.x = jugadoresImprimidos.get(id).x - 20;
+        }
+        jugadorNombre.position.y = jugadoresImprimidos.get(id).y - 30;
+    }
+}
+
+function enviarMiNombreUsuario() {
+    console.log("envio mi nombre a otro usuario");
+    Client.nickEnemigo(sessionStorage.getItem("usuario"));
 }
 
 function limites(limite){

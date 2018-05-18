@@ -36,7 +36,7 @@ window.onload = () => {
                         console.log("false");
                         malIniciado();
                     } else {
-                        localStorage.setItem('usuario', nombre);
+                        sessionStorage.setItem('usuario', nombre);
                         window.location = "/menu";
                     }
                 }, error: function (xhr, status) {
@@ -63,7 +63,7 @@ window.onload = () => {
                         console.log("false");
                         nickExiste();
                     } else {
-                        localStorage.setItem('usuario', nombre);
+                        sessionStorage.setItem('usuario', nombre);
                         window.location = "/menu";
                     }
                 }, error: function (xhr, status) {
@@ -106,7 +106,7 @@ window.onload = () => {
         setTimeout(function () {
             mensajeRegistro.style.opacity = "0";
             // mensajeRegistro.innerHTML = "";
-            // zonaInvitado.style.marginTop = "200px";
+            zonaInvitado.style.marginTop = "200px";
         }, 3000);
     }
 
@@ -159,7 +159,7 @@ window.onload = () => {
     }
 
     botonesInvitado.addEventListener("click", function(e){
-        localStorage.setItem('usuario', 'Invitado');
+        sessionStorage.setItem('usuario', 'Invitado');
     });
 
 }
