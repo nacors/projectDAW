@@ -27,9 +27,9 @@ body {
 #zonaInicio {
     width: 300px;
     height: 500px;
-    border: 1px #00b894 solid;
-    border-radius: 2px 2px 2px 2px;
-    background: #81ecec;
+    /* border: 1px #533fee solid; */
+    /* border-radius: 2px 2px 2px 2px; */
+    background: #6c5ce7;
     margin: auto;
     margin-top: 7%;
     display: grid;
@@ -52,10 +52,13 @@ input {
 }
 
 .boton:hover {
-    cursor: pointer;
+    /* cursor: pointer;
     border: 0px #00cec9 solid !important;
-    background: #fdcb6e;
-    border-radius: 3px 3px 3px 3px;
+    background: #fdcb6e; */
+    /* border-radius: 3px 3px 3px 3px; */
+    background: #00b894;
+    cursor: pointer;
+    box-shadow: 2px 2px 10px black;
 }
 
 #registrarse {
