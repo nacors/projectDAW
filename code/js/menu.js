@@ -24,6 +24,8 @@ window.onload = () => {
         info.innerHTML += "<a id='noSalir' href=''>Cancelar</a>";
         document.getElementById("noSalir").addEventListener("click", function (e) {
             e.preventDefault();
+            reiniciarColoresBotones();
+            document.getElementById("jugarJuego").style.background = "#6c5ce7";
             info.innerHTML = "<h3>Atención, el emparejamiento es aleatorio. Para buscar una sesión presiona el botón de abajo</h3><br>";
             info.innerHTML += "<div id='imagenJuego'></div>";
             info.innerHTML += "<a id='enlacePartidaJ' href='/jugar'>JUGAR</a>";
