@@ -157,12 +157,8 @@ Game.update = function () {
             }
             //damos movimiento del jugador al personaje
             movimientoNombreJugador();
-<<<<<<< HEAD
-
-=======
             movimientoNombreJugador("enemigo");
             
->>>>>>> 46151d4389f238cb209462492fb5410353cb1e65
         }
         //movimiento para el personaje que controla el jugador
         if (cursors.left.isDown && quieto) {
