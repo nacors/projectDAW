@@ -143,6 +143,11 @@ io.on('connection', function (socket) {
     socket.broadcast.to(funcion.getRoom(socket)).emit('opacityEnemigo', accion);
   });
 
+  //enviamos nuestro nick al contrincante
+  socket.on("nickEnemigo", function(nombre){
+    console.log("enviamos el nombre de "+nombre);
+    socket.broadcast.to(funcion.getRoom(socket)).emit('nickEnemigo', nombre);
+  });
 });
 
 //funciones del aldo cliente en el juego
@@ -213,7 +218,7 @@ new time('* * * * *', function(){
       io.sockets.in(room).emit("murcielagos", direccion, y);
     }
   }
-  console.log("Señal para murcielagos");
+  //console.log("Señal para murcielagos");
 }, null, true, 'America/Los_Angeles');
 
 function generarPosicionesPociones(cant) {

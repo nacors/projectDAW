@@ -114,3 +114,19 @@ a:hover {
 #nombreJugador{
     font-size: 30px;
 }
+#imagenJuego{
+    width: 600px;
+    height: 283px;
+    background-image: url("../assets/imagenes/estilo/imagenJuego.gif");
+    margin: auto;
+    margin-bottom: 2%;
+}
+
+#imagenFlechas{
+    width: 200px;
+    height: 120px;
+    background-image: url("../assets/imagenes/estilo/flechas.png");
+    background-size: 200px 120px;
+    margin: auto;
+    margin-bottom: 2%;
+}

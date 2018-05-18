@@ -15,14 +15,15 @@ var suelo,
     fondo,
     audioCaida,
     audioPocion,
-    nombreJugador = null;
+    nombreJugador = null,
+    nombreEnemigo = null;
 
 var jugadoresImprimidos = new Map();
 var idJugadoresImprimidos = [];
 var idJugadoresNoMover = [];
 
 var Game = {};
-
+var veceseEjecutado = 0;
 var Timer = 0;
 var salto = true;
 var miid = 0;
@@ -53,13 +54,16 @@ Game.playerMap = new Map();
 
 //FUNCIONES GAME---------------------------------------------------------------------------------------------------------------------------------
 Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
-    console.log(jugadores);
+    veceseEjecutado ++;
+    if(veceseEjecutado == 2){
+        enviarMiNombreUsuario();
+    }
+    console.log(veceseEjecutado);
     //imprimios al jugador principal
     if (jugadoresImprimidos.size < 1) {
         miid = id;
         cargarMapa(numMapa, pociones);
     }
-    console.log(miid);
     let g = game.add.sprite(x, y, 'caballero');
     Game.playerMap.set(id, g);
     var jugador = Game.playerMap.get(id);
@@ -84,7 +88,10 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
     //metemos el nombre de nuestro id antes de que se crean copiaso se impriman otros jugadores
     if (jugadoresImprimidos.size < 2) {
         añadirNombreUsuario();
+        enviarMiNombreUsuario();
     }
+    
+    //enviamos el nombre del usuario a la pantalla enemiga
     //imprimimos los juagdores que no se muestran 
     //recorremos la array de jugadores que hemos pasado desde el servidor 
     //el servidor nos devuelve la array de todos los jugadores que se han conectado
@@ -118,7 +125,7 @@ Game.create = function () {
     audioCaida = game.add.audio("caida");
     audioPocion = game.add.audio("pocion");
 
-    fondo.loopFull(0.6);
+    //fondo.loopFull(0.6);
 };
 
 Game.update = function () {
@@ -137,6 +144,8 @@ Game.update = function () {
             }
             //damos movimiento del jugador al personaje
             movimientoNombreJugador();
+            movimientoNombreJugador("enemigo");
+            
         }
         //movimiento para el personaje que controla el jugador
         if (cursors.left.isDown && quieto) {
@@ -336,8 +345,18 @@ Game.crearMurcielagos = function (direccion, y) {
         murcielago.animations.play('murcielagosmov', 10, true);
         murcielagos.push(murcielago);
     }
-
     //console.log(murcielagos);
+}
+
+Game.nickEnemigo = function(nombre){
+    console.log("imprimo el nombre del enemigo");
+    if(idJugadoresImprimidos.length > 1){
+        nombreEnemigo = game.add.text(jugadoresImprimidos.get(idJugadoresImprimidos[1]).x, jugadoresImprimidos.get(idJugadoresImprimidos[1]).y - 20, nombre, {
+            fill: "white",
+            stroke: "black",
+            fontSize: 15
+        });
+    }
 }
 game.state.add('Game', Game);
 game.state.start('Game');
