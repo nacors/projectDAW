@@ -21,7 +21,6 @@ function imprimirJugador(jugadorImprimir) {
     jugador.body.immovable = true;
     jugador.body.moves = false;
     jugador.name = "enemigo";
-    if (jugadorImprimir.id == miid) game.camera.follow(jugador);
     jugadoresImprimidos.set(jugadorImprimir.id, g);
     //metemos la id del jugador imprimido
     idJugadoresImprimidos.push(jugadorImprimir.id);
@@ -72,9 +71,11 @@ function iniciarPartida() {
     if (idJugadoresImprimidos[0] < idJugadoresImprimidos[1]) {
         jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 2950;
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 3450;
+        miDireccion = "derecha";
     } else {
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 2950;
         jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 3450;
+        miDireccion = "izquierda";
     }
 }
 
@@ -97,6 +98,7 @@ function checkOverlap(body1, body2) {
             if (body2.x < body1.x && direccion == "left") {
                 if (jugadoresImprimidos.get(miid) == body1.sprite) {
                     body2.sprite.alpha = 0;
+                    setCamara(body1);
                     //ocultar al enemigo
                     Client.opacityEnemigo("ocultar");
                 }
@@ -105,6 +107,7 @@ function checkOverlap(body1, body2) {
                 // console.log("Muere " + body2.sprite.name);
                 if (jugadoresImprimidos.get(miid) == body1.sprite) {
                     body2.sprite.alpha = 0;
+                    setCamara(body1);
                     Client.opacityEnemigo("ocultar");
                 }
                 volverTransparenciaNormal();
@@ -114,6 +117,7 @@ function checkOverlap(body1, body2) {
                 // console.log("Muere " + body1.sprite.name);
                 if (jugadoresImprimidos.get(miid) == body2.sprite) {
                     body1.sprite.alpha = 0;
+                    setCamara(body2);
                     Client.opacityEnemigo("ocultar");
                 }
                 volverTransparenciaNormal();
@@ -121,6 +125,7 @@ function checkOverlap(body1, body2) {
                 // console.log("Muere " + body1.sprite.name);
                 if (jugadoresImprimidos.get(miid) == body2.sprite) {
                     body1.sprite.alpha = 0;
+                    setCamara(body2);
                     Client.opacityEnemigo("ocultar");
                 }
                 volverTransparenciaNormal();
@@ -184,6 +189,7 @@ function pegar1(id, direccion) {
         if (id == miid) quieto = true;
         if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+        cambiarLimite = true;
     }, this);
 }
 
@@ -198,6 +204,7 @@ function pegar2(id, direccion) {
         if (id == miid) quieto = true;
         if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+        cambiarLimite = true;
     }, this);
 }
 
@@ -470,3 +477,37 @@ function movimientoNombreJugador(){
     
 }
 
+function limites(limite){
+    if(jugadoresImprimidos.get(miid).x < limitesMapa[limiteActual] && direccion == "left") jugadoresImprimidos.get(miid).body.velocity.x = 0;
+    if(jugadoresImprimidos.get(miid).x > limiteDerecha && direccion == "right") jugadoresImprimidos.get(miid).body.velocity.x = 0;
+}
+
+function setCamara(body){
+    game.camera.follow(body.sprite);
+    if(miDireccion == "derecha" && cambiarLimite){
+        limiteActual++;
+        console.log("sumo limite actual por que voy a la derecha");
+    }else if(miDireccion == "izquierda" && cambiarLimite){
+        limiteActual--;
+    }
+    console.log(game.camera.x + " posicion camara");
+    cambiarLimite = false;
+}
+
+function fixCamara(){
+    if(miDireccion == "izquierda"){
+        if(game.camera.x <= limitesMapa[limiteActual]){
+            game.camera.target = null;
+            limiteDerecha = limitesMapa[limiteActual] + 1910;
+        }
+        
+    }
+    if(miDireccion == "derecha"){
+        console.log(limitesMapa[limiteActual] + "Esto es limite actual");
+        if(game.camera.x >= limitesMapa[limiteActual]){
+            game.camera.target = null;
+            limiteDerecha = limitesMapa[limiteActual] + 1910;
+            console.log(limiteDerecha +" Esto es limitederecha");
+        }
+    }
+}

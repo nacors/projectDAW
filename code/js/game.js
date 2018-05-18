@@ -48,6 +48,17 @@ var audioMurcielagos;
 var direccionMurcielagos;
 var sumarVelocidad = 0;
 var sonidosSalto = [];
+var limitesMapa = {
+    0: 0,
+    1: 290,
+    2: 2200,
+    3: 4110,
+    4: 4490,
+};
+var limiteActual = 2;
+var limiteDerecha = limitesMapa[limiteActual] + 1910;
+var miDireccion;
+var cambiarLimite = true;
 Game.playerMap = new Map();
 
 
@@ -77,7 +88,9 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
     jugador.body.fixedRotation = true;
     jugador.body.mass = 70;
     game.world.setBounds(0, 0, 6400, 900);
-    if (id == miid) game.camera.follow(jugador);
+    game.camera.x = limitesMapa[limiteActual];
+    console.log(game.world.bounds.left);
+    jugador.body.collideWorldBounds = true;
     jugadoresImprimidos.set(id, g);
     idJugadoresImprimidos.push(id);
     textoEspera();
@@ -137,20 +150,26 @@ Game.update = function () {
             }
             //damos movimiento del jugador al personaje
             movimientoNombreJugador();
+
         }
         //movimiento para el personaje que controla el jugador
         if (cursors.left.isDown && quieto) {
             direccion = "left";
+
             Client.presionar(data, "izquierda");
             moverJugador(miid, "izquierda");
             movimientoFondo();
             revisarCaidoFueraMapa();
+            limites();
+            fixCamara();
         } else if (cursors.right.isDown && quieto) {
             direccion = "right";
             Client.presionar(data, "derecha");
             moverJugador(miid, "derecha");
             movimientoFondo();
             revisarCaidoFueraMapa();
+            limites();
+            fixCamara();
         } else if (quieto) {
             if (jugadoresImprimidos.size != 0) {
                 Client.soltar(data);
@@ -174,7 +193,7 @@ Game.update = function () {
                 Client.presionar(data, "salto");
                 salto = false;
             }
-            
+
         } else if (cursors.up.isUp) {
             if (jugadoresImprimidos.get(miid) && jugadoresImprimidos.get(miid).body.velocity.y < 14 && jugadoresImprimidos.get(miid).body.velocity.y > -14) {
                 countSalto = 0;
@@ -192,6 +211,7 @@ Game.update = function () {
             Client.ataque("hit2", direccion);
             pegar2(miid, direccion);
         }
+
     }
     //parte de easter egg
     easterEgg();
@@ -254,9 +274,9 @@ Game.movimiento = function (id, data, accion, direccion) {
             console.log(jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x);
             if (jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x < 1000
                 && jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x > -1000) {
-                
-                    sonidosSalto[0].play();
-                
+
+                sonidosSalto[0].play();
+
             }
         }
     } else if (accion == "soltar") {
