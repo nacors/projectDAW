@@ -62,14 +62,14 @@ app.get('/registrar', function (req, res) {
 //metdod para devolver clasifficacion del jugador al menu
 app.get("/miClasificacion", function (req, res) {
   //funcion que nos devuelve nuestra clasificacion
-  mongo.miClasificacion(req.query.nick).then(function(resultado){
+  mongo.miClasificacion(req.query.nick).then(function (resultado) {
     res.json(resultado[0]);
   });
 });
 
 app.get("/clasificacionGeneral", function (req, res) {
   //funcion que nos devuelve nuestra clasificacion
-  mongo.clasificacionGeneral().then(function(resultado){
+  mongo.clasificacionGeneral().then(function (resultado) {
     res.json(resultado);
   });
 });
@@ -162,6 +162,10 @@ io.on('connection', function (socket) {
   socket.on("nickEnemigo", function (nombre) {
     console.log("enviamos el nombre de " + nombre);
     socket.broadcast.to(funcion.getRoom(socket)).emit('nickEnemigo', nombre);
+  });
+
+  socket.on("clasificacionJugador", function (resultado, bajas, tiempo, nick, muertes) {
+    mongo.actualizarClasificacionJugador(resultado, bajas, tiempo, nick, muertes);
   });
 });
 
