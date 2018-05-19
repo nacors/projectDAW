@@ -19,21 +19,25 @@ function conexionMongo() {
 }
 
 //funcion de consulta al mongo
-function consultaMongo(dbo, nick, contr = false) {
+function consultaMongo(dbo, nick = false, contr = false, documento) {
     var query;
     //si no hay contraseña es la consulta de registro
-    if (!contr) {
+    if (!contr && nick != false) {
         query = { nickname: nick };
         //si hay contraseña es una consulta que verifica si el usuario esta registrado
-    } else {
+    } else if (nick != false && contr) {
         query = { nickname: nick, contrasenya: contr };
+    } else if(nick == false){
+        console.log("aqui entro");
+        query = {};
     }
     return new Promise(function (resolve, reject) {
-        dbo.collection("usuaris").find(query).toArray(function (err, result) {
+        dbo.collection(documento).find(query).toArray(function (err, result) {
             if (err) throw err;
             console.log("--resultado de la consulta: " + result);
             resultado = result.length == 0 ? false : true;
-            resolve(resultado);
+            if (documento == "usuaris") resolve(resultado);
+            else if (documento == "clasificacion" || documento == "clasificacionGeneral") resolve(result);
         });
     });
 
@@ -45,7 +49,7 @@ exports.consultarUsuarioRegistrado = function (nick, contr) {
         conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
             if (err) throw err;
             var dbo = db.db("projecte");
-            consultaMongo(dbo, nick, contr).then(function (existe) {
+            consultaMongo(dbo, nick, contr, "usuaris").then(function (existe) {
                 var myobj = { nickname: nick, contrasenya: contr };
                 console.log("--usuario existe: " + existe);
                 if (existe) {
@@ -74,12 +78,21 @@ exports.insertarMongo = function (nick, contr) {
             if (err) throw err;
             var dbo = db.db("projecte");
             //una vez hecha consulta se ejecuta la funcion
-            consultaMongo(dbo, nick).then(function (existe) {
+            consultaMongo(dbo, nick, false, "usuaris").then(function (existe) {
                 var myobj = { nickname: nick, contrasenya: contr };
+                var clasificacion = { nickname: nick, clasificacion: 0, partidasJugadas: 0, enemigosEliminados: 0, partidasGanadas: 0 };
                 if (!existe) {
                     dbo.collection("usuaris").insertOne(myobj, function (err, res) {
                         if (err) throw err;
                         console.log("--nuevo usuario registrado");
+                        // db.close();
+                        //si se añadio correctamente, devolvemos un true
+                        // resolve(true);
+                    });
+                    //insertamos nueva coleccion de clasificacion
+                    dbo.collection("clasificacion").insertOne(clasificacion, function (err, res) {
+                        if (err) throw err;
+                        console.log("--clasificacion de nuevo usuario registrado");
                         db.close();
                         //si se añadio correctamente, devolvemos un true
                         resolve(true);
@@ -91,6 +104,30 @@ exports.insertarMongo = function (nick, contr) {
                     //si ya existe, devolvemos un false
                     resolve(false);
                 }
+            }).catch(console.log);
+        });
+    });
+}
+
+exports.miClasificacion = function (nick) {
+    return new Promise(function (resolve, reject) {
+        conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("projecte");
+            consultaMongo(dbo, nick, false, "clasificacion").then(function (resultado) {
+                resolve(resultado);
+            }).catch(console.log);
+        });
+    });
+}
+
+exports.clasificacionGeneral = function () {
+    return new Promise(function (resolve, reject) {
+        conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("projecte");
+            consultaMongo(dbo, false, false, "clasificacionGeneral").then(function (resultado) {
+                resolve(resultado);
             }).catch(console.log);
         });
     });

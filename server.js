@@ -59,6 +59,21 @@ app.get('/registrar', function (req, res) {
   });
 });
 
+//metdod para devolver clasifficacion del jugador al menu
+app.get("/miClasificacion", function (req, res) {
+  //funcion que nos devuelve nuestra clasificacion
+  mongo.miClasificacion(req.query.nick).then(function(resultado){
+    res.json(resultado[0]);
+  });
+});
+
+app.get("/clasificacionGeneral", function (req, res) {
+  //funcion que nos devuelve nuestra clasificacion
+  mongo.clasificacionGeneral().then(function(resultado){
+    res.json(resultado);
+  });
+});
+
 app.get('/iniciar', function (req, res) {
   //funcion que nos inica la sesion
   linea();
@@ -144,8 +159,8 @@ io.on('connection', function (socket) {
   });
 
   //enviamos nuestro nick al contrincante
-  socket.on("nickEnemigo", function(nombre){
-    console.log("enviamos el nombre de "+nombre);
+  socket.on("nickEnemigo", function (nombre) {
+    console.log("enviamos el nombre de " + nombre);
     socket.broadcast.to(funcion.getRoom(socket)).emit('nickEnemigo', nombre);
   });
 });
@@ -208,13 +223,13 @@ function guardarJugadresRoom(socket) {
   }
 }
 
-new time('* * * * *', function(){
+new time('* * * * *', function () {
   var randDir = Math.round(Math.random());
   var direccion = (randDir == 1) ? "derecha" : "izquierda";
   var y = Math.floor(Math.random() * (300 - 100) + 100);
-  for(let room in io.sockets.adapter.rooms){
-    var sala = room.substring(0,4);
-    if(sala = "sala"){
+  for (let room in io.sockets.adapter.rooms) {
+    var sala = room.substring(0, 4);
+    if (sala = "sala") {
       io.sockets.in(room).emit("murcielagos", direccion, y);
     }
   }

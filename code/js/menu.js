@@ -1,6 +1,5 @@
 window.onload = () => {
     document.getElementById("nickJugador").innerHTML = sessionStorage.getItem("usuario");
-
     cambiarFondoRegistro();
 
     var info = document.getElementById("informacion");
@@ -42,7 +41,14 @@ window.onload = () => {
     document.getElementById("clasificacion").addEventListener("click", function () {
         reiniciarColoresBotones();
         this.style.background = "#6c5ce7";
-        info.innerHTML = "<h3>Aqui en un futuro no muy lejano, eso espero, habra clasficación de los mejores jugadores</h3><br>";
+        info.innerHTML = "<div id='clasificacionInfo'></div>";
+        console.log(sessionStorage.getItem("usuario"));
+        if(sessionStorage.getItem("usuario") == "Invitado" || sessionStorage.getItem("usuario") == ""){
+            info.innerHTML = ("<div>Regsitrate o inicia sesión para ver las clasificaciones</div>");
+        }else{
+            imprimirTuClasificacion();
+            imprimirClasificacionGeneral();
+        }
     });
 
     document.getElementById("reglas").addEventListener("click", function () {
@@ -90,5 +96,51 @@ window.onload = () => {
             fondo.style.backgroundImage = `url(../assets/imagenes/estilo/${fondos[pos]})`;
             pos = pos == fondos.length - 1 ? 0 : pos + 1;
         }, 10000);
+    }
+
+    function imprimirTuClasificacion() {
+        $.ajax({
+            type: 'GET',
+            url: '/miClasificacion',
+            data: { nick: sessionStorage.getItem("usuario") },
+            beforeSend: function () {
+                document.getElementById("clasificacionInfo").innerHTML = `  
+                <div id='clasificacionPersonal'><div id="cargando"></div></div>`;
+            },
+            success: function (taken) {
+                document.getElementById("clasificacionPersonal").innerHTML = `<div>Nick: <b>${taken.nickname}</b></div>
+                                    <div>Clasificación: <b>${taken.clasificacion}</b></div>
+                                    <div>Partidas Ganadas: <b>${taken.partidasGanadas}</b></div>
+                                    <div>Partidas Jugadas: <b>${taken.partidasJugadas}</b></div>
+                                    <div>Enemigos Eliminados: <b>${taken.enemigosEliminados}</b></div>`;
+            }, error: function (xhr, status) {
+                console.log(status);
+                console.log(xhr);
+                alert('!!!!!!ajax!!!!!!!');
+            },
+        });
+    }
+    function imprimirClasificacionGeneral() {
+        $.ajax({
+            type: 'GET',
+            url: '/clasificacionGeneral',
+            beforeSend: function () {
+                document.getElementById("clasificacionInfo").innerHTML +=  `  
+                <div id='clasificacionGlobal'><div id="cargando"></div></div>`;
+            },
+            success: function (taken) {
+                for (let resultado in taken) {
+                    if (resultado == 0) {
+                        document.getElementById("clasificacionGlobal").innerHTML = `<div>${parseInt(resultado) + 1}. <b>${taken[resultado].nick}</b>, puntos: <b>${taken[resultado].clasificacion}</b></div>`;
+                    } else {
+                        document.getElementById("clasificacionGlobal").innerHTML += `<div>${parseInt(resultado) + 1}. <b>${taken[resultado].nick}</b>, puntos: <b>${taken[resultado].clasificacion}</b></div>`;
+                    }
+                }
+            }, error: function (xhr, status) {
+                console.log(status);
+                console.log(xhr);
+                alert('!!!!!!ajax!!!!!!!');
+            },
+        });
     }
 }
