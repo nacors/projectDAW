@@ -75,7 +75,7 @@ input {
 
 #invitado {
     grid-area: invitado;
-    margin-top: 200px;
+    padding-top: 200px;
 }
 
 form input{
@@ -155,4 +155,12 @@ input[name=registrar] {
 }
 #jugarInvitadoForm{
     display: inline;
+}
+.cargando{
+    width: 300px;
+    height: 21px;
+    background: url(../assets/imagenes/estilo/cargando.apng);
+    background-size: 100px 100px;
+    background-repeat: no-repeat;
+    background-position: 97px 1px;
 }

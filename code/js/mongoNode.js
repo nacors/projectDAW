@@ -22,8 +22,8 @@ function conexionMongo() {
 function consultaMongo(dbo, nick = false, contr = false, documento) {
     var query;
     var mysort = null;
-    //si no hay contraseña es la consulta de registro
-    if (!contr && nick) {
+    //para ver la clasificacion de una persona
+    if (!contr && nick && documento == "clasificacion") {
         query = { nickname: nick };
         //esto nos devuelve el objeto del usuario
         return new Promise(function (resolve, reject) {
@@ -33,6 +33,18 @@ function consultaMongo(dbo, nick = false, contr = false, documento) {
                 resolve(result);
             });
         });
+        //para ver si el nick de la persona se encuentra en la bbdd
+    } else if (!contr && nick && documento == "usuaris") {
+        query = { nickname: nick };
+        return new Promise(function (resolve, reject) {
+            dbo.collection(documento).find(query).toArray(function (err, result) {
+                if (err) throw err;
+                console.log("--resultado de la consulta: " + result);
+                resultado = result.length == 0 ? false : true;
+                resolve(resultado);
+            });
+        });
+        //para ver si la persoan esta registrada
     } else if (nick && contr) {
         query = { nickname: nick, contrasenya: contr };
         return new Promise(function (resolve, reject) {
@@ -43,6 +55,7 @@ function consultaMongo(dbo, nick = false, contr = false, documento) {
                 resolve(resultado);
             });
         });
+        //para ver clasificacion de los 5 primeros
     } else if (nick == false) {
         query = {};
         mysort = { clasificacion: -1 };
