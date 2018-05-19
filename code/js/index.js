@@ -106,7 +106,7 @@ window.onload = () => {
         setTimeout(function () {
             mensajeRegistro.style.opacity = "0";
             // mensajeRegistro.innerHTML = "";
-            zonaInvitado.style.marginTop = "200px";
+            // zonaInvitado.style.marginTop = "200px";
         }, 3000);
     }
 

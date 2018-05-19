@@ -32,13 +32,17 @@ Client.ataque = function (ataque, direccion) {
 }
 
 //metodo para elimianr el enemigo
-Client.opacityEnemigo = function(accion){
+Client.opacityEnemigo = function (accion) {
     Client.socket.emit("opacityEnemigo", accion);
 }
 
 //metodo para coger el nick del contrincante
-Client.nickEnemigo = function(nombre){
+Client.nickEnemigo = function (nombre) {
     Client.socket.emit("nickEnemigo", nombre);
+}
+
+Client.clasificacionJugador = function (resultado, bajas, tiempo, nick, muertes) {
+    Client.socket.emit("clasificacionJugador", resultado, bajas, tiempo, nick, muertes);
 }
 
 //FUNCIONES QUE SE RECIBEN DEL SERVIDOR***********************************************************
@@ -95,16 +99,16 @@ Client.socket.on("atacar", function (id, ataque, direccion) {
     Game.ataqueEnemigo(id, ataque, direccion);
 });
 
-Client.socket.on("opacityEnemigo", function(accion){
+Client.socket.on("opacityEnemigo", function (accion) {
     Game.opacityEnemigo(accion);
 })
 
-Client.socket.on("murcielagos", function(direccion, y){
+Client.socket.on("murcielagos", function (direccion, y) {
     //console.log("recibe el cliente");
     Game.crearMurcielagos(direccion, y);
 });
 
-Client.socket.on("nickEnemigo", function(nombre){
+Client.socket.on("nickEnemigo", function (nombre) {
     //console.log("recibe el cliente");
     Game.nickEnemigo(nombre);
 });

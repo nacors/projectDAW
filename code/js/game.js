@@ -62,11 +62,12 @@ var miDireccion;
 var cambiarLimite = true;
 Game.playerMap = new Map();
 
-
 //FUNCIONES GAME---------------------------------------------------------------------------------------------------------------------------------
 Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
-    veceseEjecutado ++;
-    if(veceseEjecutado == 2){
+    //ejecutar este metodo cuando el juego termine, esto actualiza los datos de los jugadores
+    // enviarClasificacionJugador("victoria", 5, 145, "ivanisayenko", 2);
+    veceseEjecutado++;
+    if (veceseEjecutado == 2) {
         enviarMiNombreUsuario();
     }
     console.log(veceseEjecutado);
@@ -103,7 +104,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
         añadirNombreUsuario();
         enviarMiNombreUsuario();
     }
-    
+
     //enviamos el nombre del usuario a la pantalla enemiga
     //imprimimos los juagdores que no se muestran 
     //recorremos la array de jugadores que hemos pasado desde el servidor 
@@ -158,7 +159,7 @@ Game.update = function () {
             //damos movimiento del jugador al personaje
             movimientoNombreJugador();
             movimientoNombreJugador("enemigo");
-            
+
         }
         //movimiento para el personaje que controla el jugador
         if (cursors.left.isDown && quieto) {
@@ -367,9 +368,9 @@ Game.crearMurcielagos = function (direccion, y) {
     //console.log(murcielagos);
 }
 
-Game.nickEnemigo = function(nombre){
+Game.nickEnemigo = function (nombre) {
     console.log("imprimo el nombre del enemigo");
-    if(idJugadoresImprimidos.length > 1){
+    if (idJugadoresImprimidos.length > 1) {
         nombreEnemigo = game.add.text(jugadoresImprimidos.get(idJugadoresImprimidos[1]).x, jugadoresImprimidos.get(idJugadoresImprimidos[1]).y - 20, nombre, {
             fill: "white",
             stroke: "black",

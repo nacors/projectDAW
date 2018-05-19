@@ -489,37 +489,41 @@ function enviarMiNombreUsuario() {
     Client.nickEnemigo(sessionStorage.getItem("usuario"));
 }
 
-function limites(limite){
-    if(jugadoresImprimidos.get(miid).x < limitesMapa[limiteActual] && direccion == "left") jugadoresImprimidos.get(miid).body.velocity.x = 0;
-    if(jugadoresImprimidos.get(miid).x > limiteDerecha && direccion == "right") jugadoresImprimidos.get(miid).body.velocity.x = 0;
+function limites(limite) {
+    if (jugadoresImprimidos.get(miid).x < limitesMapa[limiteActual] && direccion == "left") jugadoresImprimidos.get(miid).body.velocity.x = 0;
+    if (jugadoresImprimidos.get(miid).x > limiteDerecha && direccion == "right") jugadoresImprimidos.get(miid).body.velocity.x = 0;
 }
 
-function setCamara(body){
+function setCamara(body) {
     game.camera.follow(body.sprite);
-    if(miDireccion == "derecha" && cambiarLimite){
+    if (miDireccion == "derecha" && cambiarLimite) {
         limiteActual++;
         console.log("sumo limite actual por que voy a la derecha");
-    }else if(miDireccion == "izquierda" && cambiarLimite){
+    } else if (miDireccion == "izquierda" && cambiarLimite) {
         limiteActual--;
     }
     console.log(game.camera.x + " posicion camara");
     cambiarLimite = false;
 }
 
-function fixCamara(){
-    if(miDireccion == "izquierda"){
-        if(game.camera.x <= limitesMapa[limiteActual]){
+function fixCamara() {
+    if (miDireccion == "izquierda") {
+        if (game.camera.x <= limitesMapa[limiteActual]) {
             game.camera.target = null;
             limiteDerecha = limitesMapa[limiteActual] + 1910;
         }
-        
+
     }
-    if(miDireccion == "derecha"){
+    if (miDireccion == "derecha") {
         console.log(limitesMapa[limiteActual] + "Esto es limite actual");
-        if(game.camera.x >= limitesMapa[limiteActual]){
+        if (game.camera.x >= limitesMapa[limiteActual]) {
             game.camera.target = null;
             limiteDerecha = limitesMapa[limiteActual] + 1910;
-            console.log(limiteDerecha +" Esto es limitederecha");
+            console.log(limiteDerecha + " Esto es limitederecha");
         }
     }
+}
+
+function enviarClasificacionJugador(resultado, bajas, tiempo, nick, muertes) {
+    Client.clasificacionJugador(resultado, bajas, tiempo, nick, muertes);
 }
