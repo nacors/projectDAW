@@ -1,4 +1,7 @@
 window.onload = () => {
+    if(sessionStorage.getItem("usuario") == null){
+        sessionStorage.setItem("usuario", "Invitado");
+    }
     document.getElementById("nickJugador").innerHTML = sessionStorage.getItem("usuario");
     cambiarFondoRegistro();
     var info = document.getElementById("informacion");
@@ -37,8 +40,8 @@ window.onload = () => {
         reiniciarColoresBotones();
         this.style.background = "#6c5ce7";
         info.innerHTML = "<div id='clasificacionInfo'></div>";
-        console.log(sessionStorage.getItem("usuario"));
-        if (sessionStorage.getItem("usuario") == "Invitado" || sessionStorage.getItem("usuario") == "") {
+        // console.log(sessionStorage.getItem("usuario"));
+        if (sessionStorage.getItem("usuario") == "Invitado" || sessionStorage.getItem("usuario") == null) {
             info.innerHTML = ("<h2><a href='/'>Registrate</a> o <a href='/'>Inicia Sesón</a> para ver las clasificaciones</h2>");
         } else {
             imprimirTuClasificacion();
