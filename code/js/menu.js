@@ -1,19 +1,13 @@
 window.onload = () => {
     document.getElementById("nickJugador").innerHTML = sessionStorage.getItem("usuario");
-
     cambiarFondoRegistro();
-
     var info = document.getElementById("informacion");
+    abrirPestañaJugar(document.getElementById("jugarJuego"));
+
+
     document.getElementById("jugarJuego").addEventListener("click", function (e) {
         reiniciarColoresBotones();
-        this.style.background = "#6c5ce7";
-        info.innerHTML = "<h3>Atención, el emparejamiento es aleatorio. Para buscar una sesión presiona el botón de abajo</h3><br>";
-        info.innerHTML += "<div id='imagenJuego'></div>";
-        info.innerHTML += "<a id='enlacePartida' href='/jugar'>JUGAR</a>";
-        document.getElementById("enlacePartida").addEventListener("click", function (e) {
-            e.preventDefault();
-            window.location = "/juego";
-        });
+        abrirPestañaJugar(this);
     });
 
     document.getElementById("cerrarSesion").addEventListener("click", function () {
@@ -24,8 +18,8 @@ window.onload = () => {
         info.innerHTML += "<a id='noSalir' href=''>Cancelar</a>";
         document.getElementById("noSalir").addEventListener("click", function (e) {
             e.preventDefault();
+            reiniciarColoresBotones();
             document.getElementById("jugarJuego").style.background = "#6c5ce7";
-            document.getElementById("cerrarSesion").style.background = "#a29bfe";
             info.innerHTML = "<h3>Atención, el emparejamiento es aleatorio. Para buscar una sesión presiona el botón de abajo</h3><br>";
             info.innerHTML += "<div id='imagenJuego'></div>";
             info.innerHTML += "<a id='enlacePartidaJ' href='/jugar'>JUGAR</a>";
@@ -37,13 +31,19 @@ window.onload = () => {
         document.getElementById("salir").addEventListener("click", function (e) {
             sessionStorage.setItem('usuario', "invitado");
         });
-
     });
 
     document.getElementById("clasificacion").addEventListener("click", function () {
         reiniciarColoresBotones();
         this.style.background = "#6c5ce7";
-        info.innerHTML = "<h3>Aqui en un futuro no muy lejano, eso espero, habra clasficación de los mejores jugadores</h3><br>";
+        info.innerHTML = "<div id='clasificacionInfo'></div>";
+        console.log(sessionStorage.getItem("usuario"));
+        if (sessionStorage.getItem("usuario") == "Invitado" || sessionStorage.getItem("usuario") == "") {
+            info.innerHTML = ("<h2><a href='/'>Registrate</a> o <a href='/'>Inicia Sesón</a> para ver las clasificaciones</h2>");
+        } else {
+            imprimirTuClasificacion();
+            imprimirClasificacionGeneral();
+        }
     });
 
     document.getElementById("reglas").addEventListener("click", function () {
@@ -91,5 +91,65 @@ window.onload = () => {
             fondo.style.backgroundImage = `url(../assets/imagenes/estilo/${fondos[pos]})`;
             pos = pos == fondos.length - 1 ? 0 : pos + 1;
         }, 10000);
+    }
+
+    function imprimirTuClasificacion() {
+        $.ajax({
+            type: 'GET',
+            url: '/miClasificacion',
+            data: { nick: sessionStorage.getItem("usuario") },
+            beforeSend: function () {
+                document.getElementById("clasificacionInfo").innerHTML = `  
+                <div id='clasificacionPersonal'><div id="cargando"></div></div>`;
+            },
+            success: function (taken) {
+                document.getElementById("clasificacionPersonal").innerHTML = `<h4>Datos Personales</h4>`;
+                document.getElementById("clasificacionPersonal").innerHTML += `<div>Nick: <b>${taken.nickname}</b></div>
+                                    <div>Clasificación: <b>${taken.clasificacion}</b></div>
+                                    <div>Partidas Ganadas: <b>${taken.partidasGanadas}</b></div>
+                                    <div>Partidas Jugadas: <b>${taken.partidasJugadas}</b></div>
+                                    <div>Enemigos Eliminados: <b>${taken.enemigosEliminados}</b></div>`;
+            }, error: function (xhr, status) {
+                console.log(status);
+                console.log(xhr);
+                alert('!!!!!!ajax!!!!!!!');
+            },
+        });
+    }
+    function imprimirClasificacionGeneral() {
+        $.ajax({
+            type: 'GET',
+            url: '/clasificacionGeneral',
+            beforeSend: function () {
+                document.getElementById("clasificacionInfo").innerHTML += `  
+                <div id='clasificacionGlobal'><div id="cargando"></div></div>`;
+            },
+            success: function (taken) {
+                // console.log(taken);
+                document.getElementById("clasificacionGlobal").innerHTML = `<h4>Clasificación General</h4>`;
+                for (let resultado = 0; resultado < 5; resultado++) {
+                    if (resultado == 0) {
+                        document.getElementById("clasificacionGlobal").innerHTML += `<div>${parseInt(resultado) + 1}. <b>${taken[resultado].nickname}</b>, puntos: <b>${taken[resultado].clasificacion}</b></div>`;
+                    } else {
+                        document.getElementById("clasificacionGlobal").innerHTML += `<div>${parseInt(resultado) + 1}. <b>${taken[resultado].nickname}</b>, puntos: <b>${taken[resultado].clasificacion}</b></div>`;
+                    }
+                }
+            }, error: function (xhr, status) {
+                console.log(status);
+                console.log(xhr);
+                alert('!!!!!!ajax!!!!!!!');
+            },
+        });
+    }
+
+    function abrirPestañaJugar(pestaña) {
+        pestaña.style.background = "#6c5ce7";
+        info.innerHTML = "<h3>Atención, el emparejamiento es aleatorio. Para buscar una sesión presiona el botón de abajo</h3><br>";
+        info.innerHTML += "<div id='imagenJuego'></div>";
+        info.innerHTML += "<a id='enlacePartida' href='/jugar'>JUGAR</a>";
+        document.getElementById("enlacePartida").addEventListener("click", function (e) {
+            e.preventDefault();
+            window.location = "/juego";
+        });
     }
 }

@@ -560,3 +560,7 @@ function fixCamara(){
         }
     }
 }
+
+function enviarClasificacionJugador(resultado, bajas, tiempo, nick, muertes) {
+    Client.clasificacionJugador(resultado, bajas, tiempo, nick, muertes);
+}

@@ -19,24 +19,55 @@ function conexionMongo() {
 }
 
 //funcion de consulta al mongo
-function consultaMongo(dbo, nick, contr = false) {
+function consultaMongo(dbo, nick = false, contr = false, documento) {
     var query;
-    //si no hay contraseña es la consulta de registro
-    if (!contr) {
+    var mysort = null;
+    //para ver la clasificacion de una persona
+    if (!contr && nick && documento == "clasificacion") {
         query = { nickname: nick };
-        //si hay contraseña es una consulta que verifica si el usuario esta registrado
-    } else {
-        query = { nickname: nick, contrasenya: contr };
-    }
-    return new Promise(function (resolve, reject) {
-        dbo.collection("usuaris").find(query).toArray(function (err, result) {
-            if (err) throw err;
-            console.log("--resultado de la consulta: " + result);
-            resultado = result.length == 0 ? false : true;
-            resolve(resultado);
+        //esto nos devuelve el objeto del usuario
+        return new Promise(function (resolve, reject) {
+            dbo.collection(documento).find(query).toArray(function (err, result) {
+                if (err) throw err;
+                console.log("--resultado de la consulta: " + result);
+                resolve(result);
+            });
         });
-    });
-
+        //para ver si el nick de la persona se encuentra en la bbdd
+    } else if (!contr && nick && documento == "usuaris") {
+        query = { nickname: nick };
+        return new Promise(function (resolve, reject) {
+            dbo.collection(documento).find(query).toArray(function (err, result) {
+                if (err) throw err;
+                console.log("--resultado de la consulta: " + result);
+                resultado = result.length == 0 ? false : true;
+                resolve(resultado);
+            });
+        });
+        //para ver si la persoan esta registrada
+    } else if (nick && contr) {
+        query = { nickname: nick, contrasenya: contr };
+        return new Promise(function (resolve, reject) {
+            dbo.collection(documento).find(query).toArray(function (err, result) {
+                if (err) throw err;
+                console.log("--resultado de la consulta: " + result);
+                resultado = result.length == 0 ? false : true;
+                resolve(resultado);
+            });
+        });
+        //para ver clasificacion de los 5 primeros
+    } else if (nick == false) {
+        query = {};
+        mysort = { clasificacion: -1 };
+        //esto nos devuelve la lista ordenada por la puntuacion
+        return new Promise(function (resolve, reject) {
+            dbo.collection(documento).find(query).sort(mysort).toArray(function (err, result) {
+                if (err) throw err;
+                console.log("--resultado de la consulta: " + result);
+                resolve(result);
+            });
+        });
+    }
 }
 
 //funcion que mira si un usuario esta registrado
@@ -45,7 +76,7 @@ exports.consultarUsuarioRegistrado = function (nick, contr) {
         conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
             if (err) throw err;
             var dbo = db.db("projecte");
-            consultaMongo(dbo, nick, contr).then(function (existe) {
+            consultaMongo(dbo, nick, contr, "usuaris").then(function (existe) {
                 var myobj = { nickname: nick, contrasenya: contr };
                 console.log("--usuario existe: " + existe);
                 if (existe) {
@@ -74,12 +105,21 @@ exports.insertarMongo = function (nick, contr) {
             if (err) throw err;
             var dbo = db.db("projecte");
             //una vez hecha consulta se ejecuta la funcion
-            consultaMongo(dbo, nick).then(function (existe) {
+            consultaMongo(dbo, nick, false, "usuaris").then(function (existe) {
                 var myobj = { nickname: nick, contrasenya: contr };
+                var clasificacion = { nickname: nick, clasificacion: 0, partidasJugadas: 0, enemigosEliminados: 0, partidasGanadas: 0 };
                 if (!existe) {
                     dbo.collection("usuaris").insertOne(myobj, function (err, res) {
                         if (err) throw err;
                         console.log("--nuevo usuario registrado");
+                        // db.close();
+                        //si se añadio correctamente, devolvemos un true
+                        // resolve(true);
+                    });
+                    //insertamos nueva coleccion de clasificacion
+                    dbo.collection("clasificacion").insertOne(clasificacion, function (err, res) {
+                        if (err) throw err;
+                        console.log("--clasificacion de nuevo usuario registrado");
                         db.close();
                         //si se añadio correctamente, devolvemos un true
                         resolve(true);
@@ -93,5 +133,57 @@ exports.insertarMongo = function (nick, contr) {
                 }
             }).catch(console.log);
         });
+    });
+}
+
+exports.miClasificacion = function (nick) {
+    return new Promise(function (resolve, reject) {
+        conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("projecte");
+            consultaMongo(dbo, nick, false, "clasificacion").then(function (resultado) {
+                resolve(resultado);
+            }).catch(console.log);
+        });
+    });
+}
+
+exports.clasificacionGeneral = function () {
+    return new Promise(function (resolve, reject) {
+        conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("projecte");
+            consultaMongo(dbo, false, false, "clasificacion").then(function (resultado) {
+                resolve(resultado);
+            }).catch(console.log);
+        });
+    });
+}
+
+exports.actualizarClasificacionJugador = function (resultadoP, bajas, tiempo, nick, muertes) {
+    conexionMongo().var.connect(conexionMongo().direccion, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("projecte");
+        consultaMongo(dbo, nick, false, "clasificacion").then(function (resultado) {
+            let clasificacion = parseInt(resultado[0].clasificacion) + (bajas * 10) - (muertes * 5);
+            if (resultadoP == "victoria") clasificacion += 100;
+
+            var myquery = { nickname: nick };
+            var newvalues = {
+                $set: {
+                    clasificacion: clasificacion,
+                    partidasGanadas: resultadoP == "victoria" ? resultado[0].partidasGanadas + 1 : resultado[0].partidasGanadas,
+                    enemigosEliminados: resultado[0].enemigosEliminados + bajas,
+                    partidasJugadas: resultado[0].partidasJugadas + 1
+                }
+            };
+            dbo.collection("clasificacion").update(myquery, newvalues, function (err, res) {
+                if (err) throw err;
+                console.log("--clasificacion actualizada");
+                db.close();
+                //si se añadio correctamente, devolvemos un true
+                // resolve(true);
+            });
+        }).catch(console.log);
     });
 }

@@ -47,6 +47,10 @@ Client.nickEnemigo = function(nombre){
     Client.socket.emit("nickEnemigo", nombre);
 }
 
+Client.clasificacionJugador = function (resultado, bajas, tiempo, nick, muertes){
+    Client.socket.emit("clasificacionJugador", resultado, bajas, tiempo, nick, muertes);
+}
+
 //FUNCIONES QUE SE RECIBEN DEL SERVIDOR***********************************************************
 Client.socket.on('malIniciado', function () {
     console.log("iniciamos el metodo del mal logeo");

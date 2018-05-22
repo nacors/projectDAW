@@ -18,7 +18,7 @@ window.onload = () => {
         zonaRegistrarse.setAttribute("style", "display: grid !important");
         botonVolver.setAttribute("style", "display: inline");
         mensajeInicio.innerHTML = "";
-        zonaInvitado.style.marginTop = "200px";
+        zonaInvitado.style.paddingTop = "200px";
     });
 
     //si queremos iniciar sesion
@@ -31,7 +31,11 @@ window.onload = () => {
                 type: 'GET',
                 url: '/iniciar',
                 data: { nick: nombre, contr: contr },
+                beforeSend: function () {
+                    document.getElementById("invitado").className = "cargando";
+                },
                 success: function (taken) {
+                    document.getElementById("invitado").className = "";
                     if (taken.ok === false) {
                         console.log("false");
                         malIniciado();
@@ -58,7 +62,11 @@ window.onload = () => {
                 type: 'GET',
                 url: '/registrar',
                 data: { nick: nombre, contr: contr },
+                beforeSend: function () {
+                    document.getElementById("invitado").className = "cargando";
+                },
                 success: function (taken) {
+                    document.getElementById("invitado").className = "";
                     if (taken.ok === false) {
                         console.log("false");
                         nickExiste();
@@ -90,23 +98,24 @@ window.onload = () => {
         mensajeInicio.style.opacity = "1";
         // mensajeInicio.style.transition = "0.5s";
         // mensajeInicio.style.color = "tomato";
-        zonaInvitado.style.marginTop = "144px";
+        zonaInvitado.style.paddingTop = "144px";
         setTimeout(function () {
             mensajeInicio.style.opacity = "0";
             mensajeInicio.innerHTML = "Vuelve a intentarlo";
             // zonaInvitado.style.marginTop = "200px";
+            zonaInvitado.style.paddingTop = "164px";
         }, 5000);
     }
 
     function nickExiste() {
         mensajeRegistro.innerHTML = "Este nick ya esta registrado";
         mensajeRegistro.style.opacity = "1";
-        zonaInvitado.style.marginTop = "164px";
+        zonaInvitado.style.paddingTop = "164px";
         document.getElementsByName("usernameR")[0].focus();
         setTimeout(function () {
             mensajeRegistro.style.opacity = "0";
             // mensajeRegistro.innerHTML = "";
-            zonaInvitado.style.marginTop = "200px";
+            // zonaInvitado.style.marginTop = "200px";
         }, 3000);
     }
 
@@ -128,7 +137,7 @@ window.onload = () => {
         } else {
             mensajeInicio.innerHTML = "Te faltan campos por rellenar";
             mensajeInicio.style.opacity = "1";
-            zonaInvitado.style.marginTop = "164px";
+            zonaInvitado.style.paddingTop = "164px";
             setTimeout(function () {
                 mensajeInicio.style.opacity = "0";
                 //mensajeInicio.innerHTML = "";
@@ -146,19 +155,19 @@ window.onload = () => {
         } else {
             mensajeRegistro.innerHTML = "Te faltan campos por rellenar";
             mensajeRegistro.style.opacity = "1";
-            zonaInvitado.style.marginTop = "164px";
+            zonaInvitado.style.paddingTop = "164px";
             setTimeout(function () {
                 mensajeRegistro.style.opacity = "0";
                 //zonaInvitado.style.marginTop = "200px";
                 //mensajeRegistro.innerHTML = "";
             }, 3000);
-            
-            
+
+
             return false;
         }
     }
 
-    botonesInvitado.addEventListener("click", function(e){
+    botonesInvitado.addEventListener("click", function (e) {
         sessionStorage.setItem('usuario', 'Invitado');
     });
 

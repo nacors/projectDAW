@@ -108,7 +108,6 @@ a:hover {
 }
 #nickJugador{
     color: #ffffff;
-    text-transform: uppercase;
     text-shadow: 2px 2px 5px  #00cec9;
 }
 #nombreJugador{
@@ -129,4 +128,33 @@ a:hover {
     background-size: 200px 120px;
     margin: auto;
     margin-bottom: 2%;
+}
+
+#clasificacionInfo{
+    display: grid;
+    grid-template-areas: "personal global";
+    grid-template-columns: 1fr 1fr;
+}
+#clasificacionPersonal b, #clasificacionGlobal b{
+    color: #81ecec;
+    font-size: 32px;
+}
+#clasificacionPersonal{
+    grid-area: personal;
+    font-size: 30px;
+    text-align: left;
+    margin: auto;
+}
+#clasificacionGlobal{
+    grid-area: global;
+    font-size: 30px;
+    text-align: left;
+    margin: auto;
+}
+#cargando{
+    margin-top: 50%;
+    width: 200px;
+    height: 200px;
+    background: url("../assets/imagenes/estilo/cargando1.apng");
+    background-size: 200px 200px;
 }
