@@ -139,8 +139,12 @@ io.on('connection', function (socket) {
   });
 
   //matar al enemigo contrario
-  socket.on("opacityEnemigo", function (accion) {
-    socket.broadcast.to(funcion.getRoom(socket)).emit('opacityEnemigo', accion);
+  socket.on("opacityEnemigo", function (accion, move) {
+    socket.broadcast.to(funcion.getRoom(socket)).emit('opacityEnemigo', accion, move);
+  });
+  //enviamos señal al enemigo para pausar su camara
+  socket.on("pararCamara", function (posicion){
+    socket.broadcast.to(funcion.getRoom(socket)).emit('pararCamara', posicion);
   });
 
   //enviamos nuestro nick al contrincante

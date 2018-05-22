@@ -30,10 +30,16 @@ Client.soltar = function (data) {
 Client.ataque = function (ataque, direccion) {
     Client.socket.emit("atacar", ataque, direccion);
 }
+//para detener la camara del enemigo
+Client.pararCamara = function(posicion){
+    Client.socket.emit("pararCamara", posicion);
+}
 
 //metodo para elimianr el enemigo
-Client.opacityEnemigo = function(accion){
-    Client.socket.emit("opacityEnemigo", accion);
+Client.opacityEnemigo = function(accion, move){
+    if(move != undefined){
+        Client.socket.emit("opacityEnemigo", accion, move);
+    }
 }
 
 //metodo para coger el nick del contrincante
@@ -95,9 +101,11 @@ Client.socket.on("atacar", function (id, ataque, direccion) {
     Game.ataqueEnemigo(id, ataque, direccion);
 });
 
-Client.socket.on("opacityEnemigo", function(accion){
-    Game.opacityEnemigo(accion);
-})
+Client.socket.on("opacityEnemigo", function(accion, move){
+    if(move != undefined){
+        Game.opacityEnemigo(accion, move);
+    }
+});
 
 Client.socket.on("murcielagos", function(direccion, y){
     //console.log("recibe el cliente");
@@ -107,4 +115,8 @@ Client.socket.on("murcielagos", function(direccion, y){
 Client.socket.on("nickEnemigo", function(nombre){
     //console.log("recibe el cliente");
     Game.nickEnemigo(nombre);
+});
+
+Client.socket.on("pararCamara", function(posicion){
+    Game.pararCamara(posicion);
 });

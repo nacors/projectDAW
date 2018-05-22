@@ -59,7 +59,7 @@ var limitesMapa = {
 var limiteActual = 2;
 var limiteDerecha = limitesMapa[limiteActual] + 1910;
 var miDireccion;
-var cambiarLimite = true;
+var direccionCamara;
 Game.playerMap = new Map();
 
 
@@ -69,7 +69,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
     if(veceseEjecutado == 2){
         enviarMiNombreUsuario();
     }
-    console.log(veceseEjecutado);
+    //console.log(veceseEjecutado);
     //imprimios al jugador principal
     if (jugadoresImprimidos.size < 1) {
         miid = id;
@@ -93,7 +93,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
     jugador.body.mass = 70;
     game.world.setBounds(0, 0, 6400, 900);
     game.camera.x = limitesMapa[limiteActual];
-    console.log(game.world.bounds.left);
+    //console.log(game.world.bounds.left);
     jugador.body.collideWorldBounds = true;
     jugadoresImprimidos.set(id, g);
     idJugadoresImprimidos.push(id);
@@ -138,7 +138,7 @@ Game.create = function () {
     audioCaida = game.add.audio("caida");
     audioPocion = game.add.audio("pocion");
 
-    //fondo.loopFull(0.6);
+    fondo.loopFull(0.6);
 };
 
 Game.update = function () {
@@ -279,7 +279,7 @@ Game.movimiento = function (id, data, accion, direccion) {
             jugadoresImprimidos.get(id).animations.play('right', 10, true);
         } else if (direccion == "salto") {
             jugadoresImprimidos.get(id).animations.play('stay', 10, true);
-            console.log(jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x);
+            //console.log(jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x);
             if (jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x < 1000
                 && jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x > -1000) {
 
@@ -323,8 +323,8 @@ Game.ataqueEnemigo = function (id, ataque, direccion) {
     }
 }
 
-Game.opacityEnemigo = function (accion) {
-    opacityJugador(accion);
+Game.opacityEnemigo = function (accion, move) {
+    opacityJugador(accion, move);
 }
 
 Game.crearMurcielagos = function (direccion, y) {
@@ -368,7 +368,7 @@ Game.crearMurcielagos = function (direccion, y) {
 }
 
 Game.nickEnemigo = function(nombre){
-    console.log("imprimo el nombre del enemigo");
+    //console.log("imprimo el nombre del enemigo");
     if(idJugadoresImprimidos.length > 1){
         nombreEnemigo = game.add.text(jugadoresImprimidos.get(idJugadoresImprimidos[1]).x, jugadoresImprimidos.get(idJugadoresImprimidos[1]).y - 20, nombre, {
             fill: "white",
@@ -376,6 +376,11 @@ Game.nickEnemigo = function(nombre){
             fontSize: 15
         });
     }
+}
+
+Game.pararCamara = function(posicion){
+    game.camera.target = null;
+    game.camera.x = posicion;
 }
 game.state.add('Game', Game);
 game.state.start('Game');
