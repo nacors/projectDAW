@@ -359,7 +359,7 @@ Game.crearMurcielagos = function (direccion, y) {
         4: [y + 90, -600]
     }
     direccionMurcielagos = direccion;
-    if (direccion == "derecha") {
+    /*if (direccion == "derecha") {
         x = 50;
         sprite = [4, 5, 6, 7];
         datosMurcielagos = murcielagosDer;
@@ -376,7 +376,7 @@ Game.crearMurcielagos = function (direccion, y) {
         murcielago.animations.add('murcielagosmov', sprite, 60, true);
         murcielago.animations.play('murcielagosmov', 10, true);
         murcielagos.push(murcielago);
-    }
+    }*/
     //console.log(murcielagos);
 }
 

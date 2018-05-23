@@ -52,7 +52,7 @@ Client.clasificacionJugador = function (resultado, bajas, tiempo, nick, muertes)
 }
 
 Client.derrota = function(x, y){
-    Client.socket.emit("derrota");
+    Client.socket.emit("derrota", x, y);
 }
 
 //FUNCIONES QUE SE RECIBEN DEL SERVIDOR***********************************************************

@@ -593,28 +593,30 @@ function ganar(){
         victory.animations.add('victory', [0], 60, false);
         victory.animations.play('victory', 60, false);
         game.add.tween(victory.scale).to( {x: 1.5, y: 1.5}, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
-        //enviarClasificacionJugador("victoria", 0, 0, sessionStorage.getItem("usuario"), 0);
+        if(sessionStorage.getItem("usuario") != "Invitado")enviarClasificacionJugador("victoria", 0, 0, sessionStorage.getItem("usuario"), 0);
         Client.derrota(5445, 405);
+        sePuedeJugar = false;
     }
-    else if(miDireccion == "izquierda" && jugadoresImprimidos.get(miid).x < 200){
+    else if(miDireccion == "izquierda" && jugadoresImprimidos.get(miid).x < 100){
         game.input.enabled = false;
-        var victory = game.add.sprite(863, 405, 'fin');
+        var victory = game.add.sprite(955, 405, 'fin');
         victory.anchor.setTo(0.5,0.5);
         victory.animations.add('victory', [0], 60, false);
         victory.animations.play('victory', 60, false);
         game.add.tween(victory.scale).to( {x: 1.5, y: 1.5}, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
-        //enviarClasificacionJugador("victoria", 0, 0, sessionStorage.getItem("usuario"), 0);
-        Client.derrota(863, 405);
+        if(sessionStorage.getItem("usuario") != "Invitado")enviarClasificacionJugador("victoria", 0, 0, sessionStorage.getItem("usuario"), 0);
+        Client.derrota(955, 405);
+        sePuedeJugar = false;
     }
 }
 
 function derrota(x, y){
-    Client.derrota();
     game.input.enabled = false;
     var victory = game.add.sprite(x, y, 'fin');
     victory.anchor.setTo(0.5,0.5);
     victory.animations.add('victory', [1], 60, false);
     victory.animations.play('victory', 60, false);
     game.add.tween(victory.scale).to( {x: 1.5, y: 1.5}, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
-    enviarClasificacionJugador("victoria", 0, 0, sessionStorage.getItem("usuario"), 0);
+    if(sessionStorage.getItem("usuario") != "Invitado")enviarClasificacionJugador("derrota", 0, 0, sessionStorage.getItem("usuario"), 0);
+    sePuedeJugar = false;
 }
