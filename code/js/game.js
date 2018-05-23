@@ -56,17 +56,25 @@ var limitesMapa = {
     3: 4110,
     4: 4490,
 };
+var zonasReaparecion = {
+    0: 995,
+    1: 1285,
+    2: 3200,
+    3: 5065,
+    4: 5445
+};
 var limiteActual = 2;
 var limiteDerecha = limitesMapa[limiteActual] + 1910;
 var miDireccion;
 var direccionCamara;
+var sePuedeReaparecer = false;
 Game.playerMap = new Map();
 
 
 //FUNCIONES GAME---------------------------------------------------------------------------------------------------------------------------------
 Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
-    veceseEjecutado ++;
-    if(veceseEjecutado == 2){
+    veceseEjecutado++;
+    if (veceseEjecutado == 2) {
         enviarMiNombreUsuario();
     }
     //console.log(veceseEjecutado);
@@ -103,7 +111,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
         añadirNombreUsuario();
         enviarMiNombreUsuario();
     }
-    
+
     //enviamos el nombre del usuario a la pantalla enemiga
     //imprimimos los juagdores que no se muestran 
     //recorremos la array de jugadores que hemos pasado desde el servidor 
@@ -158,7 +166,8 @@ Game.update = function () {
             //damos movimiento del jugador al personaje
             movimientoNombreJugador();
             movimientoNombreJugador("enemigo");
-            
+            // console.log("x: "+jugadoresImprimidos.get(miid).x);
+            // console.log("y: "+jugadoresImprimidos.get(miid).y);
         }
         //movimiento para el personaje que controla el jugador
         if (cursors.left.isDown && quieto) {
@@ -226,6 +235,7 @@ Game.update = function () {
     //parte de easter egg
     easterEgg();
     reaparecerJugador();
+    volverTransparenciaNormal();
     revisarPocionFueraMapa();
     murcielagosVolumen();
 }
@@ -370,9 +380,9 @@ Game.crearMurcielagos = function (direccion, y) {
     //console.log(murcielagos);
 }
 
-Game.nickEnemigo = function(nombre){
+Game.nickEnemigo = function (nombre) {
     //console.log("imprimo el nombre del enemigo");
-    if(idJugadoresImprimidos.length > 1){
+    if (idJugadoresImprimidos.length > 1) {
         nombreEnemigo = game.add.text(jugadoresImprimidos.get(idJugadoresImprimidos[1]).x, jugadoresImprimidos.get(idJugadoresImprimidos[1]).y - 20, nombre, {
             fill: "white",
             stroke: "black",
@@ -381,7 +391,7 @@ Game.nickEnemigo = function(nombre){
     }
 }
 
-Game.pararCamara = function(posicion){
+Game.pararCamara = function (posicion) {
     game.camera.target = null;
     game.camera.x = posicion;
 }

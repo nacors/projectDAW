@@ -1,0 +1,12 @@
+{ "columns":30,
+ "image":"mapa2.png",
+ "imageheight":352,
+ "imagewidth":480,
+ "margin":0,
+ "name":"mapa2",
+ "spacing":0,
+ "tilecount":660,
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset"
+}
