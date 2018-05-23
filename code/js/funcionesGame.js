@@ -214,34 +214,26 @@ function nombreSprite(body) {
 }
 
 function pegar1(id, direccion) {
-    //quitar los magic numbers
-    //jugadoresImprimidos.get(id).body.velocity.x = 0;
     if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(60, 58, 5, 22);
     else jugadoresImprimidos.get(id).body.setRectangle(60, 58, -5, 22);
-    //if (id == miid) quieto = false;
     jugadoresImprimidos.get(id).animations.stop();
     jugadoresImprimidos.get(id).animations.play('hit1', 10, false);
     jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
-        if (id == miid) quieto = true;
         if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
-        jugadoresImprimidos.get(miid).animations.play('stay', 10, true);
+        jugadoresImprimidos.get(id).animations.play('stay', 10, true);
     }, this);
 }
 
 function pegar2(id, direccion) {
-    //jugadoresImprimidos.get(id).body.velocity.x = 0;
-    //Client.pegar(data,"hit1");
     if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(70, 58, 10, 22);
     else jugadoresImprimidos.get(id).body.setRectangle(70, 58, -10, 22);
-    //if (id == miid) quieto = false;
     jugadoresImprimidos.get(id).animations.stop();
     jugadoresImprimidos.get(id).animations.play('hit2', 10, false);
     jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
-        if (id == miid) quieto = true;
         if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
-        jugadoresImprimidos.get(miid).animations.play('stay', 10, true);
+        jugadoresImprimidos.get(id).animations.play('stay', 10, true);
     }, this);
 }
 
@@ -250,12 +242,16 @@ function moverJugador(id, direccion) {
         jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
         jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
         jugadoresImprimidos.get(id).body.moveLeft(700 + sumarVelocidad);
-        if(jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2")jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        if(jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2"){
+            jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        }
     } else if (direccion == "derecha") {
         jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
         jugadoresImprimidos.get(id).body.moveRight(700 + sumarVelocidad);
-        if(jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2")jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        if(jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2"){
+            jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        }
     }
 }
 
