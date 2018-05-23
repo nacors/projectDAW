@@ -1,4 +1,4 @@
-var frasesRius = ["El windows es una mierda!", "Usa un navegador de verdad!", "Viteh!", "Que eres, de Madrid?"];
+var frasesRius = ["El Wirus es una mierda!", "Usa un navegador de verdad!", "Viteh!", "Que eres, de Madrid?"];
 var frasesInma = ["Estamos a lo que estamos?", "Venga, vamos a ver el pdf", "Esto esta mal", "Me gusta mucho"];
 var frasesSamuel = ["Que tal vais?", "Chicos, hoy toca un tipo test", "Teneis la entrega de 'fora de termini'", "Si a mi me dices que haces UML, te contrato"];
 
@@ -92,7 +92,6 @@ function checkOverlap(body1, body2) {
         if ((body1.sprite && body2.sprite) && (nombreSprite(body1) && nombreSprite(body2))) {
             //console.log("Ambos muertos");
         } else if (nombreSprite(body1) && (body1.sprite && body2.sprite)) {
-            console.log("////////////////BODY1");
             if (body2.x < body1.x && direccion == "left") {
                 if (jugadoresImprimidos.get(miid) == body1.sprite) {
                     // console.log("matamos al enemigo que se encuentra a la izquierda");
@@ -130,7 +129,6 @@ function checkOverlap(body1, body2) {
                 }
             }
         } else if (nombreSprite(body2) && (body1.sprite && body2.sprite)) {
-            console.log("////////////////BODY2");
             if (body2.x > body1.x && direccion == "left") {
                 // console.log("Muere " + body1.sprite.name);
                 if (jugadoresImprimidos.get(miid) == body2.sprite) {
@@ -326,7 +324,6 @@ function opacityJugador(accion, move) {
     if (accion == "ocultar") {
         //cogemos nuestra id ya que se hace un broadcast del server
         jugadoresImprimidos.get(miid).alpha = 0;
-        game.input.enabled = false;
         sePuedeJugar = false;
         direccionCamara = move;
         setCamara(jugadoresImprimidos.get(idJugadoresImprimidos[1]));
@@ -335,7 +332,6 @@ function opacityJugador(accion, move) {
         // console.log("me vuelvo a mostrar ya que me han matado");
         jugadoresImprimidos.get(miid).body.x = zonasReaparecion[limiteActual];
         jugadoresImprimidos.get(miid).body.y = 100;
-        game.input.enabled = true;
         sePuedeJugar = true;
         jugadoresImprimidos.get(miid).alpha = 1;
     } else if (accion == "fueraMapa") {
@@ -550,11 +546,13 @@ function setCamara(body) {
         limiteActual++;
         limiteDerecha = limitesMapa[limiteActual] + 1910;
         game.camera.follow(body);
+        if (body == jugadoresImprimidos.get(miid)) imrpimirFlechaDireccion("derecha");
         //console.log("sumo limite actual por que voy a la derecha");
     } else if (direccionCamara == "izquierda") {
         limiteActual--;
         limiteDerecha = limitesMapa[limiteActual] + 1910;
         game.camera.follow(body);
+        if (body == jugadoresImprimidos.get(miid)) imrpimirFlechaDireccion("izquierda");
     }
     //console.log(game.camera.x + " posicion camara");
 }
@@ -567,8 +565,12 @@ function fixCamara() {
             // reaparecerJugador = true;
             game.camera.target = null;
             Client.pararCamara(game.camera.x);
+            if (flecha != null) {
+                flecha.destroy();
+                felcha = null;
+            }
+            moverFlecha = false;
         }
-
     }
     if (direccionCamara == "derecha") {
         if (game.camera.x >= limitesMapa[limiteActual]) {
@@ -576,6 +578,11 @@ function fixCamara() {
             game.camera.target = null;
             // reaparecerJugador = true;
             Client.pararCamara(game.camera.x);
+            if (flecha != null) {
+                flecha.destroy();
+                felcha = null;
+            }
+            moverFlecha = false;
         }
     }
 }
@@ -584,39 +591,65 @@ function enviarClasificacionJugador(resultado, bajas, tiempo, nick, muertes) {
     Client.clasificacionJugador(resultado, bajas, tiempo, nick, muertes);
 }
 
-function ganar(){
-    if(miDireccion == "derecha" && jugadoresImprimidos.get(miid).x > 6200){
+function ganar() {
+    if (miDireccion == "derecha" && jugadoresImprimidos.get(miid).x > 6200) {
         Client.derrota();
         game.input.enabled = false;
         var victory = game.add.sprite(5445, 405, 'fin');
-        victory.anchor.setTo(0.5,0.5);
+        victory.anchor.setTo(0.5, 0.5);
         victory.animations.add('victory', [0], 60, false);
         victory.animations.play('victory', 60, false);
-        game.add.tween(victory.scale).to( {x: 1.5, y: 1.5}, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
-        if(sessionStorage.getItem("usuario") != "Invitado")enviarClasificacionJugador("victoria", 0, 0, sessionStorage.getItem("usuario"), 0);
+        game.add.tween(victory.scale).to({ x: 1.5, y: 1.5 }, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
+        if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("victoria", 0, 0, sessionStorage.getItem("usuario"), 0);
         Client.derrota(5445, 405);
         sePuedeJugar = false;
     }
-    else if(miDireccion == "izquierda" && jugadoresImprimidos.get(miid).x < 100){
+    else if (miDireccion == "izquierda" && jugadoresImprimidos.get(miid).x < 100) {
         game.input.enabled = false;
         var victory = game.add.sprite(955, 405, 'fin');
-        victory.anchor.setTo(0.5,0.5);
+        victory.anchor.setTo(0.5, 0.5);
         victory.animations.add('victory', [0], 60, false);
         victory.animations.play('victory', 60, false);
-        game.add.tween(victory.scale).to( {x: 1.5, y: 1.5}, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
-        if(sessionStorage.getItem("usuario") != "Invitado")enviarClasificacionJugador("victoria", 0, 0, sessionStorage.getItem("usuario"), 0);
+        game.add.tween(victory.scale).to({ x: 1.5, y: 1.5 }, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
+        if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("victoria", 0, 0, sessionStorage.getItem("usuario"), 0);
         Client.derrota(955, 405);
         sePuedeJugar = false;
     }
 }
 
-function derrota(x, y){
+function derrota(x, y) {
     game.input.enabled = false;
     var victory = game.add.sprite(x, y, 'fin');
-    victory.anchor.setTo(0.5,0.5);
+    victory.anchor.setTo(0.5, 0.5);
     victory.animations.add('victory', [1], 60, false);
     victory.animations.play('victory', 60, false);
-    game.add.tween(victory.scale).to( {x: 1.5, y: 1.5}, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
-    if(sessionStorage.getItem("usuario") != "Invitado")enviarClasificacionJugador("derrota", 0, 0, sessionStorage.getItem("usuario"), 0);
+    game.add.tween(victory.scale).to({ x: 1.5, y: 1.5 }, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
+    if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("derrota", 0, 0, sessionStorage.getItem("usuario"), 0);
     sePuedeJugar = false;
+}
+
+function imrpimirFlechaDireccion(direccion) {
+    if (direccion == "derecha") {
+        flecha = game.add.tileSprite(game.camera.x + 1800, 100, 192, 192, 'flecha');
+        flecha.angle += 270;
+        flecha.anchor.setTo(0.5);
+        flecha.scale.setTo(0.5);
+    } else if (direccion == "izquierda") {
+        flecha = game.add.tileSprite(game.camera.x + 100, 100, 192, 192, 'flecha');
+        flecha.angle += 90;
+        flecha.anchor.setTo(0.5);
+        flecha.scale.setTo(0.5);
+    }
+    moverFlecha = true;
+    direccionFlecha = direccion;
+}
+
+function posicionFlecha() {
+    if (moverFlecha) {
+        if (direccionFlecha == "derecha") {
+            flecha.position.x = game.camera.x + 1800;
+        } else if (direccionFlecha == "izquierda") {
+            flecha.position.x = game.camera.x + 100;
+        }
+    }
 }

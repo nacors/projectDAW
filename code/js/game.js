@@ -49,6 +49,9 @@ var audioMurcielagos;
 var direccionMurcielagos;
 var sumarVelocidad = 0;
 var sonidosSalto = [];
+var flecha = null;
+var direccionFlecha;
+var moverFlecha = false;
 var limitesMapa = {
     0: 0,
     1: 290,
@@ -238,6 +241,7 @@ Game.update = function () {
     volverTransparenciaNormal();
     revisarPocionFueraMapa();
     murcielagosVolumen();
+    posicionFlecha();
 }
 
 Game.render = function () {
@@ -266,6 +270,7 @@ Game.preload = function () {
     game.load.spritesheet('fin', 'assets/imagenes/fin/victory_defeat.png', 264, 100);
     game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`);
     game.load.image("pocion", `assets/imagenes/pociones/pocion.png`);
+    game.load.image("flecha", `assets/imagenes/estilo/direccion.png`);
 };
 
 //movemos al jugadopr enemigo sincornizando los movimientos
@@ -295,9 +300,7 @@ Game.movimiento = function (id, data, accion, direccion) {
             //console.log(jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x);
             if (jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x < 1000
                 && jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x > -1000) {
-
                 sonidosSalto[0].play();
-
             }
         }
     } else if (accion == "soltar") {
