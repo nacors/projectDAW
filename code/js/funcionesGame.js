@@ -99,6 +99,7 @@ function checkOverlap(body1, body2) {
                     if (body2.sprite.alpha != 0) {
                         direccionCamara = miDireccion;
                         setCamara(body1.sprite);
+                        reproducirSonidosPegar();
                         if (miDireccion != undefined) {
                             // console.log("Enviamos la direccion: " + miDireccion);
                             Client.opacityEnemigo("ocultar", miDireccion);
@@ -118,6 +119,7 @@ function checkOverlap(body1, body2) {
                     if (body2.sprite.alpha != 0) {
                         direccionCamara = miDireccion;
                         setCamara(body1.sprite);
+                        reproducirSonidosPegar();
                         if (miDireccion != undefined) {
                             // console.log("Enviamos la direccion: " + miDireccion);
                             Client.opacityEnemigo("ocultar", miDireccion);
@@ -137,6 +139,7 @@ function checkOverlap(body1, body2) {
                     if (body1.sprite.alpha != 0) {
                         direccionCamara = miDireccion;
                         setCamara(body2.sprite);
+                        reproducirSonidosPegar();
                         if (miDireccion != undefined) {
                             // console.log("Enviamos la direccion: " + miDireccion);
                             Client.opacityEnemigo("ocultar", miDireccion);
@@ -154,6 +157,7 @@ function checkOverlap(body1, body2) {
                     if (body1.sprite.alpha != 0) {
                         direccionCamara = miDireccion;
                         setCamara(body2.sprite);
+                        reproducirSonidosPegar();
                         if (miDireccion != undefined) {
                             // console.log("Enviamos la direccion: " + miDireccion);
                             Client.opacityEnemigo("ocultar", miDireccion);
@@ -243,21 +247,13 @@ function moverJugador(id, direccion) {
         jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
         jugadoresImprimidos.get(id).body.moveLeft(700 + sumarVelocidad);
         if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") jugadoresImprimidos.get(id).animations.play('right', 10, true);
-        if (pasoPlay) {
-            var paso = game.add.audio(`paso${numeroRandom(9, 1)}`);
-            paso.play();
-            pasoPlay = false;
-        }
+        reproducirSonidosPasos();
     } else if (direccion == "derecha") {
         jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
         jugadoresImprimidos.get(id).body.moveRight(700 + sumarVelocidad);
         if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") jugadoresImprimidos.get(id).animations.play('right', 10, true);
-        if (pasoPlay) {
-            var paso = game.add.audio(`paso${numeroRandom(9, 1)}`);
-            paso.play();
-            pasoPlay = false;
-        }
+        reproducirSonidosPasos();
     }
 }
 
@@ -636,6 +632,7 @@ function derrota(x, y) {
 }
 
 function imrpimirFlechaDireccion(direccion) {
+    if (flecha != null) flecha.destroy();
     if (direccion == "derecha") {
         flecha = game.add.tileSprite(game.camera.x + 1800, 100, 192, 192, 'flecha');
         flecha.angle += 270;
@@ -659,4 +656,29 @@ function posicionFlecha() {
             flecha.position.x = game.camera.x + 100;
         }
     }
+}
+function reproducirSonidosPasos() {
+    if (pasoPlay) {
+        var paso = game.add.audio(`paso${numeroRandom(9, 1)}`);
+        paso.play();
+        pasoPlay = false;
+    }
+}
+
+function contadorPasos() {
+    contPasos++;
+    if (contPasos == 18) {
+        contPasos = 0;
+        pasoPlay = true;
+    }
+}
+
+function reproducirSonidosPegar() {
+    var pegar = game.add.audio(`pegar${numeroRandom(7, 1)}`);
+    pegar.play();
+}
+
+function reproducirSonidosPegarAire(){
+    var pegar = game.add.audio(`pegarAire${numeroRandom(4, 2)}`);
+    pegar.play();
 }

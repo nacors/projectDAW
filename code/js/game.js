@@ -47,6 +47,7 @@ var isNingunaPocionaFuera = false;
 var isFueraMapa = false;
 var cont = 0;
 var contPasos = 0;
+var contEspada = 0;
 var murcielagos = [];
 var bordeMapa = 849;
 var pociones = [];
@@ -243,12 +244,14 @@ Game.update = function () {
                 Client.ataque("hit1", direccion);
                 pegar1(miid, direccion);
                 pegar = false;
+                reproducirSonidosPegarAire();
             }
         } else if (hit2.isDown) {
             while(pegar){
                 Client.ataque("hit2", direccion);
                 pegar2(miid, direccion);
                 pegar = false;
+                reproducirSonidosPegarAire();
             }
         }
         if (hit1.isUp && hit2.isUp){
@@ -263,11 +266,8 @@ Game.update = function () {
     revisarPocionFueraMapa();
     murcielagosVolumen();
     posicionFlecha();
-    contPasos ++;
-    if(contPasos == 18){
-        contPasos = 0;
-        pasoPlay = true;
-    }
+    //cont que sirve para reproducir correctamente los sonidos de los pasos
+    contadorPasos();
 }
 
 Game.render = function () {
@@ -305,6 +305,14 @@ Game.preload = function () {
     game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`);
     game.load.image("pocion", `assets/imagenes/pociones/pocion.png`);
     game.load.image("flecha", `assets/imagenes/estilo/direccion.png`);
+    game.load.audio("pegar1", `assets/sonidos/espada/espada1.mp3`);
+    game.load.audio("pegar2", `assets/sonidos/espada/espada2.mp3`);
+    game.load.audio("pegar3", `assets/sonidos/espada/espada3.mp3`);
+    game.load.audio("pegar4", `assets/sonidos/espada/espada4.mp3`);
+    game.load.audio("pegar5", `assets/sonidos/espada/espada6.mp3`);
+    game.load.audio("pegar6", `assets/sonidos/espada/espada9.mp3`);
+    game.load.audio("pegarAire2", `assets/sonidos/espada/espadaAire2.wav`);
+    game.load.audio("pegarAire3", `assets/sonidos/espada/espadaAire3.wav`);
 };
 
 //movemos al jugadopr enemigo sincornizando los movimientos
@@ -325,10 +333,12 @@ Game.movimiento = function (id, data, accion, direccion) {
             jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
             jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
             jugadoresImprimidos.get(id).animations.play('right', 10, true);
+            reproducirSonidosPasos();
         } else if (direccion == "derecha") {
             jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
             jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
             jugadoresImprimidos.get(id).animations.play('right', 10, true);
+            reproducirSonidosPasos();
         } else if (direccion == "salto") {
             jugadoresImprimidos.get(id).animations.play('stay', 10, true);
             //console.log(jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x);
