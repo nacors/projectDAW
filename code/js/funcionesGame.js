@@ -13,6 +13,7 @@ function imprimirJugador(jugadorImprimir) {
     jugador.animations.add('stay', [1, 2, 3, 4], 60, true);
     jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
+    jugador.animations.play('stay', 10, true);
     game.physics.p2.enable(jugador);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
@@ -214,29 +215,33 @@ function nombreSprite(body) {
 
 function pegar1(id, direccion) {
     //quitar los magic numbers
-    jugadoresImprimidos.get(id).body.velocity.x = 0;
+    //jugadoresImprimidos.get(id).body.velocity.x = 0;
     if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(60, 58, 5, 22);
     else jugadoresImprimidos.get(id).body.setRectangle(60, 58, -5, 22);
-    if (id == miid) quieto = false;
+    //if (id == miid) quieto = false;
+    jugadoresImprimidos.get(id).animations.stop();
     jugadoresImprimidos.get(id).animations.play('hit1', 10, false);
     jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
         if (id == miid) quieto = true;
         if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+        jugadoresImprimidos.get(miid).animations.play('stay', 10, true);
     }, this);
 }
 
 function pegar2(id, direccion) {
-    jugadoresImprimidos.get(id).body.velocity.x = 0;
+    //jugadoresImprimidos.get(id).body.velocity.x = 0;
     //Client.pegar(data,"hit1");
     if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(70, 58, 10, 22);
     else jugadoresImprimidos.get(id).body.setRectangle(70, 58, -10, 22);
-    if (id == miid) quieto = false;
+    //if (id == miid) quieto = false;
+    jugadoresImprimidos.get(id).animations.stop();
     jugadoresImprimidos.get(id).animations.play('hit2', 10, false);
     jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
         if (id == miid) quieto = true;
         if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+        jugadoresImprimidos.get(miid).animations.play('stay', 10, true);
     }, this);
 }
 
@@ -245,12 +250,12 @@ function moverJugador(id, direccion) {
         jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
         jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
         jugadoresImprimidos.get(id).body.moveLeft(700 + sumarVelocidad);
-        jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        if(jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2")jugadoresImprimidos.get(id).animations.play('right', 10, true);
     } else if (direccion == "derecha") {
         jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
         jugadoresImprimidos.get(id).body.moveRight(700 + sumarVelocidad);
-        jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        if(jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2")jugadoresImprimidos.get(id).animations.play('right', 10, true);
     }
 }
 
@@ -293,10 +298,10 @@ function cargarMapa(numMapa, pociones) {
     } else {
         fondo = game.add.tileSprite(0, 0, 7000, 900, 'background');
         map.addTilesetImage('paisaje', `tileset${numMapa}`);
-        nocolision = map.createLayer('nocolision');
-        suelo = map.createLayer('suelo');
-        doblesuelo = map.createLayer('doblesuelo');
         arboles = map.createLayer('arboles');
+        suelo = map.createLayer('suelo');
+        nocolision = map.createLayer('nocolision');
+        doblesuelo = map.createLayer('doblesuelo');
     }
     map.setCollisionBetween(0, 1000, true, suelo);
     map.setCollisionBetween(40, 216, true, doblesuelo);

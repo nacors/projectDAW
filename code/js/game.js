@@ -15,6 +15,10 @@ var suelo,
     fondo,
     audioCaida,
     audioPocion,
+    w,
+    a,
+    s,
+    d,
     nombreJugador = null,
     nombreEnemigo = null;
 
@@ -96,6 +100,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
     jugador.animations.add('stay', [1, 2, 3, 4], 60, true);
     jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
+    jugador.animations.play('stay', 10, true);
     game.physics.p2.enable(jugador, false);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
@@ -131,6 +136,10 @@ Game.create = function () {
     game.physics.startSystem(Phaser.Physics.P2JS);
     game.physics.p2.gravity.y = 5000;
     game.stage.backgroundColor = '#ccffff';
+    w = game.input.keyboard.addKey(Phaser.Keyboard.W);
+    a = game.input.keyboard.addKey(Phaser.Keyboard.A);
+    s = game.input.keyboard.addKey(Phaser.Keyboard.S);
+    d = game.input.keyboard.addKey(Phaser.Keyboard.D);
     cursors = game.input.keyboard.createCursorKeys();
     hit1 = game.input.keyboard.addKey(Phaser.Keyboard.C);
     hit2 = game.input.keyboard.addKey(Phaser.Keyboard.X);
@@ -148,7 +157,6 @@ Game.create = function () {
     }
     audioCaida = game.add.audio("caida");
     audioPocion = game.add.audio("pocion");
-
     fondo.loopFull(0.6);
 };
 
@@ -173,7 +181,7 @@ Game.update = function () {
             // console.log("y: "+jugadoresImprimidos.get(miid).y);
         }
         //movimiento para el personaje que controla el jugador
-        if (cursors.left.isDown && quieto) {
+        if (a.isDown && quieto) {
             direccion = "left";
 
             Client.presionar(data, "izquierda");
@@ -183,7 +191,7 @@ Game.update = function () {
             limites();
             fixCamara();
             ganar();
-        } else if (cursors.right.isDown && quieto) {
+        } else if (d.isDown && quieto) {
             direccion = "right";
             Client.presionar(data, "derecha");
             moverJugador(miid, "derecha");
@@ -197,12 +205,14 @@ Game.update = function () {
                 Client.soltar(data);
                 if (jugadoresImprimidos.has(miid)) {
                     jugadoresImprimidos.get(miid).body.velocity.x = 0;
-                    jugadoresImprimidos.get(miid).animations.play('stay', 10, true);
+                    if(jugadoresImprimidos.get(miid).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(miid).animations.currentAnim.name != "hit2"){
+                        jugadoresImprimidos.get(miid).animations.play('stay', 10, true);
+                    }
                 }
                 revisarCaidoFueraMapa();
             }
         }
-        if (cursors.up.isDown) {
+        if (w.isDown) {
             while (salto) {
                 // console.log("pulsado");
                 if (countSalto < 2) {
@@ -216,7 +226,7 @@ Game.update = function () {
                 salto = false;
             }
 
-        } else if (cursors.up.isUp) {
+        } else if (w.isUp) {
             if (jugadoresImprimidos.get(miid) && jugadoresImprimidos.get(miid).body.velocity.y < 14 && jugadoresImprimidos.get(miid).body.velocity.y > -14) {
                 countSalto = 0;
             }
