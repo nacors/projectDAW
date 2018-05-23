@@ -100,6 +100,7 @@ function checkOverlap(body1, body2) {
                         direccionCamara = miDireccion;
                         setCamara(body1.sprite);
                         reproducirSonidosPegar();
+                        bajas++;
                         if (miDireccion != undefined) {
                             // console.log("Enviamos la direccion: " + miDireccion);
                             Client.opacityEnemigo("ocultar", miDireccion);
@@ -120,6 +121,7 @@ function checkOverlap(body1, body2) {
                         direccionCamara = miDireccion;
                         setCamara(body1.sprite);
                         reproducirSonidosPegar();
+                        bajas++;
                         if (miDireccion != undefined) {
                             // console.log("Enviamos la direccion: " + miDireccion);
                             Client.opacityEnemigo("ocultar", miDireccion);
@@ -140,6 +142,7 @@ function checkOverlap(body1, body2) {
                         direccionCamara = miDireccion;
                         setCamara(body2.sprite);
                         reproducirSonidosPegar();
+                        bajas++;
                         if (miDireccion != undefined) {
                             // console.log("Enviamos la direccion: " + miDireccion);
                             Client.opacityEnemigo("ocultar", miDireccion);
@@ -158,6 +161,7 @@ function checkOverlap(body1, body2) {
                         direccionCamara = miDireccion;
                         setCamara(body2.sprite);
                         reproducirSonidosPegar();
+                        bajas++;
                         if (miDireccion != undefined) {
                             // console.log("Enviamos la direccion: " + miDireccion);
                             Client.opacityEnemigo("ocultar", miDireccion);
@@ -177,6 +181,7 @@ function checkOverlap(body1, body2) {
                     body2.sprite.alpha = 0;
                     //no le permitimos el movimiento al jugador con esa variable
                     sePuedeJugar = false;
+                    muertes++;
                     Client.opacityEnemigo("fueraMapa", direccionCamara);
                     isFueraMapa = true;
                 }
@@ -186,6 +191,7 @@ function checkOverlap(body1, body2) {
                     body1.sprite.alpha = 0;
                     //no le permitimos el movimiento al jugador con esa variable
                     sePuedeJugar = false;
+                    muertes++;
                     Client.opacityEnemigo("fueraMapa", direccionCamara);
                     isFueraMapa = true;
                 }
@@ -330,6 +336,7 @@ function opacityJugador(accion, move) {
         sePuedeJugar = false;
         direccionCamara = move;
         setCamara(jugadoresImprimidos.get(idJugadoresImprimidos[1]));
+        muertes++;
     } else if (accion == "mostrar") {
         // console.log("mi id es: " + miid);
         // console.log("me vuelvo a mostrar ya que me han matado");
@@ -391,6 +398,7 @@ function revisarCaidoFueraMapa() {
     if (jugadoresImprimidos.get(miid).y > bordeMapa && !isFueraMapa) {
         audioCaida.play();
         jugadoresImprimidos.get(miid).alpha = 0;
+        muertes++;
         //no le permitimos el movimiento al jugador con esa variable
         sePuedeJugar = false;
         Client.opacityEnemigo("fueraMapa", direccionCamara);
@@ -603,7 +611,7 @@ function ganar() {
         victory.animations.add('victory', [0], 60, false);
         victory.animations.play('victory', 60, false);
         game.add.tween(victory.scale).to({ x: 1.5, y: 1.5 }, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
-        if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("victoria", 0, 0, sessionStorage.getItem("usuario"), 0);
+        if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("victoria", bajas, 0, sessionStorage.getItem("usuario"), muertes);
         Client.derrota(5445, 405);
         sePuedeJugar = false;
     }
@@ -614,7 +622,7 @@ function ganar() {
         victory.animations.add('victory', [0], 60, false);
         victory.animations.play('victory', 60, false);
         game.add.tween(victory.scale).to({ x: 1.5, y: 1.5 }, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
-        if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("victoria", 0, 0, sessionStorage.getItem("usuario"), 0);
+        if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("victoria", bajas, 0, sessionStorage.getItem("usuario"), muertes);
         Client.derrota(955, 405);
         sePuedeJugar = false;
     }
@@ -627,7 +635,7 @@ function derrota(x, y) {
     victory.animations.add('victory', [1], 60, false);
     victory.animations.play('victory', 60, false);
     game.add.tween(victory.scale).to({ x: 1.5, y: 1.5 }, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
-    if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("derrota", 0, 0, sessionStorage.getItem("usuario"), 0);
+    if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("derrota", bajas, 0, sessionStorage.getItem("usuario"), muertes);
     sePuedeJugar = false;
 }
 
@@ -678,7 +686,7 @@ function reproducirSonidosPegar() {
     pegar.play();
 }
 
-function reproducirSonidosPegarAire(){
+function reproducirSonidosPegarAire() {
     var pegar = game.add.audio(`pegarAire${numeroRandom(4, 2)}`);
     pegar.play();
 }

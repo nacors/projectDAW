@@ -79,6 +79,8 @@ var direccionCamara;
 var sePuedeReaparecer = false;
 var pasoPlay = true;
 var pegar = true;
+var muertes = 0;
+var bajas = 0;
 Game.playerMap = new Map();
 
 
