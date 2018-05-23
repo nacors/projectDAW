@@ -51,6 +51,10 @@ Client.clasificacionJugador = function (resultado, bajas, tiempo, nick, muertes)
     Client.socket.emit("clasificacionJugador", resultado, bajas, tiempo, nick, muertes);
 }
 
+Client.derrota = function(x, y){
+    Client.socket.emit("derrota");
+}
+
 //FUNCIONES QUE SE RECIBEN DEL SERVIDOR***********************************************************
 Client.socket.on('malIniciado', function () {
     console.log("iniciamos el metodo del mal logeo");
@@ -123,4 +127,8 @@ Client.socket.on("nickEnemigo", function(nombre){
 
 Client.socket.on("pararCamara", function(posicion){
     Game.pararCamara(posicion);
+});
+
+Client.socket.on("derrota", function(x, y){
+    Game.derrota(x, y);
 });

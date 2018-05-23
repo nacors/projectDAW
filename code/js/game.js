@@ -170,6 +170,7 @@ Game.update = function () {
             revisarCaidoFueraMapa();
             limites();
             fixCamara();
+            ganar();
         } else if (cursors.right.isDown && quieto) {
             direccion = "right";
             Client.presionar(data, "derecha");
@@ -178,6 +179,7 @@ Game.update = function () {
             revisarCaidoFueraMapa();
             limites();
             fixCamara();
+            ganar();
         } else if (quieto) {
             if (jugadoresImprimidos.size != 0) {
                 Client.soltar(data);
@@ -251,6 +253,7 @@ Game.preload = function () {
     game.load.audio("pocion", `assets/sonidos/pocion/pocion.wav`);
     game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 81);
     game.load.spritesheet('murcielago', 'assets/imagenes/murcielagos/murcielago.png', 32, 32);
+    game.load.spritesheet('fin', 'assets/imagenes/fin/victory_defeat.png', 264, 100);
     game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`);
     game.load.image("pocion", `assets/imagenes/pociones/pocion.png`);
 };
@@ -381,6 +384,10 @@ Game.nickEnemigo = function(nombre){
 Game.pararCamara = function(posicion){
     game.camera.target = null;
     game.camera.x = posicion;
+}
+
+Game.derrota = function(x, y){
+    derrota(x, y);
 }
 game.state.add('Game', Game);
 game.state.start('Game');

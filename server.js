@@ -171,6 +171,10 @@ io.on('connection', function (socket) {
   socket.on("clasificacionJugador", function (resultado, bajas, tiempo, nick, muertes) {
     mongo.actualizarClasificacionJugador(resultado, bajas, tiempo, nick, muertes);
   });
+
+  socket.on("derrota", function(x, y){
+    socket.broadcast.to(funcion.getRoom(socket)).emit('derrota', x, y);
+  });
 });
 
 //funciones del aldo cliente en el juego
