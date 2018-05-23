@@ -295,10 +295,10 @@ function cargarMapa(numMapa, pociones) {
     } else {
         fondo = game.add.tileSprite(0, 0, 7000, 900, 'background');
         map.addTilesetImage('paisaje', `tileset${numMapa}`);
-        nocolision = map.createLayer('nocolision');
-        suelo = map.createLayer('suelo');
-        doblesuelo = map.createLayer('doblesuelo');
         arboles = map.createLayer('arboles');
+        suelo = map.createLayer('suelo');
+        nocolision = map.createLayer('nocolision');
+        doblesuelo = map.createLayer('doblesuelo');
     }
     map.setCollisionBetween(0, 1000, true, suelo);
     map.setCollisionBetween(40, 216, true, doblesuelo);
