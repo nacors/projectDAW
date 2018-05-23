@@ -39,7 +39,7 @@ var propiedadesTexto = {
     fontSize: 40
 };
 var countSalto = 0;
-var quieto = true;
+var restartAnim = true;
 var countCon = 0;
 var contadorTecla = 0;
 var mostrarMensajeOculto = false;
@@ -77,6 +77,7 @@ var miDireccion;
 var direccionCamara;
 var sePuedeReaparecer = false;
 var pasoPlay = true;
+var pegar = true;
 Game.playerMap = new Map();
 
 
@@ -143,8 +144,8 @@ Game.create = function () {
     s = game.input.keyboard.addKey(Phaser.Keyboard.S);
     d = game.input.keyboard.addKey(Phaser.Keyboard.D);
     cursors = game.input.keyboard.createCursorKeys();
-    hit1 = game.input.keyboard.addKey(Phaser.Keyboard.C);
-    hit2 = game.input.keyboard.addKey(Phaser.Keyboard.X);
+    hit1 = game.input.keyboard.addKey(Phaser.Keyboard.K);
+    hit2 = game.input.keyboard.addKey(Phaser.Keyboard.L);
     Client.askNewPlayer();
     game.physics.p2.setPostBroadphaseCallback(checkOverlap, this);
 
@@ -183,7 +184,7 @@ Game.update = function () {
             // console.log("y: "+jugadoresImprimidos.get(miid).y);
         }
         //movimiento para el personaje que controla el jugador
-        if (a.isDown && quieto) {
+        if (a.isDown) {
             direccion = "left";
             Client.presionar(data, "izquierda");
             moverJugador(miid, "izquierda");
@@ -192,7 +193,7 @@ Game.update = function () {
             limites();
             fixCamara();
             ganar();
-        } else if (d.isDown && quieto) {
+        } else if (d.isDown) {
             direccion = "right";
             Client.presionar(data, "derecha");
             moverJugador(miid, "derecha");
@@ -201,12 +202,12 @@ Game.update = function () {
             limites();
             fixCamara();
             ganar();
-        } else if (quieto) {
+        } else{
             if (jugadoresImprimidos.size != 0) {
-                Client.soltar(data);
                 if (jugadoresImprimidos.has(miid)) {
                     jugadoresImprimidos.get(miid).body.velocity.x = 0;
                     if(jugadoresImprimidos.get(miid).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(miid).animations.currentAnim.name != "hit2"){
+                        Client.soltar(data);
                         jugadoresImprimidos.get(miid).animations.play('stay', 10, true);
                     }
                 }
@@ -238,11 +239,21 @@ Game.update = function () {
             salto = true;
         }
         if (hit1.isDown) {
-            Client.ataque("hit1", direccion);
-            pegar1(miid, direccion);
+            
+            while(pegar){
+                Client.ataque("hit1", direccion);
+                pegar1(miid, direccion);
+                pegar = false;
+            }
         } else if (hit2.isDown) {
-            Client.ataque("hit2", direccion);
-            pegar2(miid, direccion);
+            while(pegar){
+                Client.ataque("hit2", direccion);
+                pegar2(miid, direccion);
+                pegar = false;
+            }
+        }
+        if (hit1.isUp && hit2.isUp){
+            pegar = true;
         }
 
     }
