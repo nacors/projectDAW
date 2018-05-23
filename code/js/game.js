@@ -46,6 +46,7 @@ var mostrarMensajeOculto = false;
 var isNingunaPocionaFuera = false;
 var isFueraMapa = false;
 var cont = 0;
+var contPasos = 0;
 var murcielagos = [];
 var bordeMapa = 849;
 var pociones = [];
@@ -75,6 +76,7 @@ var limiteDerecha = limitesMapa[limiteActual] + 1910;
 var miDireccion;
 var direccionCamara;
 var sePuedeReaparecer = false;
+var pasoPlay = true;
 Game.playerMap = new Map();
 
 
@@ -157,7 +159,7 @@ Game.create = function () {
     }
     audioCaida = game.add.audio("caida");
     audioPocion = game.add.audio("pocion");
-    fondo.loopFull(0.6);
+    //fondo.loopFull(0.6);
 };
 
 Game.update = function () {
@@ -183,7 +185,6 @@ Game.update = function () {
         //movimiento para el personaje que controla el jugador
         if (a.isDown && quieto) {
             direccion = "left";
-
             Client.presionar(data, "izquierda");
             moverJugador(miid, "izquierda");
             movimientoFondo();
@@ -252,6 +253,11 @@ Game.update = function () {
     revisarPocionFueraMapa();
     murcielagosVolumen();
     posicionFlecha();
+    contPasos ++;
+    if(contPasos == 18){
+        contPasos = 0;
+        pasoPlay = true;
+    }
 }
 
 Game.render = function () {
@@ -272,6 +278,14 @@ Game.preload = function () {
     game.load.audio("fondo", `assets/sonidos/fondo/fondo1.wav`);
     game.load.audio("salto1", `assets/sonidos/salto/salto1.mp3`);
     game.load.audio("salto2", `assets/sonidos/salto/salto2.mp3`);
+    game.load.audio("paso1", `assets/sonidos/pasos/paso1.mp3`);
+    game.load.audio("paso2", `assets/sonidos/pasos/paso2.mp3`);
+    game.load.audio("paso3", `assets/sonidos/pasos/paso3.mp3`);
+    game.load.audio("paso4", `assets/sonidos/pasos/paso4.mp3`);
+    game.load.audio("paso5", `assets/sonidos/pasos/paso5.mp3`);
+    game.load.audio("paso6", `assets/sonidos/pasos/paso6.mp3`);
+    game.load.audio("paso7", `assets/sonidos/pasos/paso7.mp3`);
+    game.load.audio("paso8", `assets/sonidos/pasos/paso8.mp3`);
     game.load.audio("audioMurcielagos", `assets/sonidos/murcielagos/murcielagos.mp3`);
     game.load.audio("caida", `assets/sonidos/salto/caida.wav`);
     game.load.audio("pocion", `assets/sonidos/pocion/pocion.wav`);
