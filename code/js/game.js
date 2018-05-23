@@ -237,7 +237,6 @@ Game.update = function () {
             salto = true;
         }
         if (hit1.isDown) {
-            
             while(pegar){
                 Client.ataque("hit1", direccion);
                 pegar1(miid, direccion);
