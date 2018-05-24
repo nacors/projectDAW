@@ -573,11 +573,7 @@ function añadirNombreUsuario() {
         stroke: "black",
         fontSize: 15
     });
-<<<<<<< HEAD
     nombreJugador.anchor.setTo(0.5, 0.5);
-=======
-    nombreJugador.anchor.setTo(0.5,0.5);
->>>>>>> 99ad920a0a75b1e5ba29240fb9618ea7641e9d06
 }
 
 function movimientoNombreJugador(jugador = "yo") {
