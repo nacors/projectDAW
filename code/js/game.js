@@ -88,6 +88,7 @@ var bajas = 0;
 var isPocionCogida = false;
 var isPocionCogidaEnemigo = false;
 var enemigoInmortal = false;
+var sinColision = false;
 Game.playerMap = new Map();
 
 

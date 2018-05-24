@@ -93,7 +93,7 @@ function checkOverlap(body1, body2) {
         if ((body1.sprite && body2.sprite) && (nombreSprite(body1) && nombreSprite(body2))) {
             //console.log("Ambos muertos");
         } else if (nombreSprite(body1) && (body1.sprite && body2.sprite)) {
-            if (body2.x < body1.x && direccion == "left" && !enemigoInmortal) {
+            if (body2.x < body1.x && direccion == "left" /*&& !enemigoInmortal*/) {
                 if (jugadoresImprimidos.get(miid) == body1.sprite) {
                     // console.log("matamos al enemigo que se encuentra a la izquierda");
                     if (body2.sprite.alpha != 0) {
@@ -115,7 +115,7 @@ function checkOverlap(body1, body2) {
                     sePuedeReaparecer = true;
 
                 }
-            } else if (body2.x > body1.x && direccion == "right" && !enemigoInmortal) {
+            } else if (body2.x > body1.x && direccion == "right" /*&& !enemigoInmortal*/) {
                 //console.log("inmortal: " + enemigoInmortal);
                 // console.log("Muere " + body2.sprite.name);
                 if (jugadoresImprimidos.get(miid) == body1.sprite) {
@@ -139,7 +139,7 @@ function checkOverlap(body1, body2) {
                 }
             }
         } else if (nombreSprite(body2) && (body1.sprite && body2.sprite)) {
-            if (body2.x > body1.x && direccion == "left" && !enemigoInmortal) {
+            if (body2.x > body1.x && direccion == "left" /*&& !enemigoInmortal*/) {
                 //console.log("inmortal: " + enemigoInmortal);
                 // console.log("Muere " + body1.sprite.name);
                 if (jugadoresImprimidos.get(miid) == body2.sprite) {
@@ -161,7 +161,7 @@ function checkOverlap(body1, body2) {
                     sePuedeReaparecer = true;
 
                 }
-            } else if (body2.x < body1.x && direccion == "right" && !enemigoInmortal) {
+            } else if (body2.x < body1.x && direccion == "right" /*&& !enemigoInmortal*/) {
                 //console.log("inmortal: " + enemigoInmortal);
                 // console.log("Muere " + body1.sprite.name);
                 if (jugadoresImprimidos.get(miid) == body2.sprite) {
@@ -361,6 +361,8 @@ function opacityJugador(accion, move) {
     if (accion == "ocultar") {
         reproducirSonidosPegar();
         //cogemos nuestra id ya que se hace un broadcast del server
+        sinColision = true;
+        jugadoresImprimidos.get(miid).body.clearShapes();
         jugadoresImprimidos.get(miid).alpha = 0;
         sePuedeJugar = false;
         direccionCamara = move;
@@ -370,10 +372,13 @@ function opacityJugador(accion, move) {
     } else if (accion == "mostrar") {
         //no reaparecer al jugador si esta en el principio o final del limite
         if (limiteActual != 0 && limiteActual != 4) {
+            if (direccion == "right") jugadoresImprimidos.get(miid).body.setRectangle(60, 58, 5, 22);
+            else jugadoresImprimidos.get(miid).body.setRectangle(60, 58, -5, 22);
             jugadoresImprimidos.get(miid).body.x = zonasReaparecion[limiteActual];
             jugadoresImprimidos.get(miid).body.y = 100;
             sePuedeJugar = true;
             jugadoresImprimidos.get(miid).alpha = 1;
+            sinColision = false;
             inmortal(miJugador());
             nombreJugador.alpha = 1;
         }
@@ -428,7 +433,7 @@ function easterEgg() {
 
 function revisarCaidoFueraMapa() {
     //ejecutar esta funcion cada vez que el personaje se mueve
-    if (jugadoresImprimidos.get(miid).y > bordeMapa && !isFueraMapa) {
+    if (jugadoresImprimidos.get(miid).y > bordeMapa && !isFueraMapa && !sinColision) {
         audioCaida.play();
         jugadoresImprimidos.get(miid).alpha = 0;
         muertes++;
@@ -568,7 +573,11 @@ function añadirNombreUsuario() {
         stroke: "black",
         fontSize: 15
     });
+<<<<<<< HEAD
     nombreJugador.anchor.setTo(0.5, 0.5);
+=======
+    nombreJugador.anchor.setTo(0.5,0.5);
+>>>>>>> 99ad920a0a75b1e5ba29240fb9618ea7641e9d06
 }
 
 function movimientoNombreJugador(jugador = "yo") {
