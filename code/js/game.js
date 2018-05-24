@@ -172,7 +172,7 @@ Game.create = function () {
     }
     audioCaida = game.add.audio("caida");
     audioPocion = game.add.audio("pocion");
-    musicaFondo.loopFull(0.6);
+    // musicaFondo.loopFull(0.6);
 };
 
 Game.update = function () {
@@ -275,6 +275,8 @@ Game.update = function () {
         }else if(resultadoFinal == "derrota"){
             saltosVictoria(jugadoresImprimidos.get(idJugadoresImprimidos[1]));
         }
+        //movemos el nombre del enemigo cuando estamos muertos
+        movimientoNombreJugador("enemigo");
     }
     //parte de easter egg
     easterEgg();
@@ -320,7 +322,7 @@ Game.preload = function () {
     game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 81);
     game.load.spritesheet('murcielago', 'assets/imagenes/murcielagos/murcielago.png', 32, 32);
     game.load.spritesheet('fin', 'assets/imagenes/fin/victory_defeat.png', 264, 100);
-    game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`);
+    game.load.image("background", `assets/mapas/mapa${1}/fondo${2}.png`);
     game.load.image("pocion", `assets/imagenes/pociones/pocion.png`);
     game.load.image("flecha", `assets/imagenes/estilo/direccion.png`);
     game.load.audio("pegar1", `assets/sonidos/espada/espada1.mp3`);

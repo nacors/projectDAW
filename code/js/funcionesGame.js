@@ -208,32 +208,42 @@ function checkOverlap(body1, body2) {
                 }
             }
             if (nombreSprite(body1) == "pocion" && body2.sprite.key == "caballero") {
-                // console.log("contacto con pocion");
+                console.log("CONTACTO CON LA POCION");
                 if (body2.sprite == miJugador() && !isPocionCogida) {
-                    masVelocidad(body2.sprite, 3);
                     isPocionCogida = true;
+                    masVelocidad(body2.sprite, 3);
                     imprimirMensajePocion(miJugador());
+                    console.log("yo cogi pocion: " + isPocionCogida);
+                    console.log("1111");
+                    destruirPocion(body1);
                 } else if (body2.sprite == enemigoJugador() && !isPocionCogidaEnemigo) {
                     imprimirMensajePocion(enemigoJugador());
                     isPocionCogidaEnemigo = true;
                     contPocionEnemigo();
+                    console.log("copia cogio pocion: " + isPocionCogidaEnemigo);
+                    console.log("2222");
+                    destruirPocion(body1);
                 }
-                body1.sprite.destroy();
-                audioPocion.play();
+
             } else if (nombreSprite(body2) == "pocion" && body1.sprite.key == "caballero") {
-                // console.log("contacto con pocion");
+                console.log("CONTACTO CON LA POCION");
                 if (body1.sprite == miJugador() && !isPocionCogida) {
-                    masVelocidad(body1.sprite, 3);
                     isPocionCogida = true;
+                    masVelocidad(body1.sprite, 3);
                     imprimirMensajePocion(miJugador());
+                    console.log("yo cogi pocion: " + isPocionCogida);
+                    console.log("3333");
+                    destruirPocion(body2);
                 }
                 else if (body1.sprite == enemigoJugador() && !isPocionCogidaEnemigo) {
                     imprimirMensajePocion(enemigoJugador());
                     isPocionCogidaEnemigo = true;
                     contPocionEnemigo();
+                    console.log("copia cogio pocion: " + isPocionCogidaEnemigo);
+                    console.log("4444");
+                    destruirPocion(body2);
                 }
-                body2.sprite.destroy();
-                audioPocion.play();
+
             }
         }
         if ((body1.sprite && body2.sprite)) return false;
@@ -380,7 +390,7 @@ function opacityJugador(accion, move) {
             jugadoresImprimidos.get(miid).alpha = 1;
             sinColision = false;
             inmortal(miJugador());
-            nombreJugador.alpha = 1;
+            nombreEnemigo.alpha = 1;
         }
     } else if (accion == "fueraMapa") {
         //hacemos desaparecer al enemigo que se ha caido en su pantalla
@@ -391,6 +401,7 @@ function opacityJugador(accion, move) {
         }
     } else if (accion == "reaparecer") {
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 1;
+        nombreEnemigo.alpha = 1;
     }
 }
 
@@ -531,10 +542,12 @@ function murcielagosVolumen() {
 }
 
 function masVelocidad(jugador, segundos) {
+    // console.log("entro para dar mas velocidad");
     var tiempo = 0;
     sumarVelocidad = 300;
     var intervalo = setInterval(function () {
         tiempo++;
+        // console.log("tiempo: " + tiempo);
         if (tiempo == segundos) {
             mensajePocion.destroy();
             mensajePocion = null;
@@ -546,7 +559,7 @@ function masVelocidad(jugador, segundos) {
 }
 
 function contPocionEnemigo() {
-    console.log("entro aqui");
+    console.log("Contacto Enemigo - Pocion");
     var tiempo = 0;
     var intervalo = setInterval(function () {
         tiempo++;
@@ -555,8 +568,10 @@ function contPocionEnemigo() {
             mensajePocionEnemigo = null;
             clearInterval(intervalo);
             isPocionCogidaEnemigo = false;
+            // console.log("Dentro set Interval isPocionCogidaEnemigo: " + isPocionCogidaEnemigo);
         }
     }, 3000);
+    // console.log("isPocionCogidaEnemigo: " + isPocionCogidaEnemigo);
 }
 
 function sonidoSaltar() {
@@ -777,7 +792,7 @@ function miJugador() {
 
 function movimientoMensajePocionInmortalidad() {
     if (mensajePocionEnemigo != null && isPocionCogidaEnemigo) {
-        console.log("entro aqui para cambiar posicion de pocion");
+        // console.log("entro aqui para cambiar posicion de pocion");
         mensajePocionEnemigo.position.x = enemigoJugador().x;
         mensajePocionEnemigo.position.y = enemigoJugador().y - 40;
     }
@@ -817,29 +832,21 @@ function imprimirMensajePocion(jugador) {
     }
 }
 
-function saltosVictoria(jugador){
+function saltosVictoria(jugador) {
     if (contSaltoVictoria == 50) {
         jugador.body.moveUp(1200);
         contSaltoVictoria = 0;
     }
     contSaltoVictoria++;
 }
-   
-function volverMenu(){
+
+function volverMenu() {
     var intervalo = setInterval(function () {
         window.location.href = "/menu";
     }, 5000);
 }
 
-//IVAN
-//no reaparecer en la zona 4 y 0                    +
-//pociones no se pueden coger si ya teien una       +
-//poner un mensaje de que has cogido una pocion     +
-//arreglar el menu.js
-//1 segundo de inmortalidad cuando reaparece        +
-
-//NACOR
-//mejorar vicotria y derrota (reinciiar animaciones)
-//que devuelva al menu al acabar
-//rooms
-
+function destruirPocion(pocion) {
+    pocion.sprite.destroy();
+    audioPocion.play();
+}
