@@ -754,7 +754,6 @@ function miJugador() {
     return jugadoresImprimidos.get(miid);
 }
 
-<<<<<<< HEAD
 function movimientoMensajePocionInmortalidad() {
     if (mensajePocionEnemigo != null && isPocionCogidaEnemigo) {
         console.log("entro aqui para cambiar posicion de pocion");
@@ -809,7 +808,6 @@ function imprimirMensajePocion(jugador) {
 //que devuelva al menu al acabar
 //rooms
 
-=======
 function saltosVictoria(jugador){
     if (contSaltoVictoria == 50) {
         jugador.body.moveUp(1200);
@@ -823,4 +821,3 @@ function volverMenu(){
         window.location.href = "/menu";
     }, 5000);
 }
->>>>>>> f16d07ae957c30888bc0a68f115716d002663a39
