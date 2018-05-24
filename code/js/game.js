@@ -15,6 +15,10 @@ var suelo,
     fondo,
     audioCaida,
     audioPocion,
+    w,
+    a,
+    s,
+    d,
     nombreJugador = null,
     nombreEnemigo = null;
 
@@ -35,13 +39,15 @@ var propiedadesTexto = {
     fontSize: 40
 };
 var countSalto = 0;
-var quieto = true;
+var restartAnim = true;
 var countCon = 0;
 var contadorTecla = 0;
 var mostrarMensajeOculto = false;
 var isNingunaPocionaFuera = false;
 var isFueraMapa = false;
 var cont = 0;
+var contPasos = 0;
+var contEspada = 0;
 var murcielagos = [];
 var bordeMapa = 849;
 var pociones = [];
@@ -49,6 +55,9 @@ var audioMurcielagos;
 var direccionMurcielagos;
 var sumarVelocidad = 0;
 var sonidosSalto = [];
+var flecha = null;
+var direccionFlecha;
+var moverFlecha = false;
 var limitesMapa = {
     0: 0,
     1: 290,
@@ -68,6 +77,10 @@ var limiteDerecha = limitesMapa[limiteActual] + 1910;
 var miDireccion;
 var direccionCamara;
 var sePuedeReaparecer = false;
+var pasoPlay = true;
+var pegar = true;
+var muertes = 0;
+var bajas = 0;
 Game.playerMap = new Map();
 
 
@@ -93,6 +106,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
     jugador.animations.add('stay', [1, 2, 3, 4], 60, true);
     jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
+    jugador.animations.play('stay', 10, true);
     game.physics.p2.enable(jugador, false);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
@@ -128,9 +142,13 @@ Game.create = function () {
     game.physics.startSystem(Phaser.Physics.P2JS);
     game.physics.p2.gravity.y = 5000;
     game.stage.backgroundColor = '#ccffff';
+    w = game.input.keyboard.addKey(Phaser.Keyboard.W);
+    a = game.input.keyboard.addKey(Phaser.Keyboard.A);
+    s = game.input.keyboard.addKey(Phaser.Keyboard.S);
+    d = game.input.keyboard.addKey(Phaser.Keyboard.D);
     cursors = game.input.keyboard.createCursorKeys();
-    hit1 = game.input.keyboard.addKey(Phaser.Keyboard.C);
-    hit2 = game.input.keyboard.addKey(Phaser.Keyboard.X);
+    hit1 = game.input.keyboard.addKey(Phaser.Keyboard.K);
+    hit2 = game.input.keyboard.addKey(Phaser.Keyboard.L);
     Client.askNewPlayer();
     game.physics.p2.setPostBroadphaseCallback(checkOverlap, this);
 
@@ -145,8 +163,7 @@ Game.create = function () {
     }
     audioCaida = game.add.audio("caida");
     audioPocion = game.add.audio("pocion");
-
-    fondo.loopFull(0.6);
+    //fondo.loopFull(0.6);
 };
 
 Game.update = function () {
@@ -170,16 +187,16 @@ Game.update = function () {
             // console.log("y: "+jugadoresImprimidos.get(miid).y);
         }
         //movimiento para el personaje que controla el jugador
-        if (cursors.left.isDown && quieto) {
+        if (a.isDown) {
             direccion = "left";
-
             Client.presionar(data, "izquierda");
             moverJugador(miid, "izquierda");
             movimientoFondo();
             revisarCaidoFueraMapa();
             limites();
             fixCamara();
-        } else if (cursors.right.isDown && quieto) {
+            ganar();
+        } else if (d.isDown) {
             direccion = "right";
             Client.presionar(data, "derecha");
             moverJugador(miid, "derecha");
@@ -187,17 +204,20 @@ Game.update = function () {
             revisarCaidoFueraMapa();
             limites();
             fixCamara();
-        } else if (quieto) {
+            ganar();
+        } else {
             if (jugadoresImprimidos.size != 0) {
-                Client.soltar(data);
                 if (jugadoresImprimidos.has(miid)) {
                     jugadoresImprimidos.get(miid).body.velocity.x = 0;
-                    jugadoresImprimidos.get(miid).animations.play('stay', 10, true);
+                    if (jugadoresImprimidos.get(miid).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(miid).animations.currentAnim.name != "hit2") {
+                        Client.soltar(data);
+                        jugadoresImprimidos.get(miid).animations.play('stay', 10, true);
+                    }
                 }
                 revisarCaidoFueraMapa();
             }
         }
-        if (cursors.up.isDown) {
+        if (w.isDown) {
             while (salto) {
                 // console.log("pulsado");
                 if (countSalto < 2) {
@@ -211,7 +231,7 @@ Game.update = function () {
                 salto = false;
             }
 
-        } else if (cursors.up.isUp) {
+        } else if (w.isUp) {
             if (jugadoresImprimidos.get(miid) && jugadoresImprimidos.get(miid).body.velocity.y < 14 && jugadoresImprimidos.get(miid).body.velocity.y > -14) {
                 countSalto = 0;
             }
@@ -222,11 +242,22 @@ Game.update = function () {
             salto = true;
         }
         if (hit1.isDown) {
-            Client.ataque("hit1", direccion);
-            pegar1(miid, direccion);
+            while (pegar) {
+                Client.ataque("hit1", direccion);
+                pegar1(miid, direccion);
+                pegar = false;
+                reproducirSonidosPegarAire();
+            }
         } else if (hit2.isDown) {
-            Client.ataque("hit2", direccion);
-            pegar2(miid, direccion);
+            while (pegar) {
+                Client.ataque("hit2", direccion);
+                pegar2(miid, direccion);
+                pegar = false;
+                reproducirSonidosPegarAire();
+            }
+        }
+        if (hit1.isUp && hit2.isUp) {
+            pegar = true;
         }
 
     }
@@ -236,6 +267,9 @@ Game.update = function () {
     volverTransparenciaNormal();
     revisarPocionFueraMapa();
     murcielagosVolumen();
+    posicionFlecha();
+    //cont que sirve para reproducir correctamente los sonidos de los pasos
+    contadorPasos();
 }
 
 Game.render = function () {
@@ -256,13 +290,31 @@ Game.preload = function () {
     game.load.audio("fondo", `assets/sonidos/fondo/fondo1.wav`);
     game.load.audio("salto1", `assets/sonidos/salto/salto1.mp3`);
     game.load.audio("salto2", `assets/sonidos/salto/salto2.mp3`);
+    game.load.audio("paso1", `assets/sonidos/pasos/paso1.mp3`);
+    game.load.audio("paso2", `assets/sonidos/pasos/paso2.mp3`);
+    game.load.audio("paso3", `assets/sonidos/pasos/paso3.mp3`);
+    game.load.audio("paso4", `assets/sonidos/pasos/paso4.mp3`);
+    game.load.audio("paso5", `assets/sonidos/pasos/paso5.mp3`);
+    game.load.audio("paso6", `assets/sonidos/pasos/paso6.mp3`);
+    game.load.audio("paso7", `assets/sonidos/pasos/paso7.mp3`);
+    game.load.audio("paso8", `assets/sonidos/pasos/paso8.mp3`);
     game.load.audio("audioMurcielagos", `assets/sonidos/murcielagos/murcielagos.mp3`);
     game.load.audio("caida", `assets/sonidos/salto/caida.wav`);
     game.load.audio("pocion", `assets/sonidos/pocion/pocion.wav`);
     game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 81);
     game.load.spritesheet('murcielago', 'assets/imagenes/murcielagos/murcielago.png', 32, 32);
+    game.load.spritesheet('fin', 'assets/imagenes/fin/victory_defeat.png', 264, 100);
     game.load.image("background", `assets/mapas/mapa${1}/fondo${1}.png`);
     game.load.image("pocion", `assets/imagenes/pociones/pocion.png`);
+    game.load.image("flecha", `assets/imagenes/estilo/direccion.png`);
+    game.load.audio("pegar1", `assets/sonidos/espada/espada1.mp3`);
+    game.load.audio("pegar2", `assets/sonidos/espada/espada2.mp3`);
+    game.load.audio("pegar3", `assets/sonidos/espada/espada3.mp3`);
+    game.load.audio("pegar4", `assets/sonidos/espada/espada4.mp3`);
+    game.load.audio("pegar5", `assets/sonidos/espada/espada6.mp3`);
+    game.load.audio("pegar6", `assets/sonidos/espada/espada9.mp3`);
+    game.load.audio("pegarAire2", `assets/sonidos/espada/espadaAire2.wav`);
+    game.load.audio("pegarAire3", `assets/sonidos/espada/espadaAire3.wav`);
 };
 
 //movemos al jugadopr enemigo sincornizando los movimientos
@@ -283,18 +335,18 @@ Game.movimiento = function (id, data, accion, direccion) {
             jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
             jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
             jugadoresImprimidos.get(id).animations.play('right', 10, true);
+            reproducirSonidosPasos();
         } else if (direccion == "derecha") {
             jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
             jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
             jugadoresImprimidos.get(id).animations.play('right', 10, true);
+            reproducirSonidosPasos();
         } else if (direccion == "salto") {
             jugadoresImprimidos.get(id).animations.play('stay', 10, true);
             //console.log(jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x);
             if (jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x < 1000
                 && jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x > -1000) {
-
                 sonidosSalto[0].play();
-
             }
         }
     } else if (accion == "soltar") {
@@ -326,6 +378,7 @@ Game.iniciarPartida = function () {
 }
 
 Game.ataqueEnemigo = function (id, ataque, direccion) {
+    reproducirSonidosPegarAire();
     if (ataque == "hit1") {
         pegar1(id, direccion);
     } else if (ataque == "hit2") {
@@ -356,7 +409,7 @@ Game.crearMurcielagos = function (direccion, y) {
         4: [y + 90, -600]
     }
     direccionMurcielagos = direccion;
-    if (direccion == "derecha") {
+    /*if (direccion == "derecha") {
         x = 50;
         sprite = [4, 5, 6, 7];
         datosMurcielagos = murcielagosDer;
@@ -373,7 +426,7 @@ Game.crearMurcielagos = function (direccion, y) {
         murcielago.animations.add('murcielagosmov', sprite, 60, true);
         murcielago.animations.play('murcielagosmov', 10, true);
         murcielagos.push(murcielago);
-    }
+    }*/
     //console.log(murcielagos);
 }
 
@@ -391,6 +444,10 @@ Game.nickEnemigo = function (nombre) {
 Game.pararCamara = function (posicion) {
     game.camera.target = null;
     game.camera.x = posicion;
+}
+
+Game.derrota = function (x, y) {
+    derrota(x, y);
 }
 game.state.add('Game', Game);
 game.state.start('Game');

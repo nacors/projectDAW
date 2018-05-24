@@ -1,4 +1,4 @@
-var frasesRius = ["El windows es una mierda!", "Usa un navegador de verdad!", "Viteh!", "Que eres, de Madrid?"];
+var frasesRius = ["El Wirus es una mierda!", "Usa un navegador de verdad!", "Viteh!", "Que eres, de Madrid?"];
 var frasesInma = ["Estamos a lo que estamos?", "Venga, vamos a ver el pdf", "Esto esta mal", "Me gusta mucho"];
 var frasesSamuel = ["Que tal vais?", "Chicos, hoy toca un tipo test", "Teneis la entrega de 'fora de termini'", "Si a mi me dices que haces UML, te contrato"];
 
@@ -13,6 +13,7 @@ function imprimirJugador(jugadorImprimir) {
     jugador.animations.add('stay', [1, 2, 3, 4], 60, true);
     jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
+    jugador.animations.play('stay', 10, true);
     game.physics.p2.enable(jugador);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
@@ -92,13 +93,14 @@ function checkOverlap(body1, body2) {
         if ((body1.sprite && body2.sprite) && (nombreSprite(body1) && nombreSprite(body2))) {
             //console.log("Ambos muertos");
         } else if (nombreSprite(body1) && (body1.sprite && body2.sprite)) {
-            console.log("////////////////BODY1");
             if (body2.x < body1.x && direccion == "left") {
                 if (jugadoresImprimidos.get(miid) == body1.sprite) {
                     // console.log("matamos al enemigo que se encuentra a la izquierda");
                     if (body2.sprite.alpha != 0) {
                         direccionCamara = miDireccion;
                         setCamara(body1.sprite);
+                        reproducirSonidosPegar();
+                        bajas++;
                         if (miDireccion != undefined) {
                             // console.log("Enviamos la direccion: " + miDireccion);
                             Client.opacityEnemigo("ocultar", miDireccion);
@@ -118,6 +120,8 @@ function checkOverlap(body1, body2) {
                     if (body2.sprite.alpha != 0) {
                         direccionCamara = miDireccion;
                         setCamara(body1.sprite);
+                        reproducirSonidosPegar();
+                        bajas++;
                         if (miDireccion != undefined) {
                             // console.log("Enviamos la direccion: " + miDireccion);
                             Client.opacityEnemigo("ocultar", miDireccion);
@@ -130,7 +134,6 @@ function checkOverlap(body1, body2) {
                 }
             }
         } else if (nombreSprite(body2) && (body1.sprite && body2.sprite)) {
-            console.log("////////////////BODY2");
             if (body2.x > body1.x && direccion == "left") {
                 // console.log("Muere " + body1.sprite.name);
                 if (jugadoresImprimidos.get(miid) == body2.sprite) {
@@ -138,6 +141,8 @@ function checkOverlap(body1, body2) {
                     if (body1.sprite.alpha != 0) {
                         direccionCamara = miDireccion;
                         setCamara(body2.sprite);
+                        reproducirSonidosPegar();
+                        bajas++;
                         if (miDireccion != undefined) {
                             // console.log("Enviamos la direccion: " + miDireccion);
                             Client.opacityEnemigo("ocultar", miDireccion);
@@ -155,6 +160,8 @@ function checkOverlap(body1, body2) {
                     if (body1.sprite.alpha != 0) {
                         direccionCamara = miDireccion;
                         setCamara(body2.sprite);
+                        reproducirSonidosPegar();
+                        bajas++;
                         if (miDireccion != undefined) {
                             // console.log("Enviamos la direccion: " + miDireccion);
                             Client.opacityEnemigo("ocultar", miDireccion);
@@ -174,6 +181,7 @@ function checkOverlap(body1, body2) {
                     body2.sprite.alpha = 0;
                     //no le permitimos el movimiento al jugador con esa variable
                     sePuedeJugar = false;
+                    muertes++;
                     Client.opacityEnemigo("fueraMapa", direccionCamara);
                     isFueraMapa = true;
                 }
@@ -183,18 +191,23 @@ function checkOverlap(body1, body2) {
                     body1.sprite.alpha = 0;
                     //no le permitimos el movimiento al jugador con esa variable
                     sePuedeJugar = false;
+                    muertes++;
                     Client.opacityEnemigo("fueraMapa", direccionCamara);
                     isFueraMapa = true;
                 }
             }
             if (nombreSprite(body1) == "pocion" && body2.sprite.key == "caballero") {
                 // console.log("contacto con pocion");
-                masVelocidad(body2.sprite, 3);
+                if (body2.sprite == miJugador()) {
+                    masVelocidad(body2.sprite, 3);
+                }
                 body1.sprite.destroy();
                 audioPocion.play();
             } else if (nombreSprite(body2) == "pocion" && body1.sprite.key == "caballero") {
                 // console.log("contacto con pocion");
-                masVelocidad(body2.sprite, 3);
+                if (body1.sprite == miJugador()) {
+                    masVelocidad(body1.sprite, 3);
+                }
                 body2.sprite.destroy();
                 audioPocion.play();
             }
@@ -215,30 +228,26 @@ function nombreSprite(body) {
 }
 
 function pegar1(id, direccion) {
-    //quitar los magic numbers
-    jugadoresImprimidos.get(id).body.velocity.x = 0;
     if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(60, 58, 5, 22);
     else jugadoresImprimidos.get(id).body.setRectangle(60, 58, -5, 22);
-    if (id == miid) quieto = false;
+    jugadoresImprimidos.get(id).animations.stop();
     jugadoresImprimidos.get(id).animations.play('hit1', 10, false);
     jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
-        if (id == miid) quieto = true;
         if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+        jugadoresImprimidos.get(id).animations.play('stay', 10, true);
     }, this);
 }
 
 function pegar2(id, direccion) {
-    jugadoresImprimidos.get(id).body.velocity.x = 0;
-    //Client.pegar(data,"hit1");
     if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(70, 58, 10, 22);
     else jugadoresImprimidos.get(id).body.setRectangle(70, 58, -10, 22);
-    if (id == miid) quieto = false;
+    jugadoresImprimidos.get(id).animations.stop();
     jugadoresImprimidos.get(id).animations.play('hit2', 10, false);
     jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
-        if (id == miid) quieto = true;
         if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+        jugadoresImprimidos.get(id).animations.play('stay', 10, true);
     }, this);
 }
 
@@ -247,12 +256,14 @@ function moverJugador(id, direccion) {
         jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
         jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
         jugadoresImprimidos.get(id).body.moveLeft(700 + sumarVelocidad);
-        jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        reproducirSonidosPasos();
     } else if (direccion == "derecha") {
         jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
         jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
         jugadoresImprimidos.get(id).body.moveRight(700 + sumarVelocidad);
-        jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        reproducirSonidosPasos();
     }
 }
 
@@ -324,18 +335,18 @@ function volverTransparenciaNormal() {
 
 function opacityJugador(accion, move) {
     if (accion == "ocultar") {
+        reproducirSonidosPegar();
         //cogemos nuestra id ya que se hace un broadcast del server
         jugadoresImprimidos.get(miid).alpha = 0;
-        game.input.enabled = false;
         sePuedeJugar = false;
         direccionCamara = move;
         setCamara(jugadoresImprimidos.get(idJugadoresImprimidos[1]));
+        muertes++;
     } else if (accion == "mostrar") {
         // console.log("mi id es: " + miid);
         // console.log("me vuelvo a mostrar ya que me han matado");
         jugadoresImprimidos.get(miid).body.x = zonasReaparecion[limiteActual];
         jugadoresImprimidos.get(miid).body.y = 100;
-        game.input.enabled = true;
         sePuedeJugar = true;
         jugadoresImprimidos.get(miid).alpha = 1;
     } else if (accion == "fueraMapa") {
@@ -392,6 +403,7 @@ function revisarCaidoFueraMapa() {
     if (jugadoresImprimidos.get(miid).y > bordeMapa && !isFueraMapa) {
         audioCaida.play();
         jugadoresImprimidos.get(miid).alpha = 0;
+        muertes++;
         //no le permitimos el movimiento al jugador con esa variable
         sePuedeJugar = false;
         Client.opacityEnemigo("fueraMapa", direccionCamara);
@@ -485,7 +497,7 @@ function murcielagosVolumen() {
 
 function masVelocidad(jugador, segundos) {
     var tiempo = 0;
-    sumarVelocidad = 200;
+    sumarVelocidad = 1000;
     var intervalo = setInterval(function () {
         tiempo++;
         if (tiempo == segundos) {
@@ -550,11 +562,13 @@ function setCamara(body) {
         limiteActual++;
         limiteDerecha = limitesMapa[limiteActual] + 1910;
         game.camera.follow(body);
+        if (body == jugadoresImprimidos.get(miid)) imrpimirFlechaDireccion("derecha");
         //console.log("sumo limite actual por que voy a la derecha");
     } else if (direccionCamara == "izquierda") {
         limiteActual--;
         limiteDerecha = limitesMapa[limiteActual] + 1910;
         game.camera.follow(body);
+        if (body == jugadoresImprimidos.get(miid)) imrpimirFlechaDireccion("izquierda");
     }
     //console.log(game.camera.x + " posicion camara");
 }
@@ -567,8 +581,12 @@ function fixCamara() {
             // reaparecerJugador = true;
             game.camera.target = null;
             Client.pararCamara(game.camera.x);
+            if (flecha != null) {
+                flecha.destroy();
+                felcha = null;
+            }
+            moverFlecha = false;
         }
-
     }
     if (direccionCamara == "derecha") {
         if (game.camera.x >= limitesMapa[limiteActual]) {
@@ -576,10 +594,108 @@ function fixCamara() {
             game.camera.target = null;
             // reaparecerJugador = true;
             Client.pararCamara(game.camera.x);
+            if (flecha != null) {
+                flecha.destroy();
+                felcha = null;
+            }
+            moverFlecha = false;
         }
     }
 }
 
 function enviarClasificacionJugador(resultado, bajas, tiempo, nick, muertes) {
     Client.clasificacionJugador(resultado, bajas, tiempo, nick, muertes);
+}
+
+function ganar() {
+    if (miDireccion == "derecha" && jugadoresImprimidos.get(miid).x > 6200) {
+        Client.derrota();
+        game.input.enabled = false;
+        var victory = game.add.sprite(5445, 405, 'fin');
+        victory.anchor.setTo(0.5, 0.5);
+        victory.animations.add('victory', [0], 60, false);
+        victory.animations.play('victory', 60, false);
+        game.add.tween(victory.scale).to({ x: 1.5, y: 1.5 }, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
+        if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("victoria", bajas, 0, sessionStorage.getItem("usuario"), muertes);
+        Client.derrota(5445, 405);
+        sePuedeJugar = false;
+    }
+    else if (miDireccion == "izquierda" && jugadoresImprimidos.get(miid).x < 100) {
+        game.input.enabled = false;
+        var victory = game.add.sprite(955, 405, 'fin');
+        victory.anchor.setTo(0.5, 0.5);
+        victory.animations.add('victory', [0], 60, false);
+        victory.animations.play('victory', 60, false);
+        game.add.tween(victory.scale).to({ x: 1.5, y: 1.5 }, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
+        if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("victoria", bajas, 0, sessionStorage.getItem("usuario"), muertes);
+        Client.derrota(955, 405);
+        sePuedeJugar = false;
+    }
+}
+
+function derrota(x, y) {
+    game.input.enabled = false;
+    var victory = game.add.sprite(x, y, 'fin');
+    victory.anchor.setTo(0.5, 0.5);
+    victory.animations.add('victory', [1], 60, false);
+    victory.animations.play('victory', 60, false);
+    game.add.tween(victory.scale).to({ x: 1.5, y: 1.5 }, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
+    if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("derrota", bajas, 0, sessionStorage.getItem("usuario"), muertes);
+    sePuedeJugar = false;
+}
+
+function imrpimirFlechaDireccion(direccion) {
+    if (flecha != null) flecha.destroy();
+    if (direccion == "derecha") {
+        flecha = game.add.tileSprite(game.camera.x + 1800, 100, 192, 192, 'flecha');
+        flecha.angle += 270;
+        flecha.anchor.setTo(0.5);
+        flecha.scale.setTo(0.5);
+    } else if (direccion == "izquierda") {
+        flecha = game.add.tileSprite(game.camera.x + 100, 100, 192, 192, 'flecha');
+        flecha.angle += 90;
+        flecha.anchor.setTo(0.5);
+        flecha.scale.setTo(0.5);
+    }
+    moverFlecha = true;
+    direccionFlecha = direccion;
+}
+
+function posicionFlecha() {
+    if (moverFlecha) {
+        if (direccionFlecha == "derecha") {
+            flecha.position.x = game.camera.x + 1800;
+        } else if (direccionFlecha == "izquierda") {
+            flecha.position.x = game.camera.x + 100;
+        }
+    }
+}
+function reproducirSonidosPasos() {
+    if (pasoPlay) {
+        var paso = game.add.audio(`paso${numeroRandom(9, 1)}`);
+        paso.play();
+        pasoPlay = false;
+    }
+}
+
+function contadorPasos() {
+    contPasos++;
+    if (contPasos == 18) {
+        contPasos = 0;
+        pasoPlay = true;
+    }
+}
+
+function reproducirSonidosPegar() {
+    var pegar = game.add.audio(`pegar${numeroRandom(7, 1)}`);
+    pegar.play();
+}
+
+function reproducirSonidosPegarAire() {
+    var pegar = game.add.audio(`pegarAire${numeroRandom(4, 2)}`);
+    pegar.play();
+}
+
+function miJugador() {
+    return jugadoresImprimidos.get(miid);
 }
