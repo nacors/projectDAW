@@ -23,7 +23,8 @@ var suelo,
     nombreJugador = null,
     nombreEnemigo = null,
     mensajePocion,
-    mensajePocionEnemigo = null;
+    mensajePocionEnemigo = null,
+    musicaFondo;
 
 var contSaltoVictoria = 50;
 var jugadoresImprimidos = new Map();
@@ -163,7 +164,7 @@ Game.create = function () {
     //contador fps
     game.time.advancedTiming = true;
     //game.time.desiredFps = 30;
-    var fondo = game.add.audio("fondo");
+    musicaFondo = game.add.audio("fondo");
     audioMurcielagos = game.add.audio("audioMurcielagos");
     audioMurcielagos = game.add.audio("audioMurcielagos");
     for (let i = 1; i < 3; i++) {
@@ -171,7 +172,7 @@ Game.create = function () {
     }
     audioCaida = game.add.audio("caida");
     audioPocion = game.add.audio("pocion");
-    //fondo.loopFull(0.6);
+    musicaFondo.loopFull(0.6);
 };
 
 Game.update = function () {
@@ -330,6 +331,7 @@ Game.preload = function () {
     game.load.audio("pegar6", `assets/sonidos/espada/espada9.mp3`);
     game.load.audio("pegarAire2", `assets/sonidos/espada/espadaAire2.wav`);
     game.load.audio("pegarAire3", `assets/sonidos/espada/espadaAire3.wav`);
+    game.load.audio("victoria", `assets/sonidos/victoria/musica_victoria.mp3`);
 };
 
 //movemos al jugadopr enemigo sincornizando los movimientos
@@ -453,6 +455,7 @@ Game.nickEnemigo = function (nombre) {
             stroke: "black",
             fontSize: 15
         });
+        nombreEnemigo.anchor.setTo(.5, .5);
     }
 }
 
