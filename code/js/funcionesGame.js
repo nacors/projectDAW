@@ -650,6 +650,9 @@ function ganar() {
     if (miDireccion == "derecha" && jugadoresImprimidos.get(miid).x > 6200) {
         Client.derrota();
         game.input.enabled = false;
+        jugadoresImprimidos.get(miid).body.velocity.x = 0;
+        jugadoresImprimidos.get(miid).animations.stop();
+        jugadoresImprimidos.get(miid).frame = 1;
         var victory = game.add.sprite(5445, 405, 'fin');
         victory.anchor.setTo(0.5, 0.5);
         victory.animations.add('victory', [0], 60, false);
@@ -658,9 +661,13 @@ function ganar() {
         if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("victoria", bajas, 0, sessionStorage.getItem("usuario"), muertes);
         Client.derrota(5445, 405);
         sePuedeJugar = false;
+        volverMenu();
     }
     else if (miDireccion == "izquierda" && jugadoresImprimidos.get(miid).x < 100) {
         game.input.enabled = false;
+        jugadoresImprimidos.get(miid).body.velocity.x = 0;
+        jugadoresImprimidos.get(miid).animations.stop();
+        jugadoresImprimidos.get(miid).frame = 1;
         var victory = game.add.sprite(955, 405, 'fin');
         victory.anchor.setTo(0.5, 0.5);
         victory.animations.add('victory', [0], 60, false);
@@ -668,19 +675,26 @@ function ganar() {
         game.add.tween(victory.scale).to({ x: 1.5, y: 1.5 }, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
         if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("victoria", bajas, 0, sessionStorage.getItem("usuario"), muertes);
         Client.derrota(955, 405);
+        resultadoFinal = "victoria";
         sePuedeJugar = false;
+        volverMenu();
     }
 }
 
 function derrota(x, y) {
     game.input.enabled = false;
+    jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.velocity.x = 0;
+    jugadoresImprimidos.get(idJugadoresImprimidos[1]).animations.stop();
+    jugadoresImprimidos.get(idJugadoresImprimidos[1]).frame = 1;
     var victory = game.add.sprite(x, y, 'fin');
     victory.anchor.setTo(0.5, 0.5);
     victory.animations.add('victory', [1], 60, false);
     victory.animations.play('victory', 60, false);
     game.add.tween(victory.scale).to({ x: 1.5, y: 1.5 }, 2200, Phaser.Easing.Back.InOut, true, 2000, 20, true).loop(true);
     if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("derrota", bajas, 0, sessionStorage.getItem("usuario"), muertes);
+    resultadoFinal = "derrota";
     sePuedeJugar = false;
+    volverMenu();
 }
 
 function imrpimirFlechaDireccion(direccion) {
@@ -740,6 +754,7 @@ function miJugador() {
     return jugadoresImprimidos.get(miid);
 }
 
+<<<<<<< HEAD
 function movimientoMensajePocionInmortalidad() {
     if (mensajePocionEnemigo != null && isPocionCogidaEnemigo) {
         console.log("entro aqui para cambiar posicion de pocion");
@@ -794,3 +809,18 @@ function imprimirMensajePocion(jugador) {
 //que devuelva al menu al acabar
 //rooms
 
+=======
+function saltosVictoria(jugador){
+    if (contSaltoVictoria == 50) {
+        jugador.body.moveUp(1200);
+        contSaltoVictoria = 0;
+    }
+    contSaltoVictoria++;
+}
+
+function volverMenu(){
+    var intervalo = setInterval(function () {
+        window.location.href = "/menu";
+    }, 5000);
+}
+>>>>>>> f16d07ae957c30888bc0a68f115716d002663a39
