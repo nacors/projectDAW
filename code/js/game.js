@@ -19,9 +19,11 @@ var suelo,
     a,
     s,
     d,
+    resultadoFinal,
     nombreJugador = null,
     nombreEnemigo = null;
 
+var contSaltoVictoria = 50;
 var jugadoresImprimidos = new Map();
 var idJugadoresImprimidos = [];
 var idJugadoresNoMover = [];
@@ -260,6 +262,12 @@ Game.update = function () {
             pegar = true;
         }
 
+    }else{
+        if(resultadoFinal == "victoria"){
+            saltosVictoria(jugadoresImprimidos.get(miid));
+        }else if(resultadoFinal == "derrota"){
+            saltosVictoria(jugadoresImprimidos.get(idJugadoresImprimidos[1]));
+        }
     }
     //parte de easter egg
     easterEgg();
