@@ -205,11 +205,11 @@ Game.update = function () {
             limites();
             fixCamara();
             ganar();
-        } else{
+        } else {
             if (jugadoresImprimidos.size != 0) {
                 if (jugadoresImprimidos.has(miid)) {
                     jugadoresImprimidos.get(miid).body.velocity.x = 0;
-                    if(jugadoresImprimidos.get(miid).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(miid).animations.currentAnim.name != "hit2"){
+                    if (jugadoresImprimidos.get(miid).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(miid).animations.currentAnim.name != "hit2") {
                         Client.soltar(data);
                         jugadoresImprimidos.get(miid).animations.play('stay', 10, true);
                     }
@@ -242,21 +242,21 @@ Game.update = function () {
             salto = true;
         }
         if (hit1.isDown) {
-            while(pegar){
+            while (pegar) {
                 Client.ataque("hit1", direccion);
                 pegar1(miid, direccion);
                 pegar = false;
                 reproducirSonidosPegarAire();
             }
         } else if (hit2.isDown) {
-            while(pegar){
+            while (pegar) {
                 Client.ataque("hit2", direccion);
                 pegar2(miid, direccion);
                 pegar = false;
                 reproducirSonidosPegarAire();
             }
         }
-        if (hit1.isUp && hit2.isUp){
+        if (hit1.isUp && hit2.isUp) {
             pegar = true;
         }
 
@@ -378,6 +378,7 @@ Game.iniciarPartida = function () {
 }
 
 Game.ataqueEnemigo = function (id, ataque, direccion) {
+    reproducirSonidosPegarAire();
     if (ataque == "hit1") {
         pegar1(id, direccion);
     } else if (ataque == "hit2") {
@@ -445,7 +446,7 @@ Game.pararCamara = function (posicion) {
     game.camera.x = posicion;
 }
 
-Game.derrota = function(x, y){
+Game.derrota = function (x, y) {
     derrota(x, y);
 }
 game.state.add('Game', Game);

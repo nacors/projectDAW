@@ -198,12 +198,16 @@ function checkOverlap(body1, body2) {
             }
             if (nombreSprite(body1) == "pocion" && body2.sprite.key == "caballero") {
                 // console.log("contacto con pocion");
-                masVelocidad(body2.sprite, 3);
+                if (body2.sprite == miJugador()) {
+                    masVelocidad(body2.sprite, 3);
+                }
                 body1.sprite.destroy();
                 audioPocion.play();
             } else if (nombreSprite(body2) == "pocion" && body1.sprite.key == "caballero") {
                 // console.log("contacto con pocion");
-                masVelocidad(body2.sprite, 3);
+                if (body1.sprite == miJugador()) {
+                    masVelocidad(body1.sprite, 3);
+                }
                 body2.sprite.destroy();
                 audioPocion.play();
             }
@@ -331,6 +335,7 @@ function volverTransparenciaNormal() {
 
 function opacityJugador(accion, move) {
     if (accion == "ocultar") {
+        reproducirSonidosPegar();
         //cogemos nuestra id ya que se hace un broadcast del server
         jugadoresImprimidos.get(miid).alpha = 0;
         sePuedeJugar = false;
@@ -492,7 +497,7 @@ function murcielagosVolumen() {
 
 function masVelocidad(jugador, segundos) {
     var tiempo = 0;
-    sumarVelocidad = 200;
+    sumarVelocidad = 1000;
     var intervalo = setInterval(function () {
         tiempo++;
         if (tiempo == segundos) {
@@ -689,4 +694,8 @@ function reproducirSonidosPegar() {
 function reproducirSonidosPegarAire() {
     var pegar = game.add.audio(`pegarAire${numeroRandom(4, 2)}`);
     pegar.play();
+}
+
+function miJugador() {
+    return jugadoresImprimidos.get(miid);
 }
