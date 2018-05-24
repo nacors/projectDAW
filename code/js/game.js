@@ -20,7 +20,9 @@ var suelo,
     s,
     d,
     nombreJugador = null,
-    nombreEnemigo = null;
+    nombreEnemigo = null,
+    mensajePocion,
+    mensajePocionEnemigo = null;
 
 var jugadoresImprimidos = new Map();
 var idJugadoresImprimidos = [];
@@ -81,6 +83,9 @@ var pasoPlay = true;
 var pegar = true;
 var muertes = 0;
 var bajas = 0;
+var isPocionCogida = false;
+var isPocionCogidaEnemigo = false;
+var enemigoInmortal = false;
 Game.playerMap = new Map();
 
 
@@ -270,6 +275,7 @@ Game.update = function () {
     posicionFlecha();
     //cont que sirve para reproducir correctamente los sonidos de los pasos
     contadorPasos();
+    movimientoMensajePocionInmortalidad();
 }
 
 Game.render = function () {

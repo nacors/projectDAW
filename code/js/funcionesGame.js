@@ -93,7 +93,7 @@ function checkOverlap(body1, body2) {
         if ((body1.sprite && body2.sprite) && (nombreSprite(body1) && nombreSprite(body2))) {
             //console.log("Ambos muertos");
         } else if (nombreSprite(body1) && (body1.sprite && body2.sprite)) {
-            if (body2.x < body1.x && direccion == "left") {
+            if (body2.x < body1.x && direccion == "left" && !enemigoInmortal) {
                 if (jugadoresImprimidos.get(miid) == body1.sprite) {
                     // console.log("matamos al enemigo que se encuentra a la izquierda");
                     if (body2.sprite.alpha != 0) {
@@ -112,8 +112,10 @@ function checkOverlap(body1, body2) {
                     // console.log("mostramos enemigo que hemos matado a la izquierda");
                     // volverTransparenciaNormal();
                     sePuedeReaparecer = true;
+
                 }
-            } else if (body2.x > body1.x && direccion == "right") {
+            } else if (body2.x > body1.x && direccion == "right" && !enemigoInmortal) {
+                //console.log("inmortal: " + enemigoInmortal);
                 // console.log("Muere " + body2.sprite.name);
                 if (jugadoresImprimidos.get(miid) == body1.sprite) {
                     // console.log("matamos al enemigo que se encuentra a la derecha");
@@ -131,10 +133,12 @@ function checkOverlap(body1, body2) {
                     // console.log("mostramos enemigo que hemos matado a la derecha");
                     // volverTransparenciaNormal();
                     sePuedeReaparecer = true;
+
                 }
             }
         } else if (nombreSprite(body2) && (body1.sprite && body2.sprite)) {
-            if (body2.x > body1.x && direccion == "left") {
+            if (body2.x > body1.x && direccion == "left" && !enemigoInmortal) {
+                //console.log("inmortal: " + enemigoInmortal);
                 // console.log("Muere " + body1.sprite.name);
                 if (jugadoresImprimidos.get(miid) == body2.sprite) {
                     // console.log("matamos al enemigo que se encuentra a la izquierda");
@@ -152,8 +156,10 @@ function checkOverlap(body1, body2) {
                     // console.log("mostramos enemigo que hemos matado a la izquierda");
                     // volverTransparenciaNormal();
                     sePuedeReaparecer = true;
+
                 }
-            } else if (body2.x < body1.x && direccion == "right") {
+            } else if (body2.x < body1.x && direccion == "right" && !enemigoInmortal) {
+                //console.log("inmortal: " + enemigoInmortal);
                 // console.log("Muere " + body1.sprite.name);
                 if (jugadoresImprimidos.get(miid) == body2.sprite) {
                     // console.log("matamos al enemigo que se encuentra a la derecha");
@@ -171,6 +177,7 @@ function checkOverlap(body1, body2) {
                     // console.log("mostramos enemigo que hemos matado a la derecha");
                     // volverTransparenciaNormal();
                     sePuedeReaparecer = true;
+
                 }
             }
         }
@@ -198,15 +205,28 @@ function checkOverlap(body1, body2) {
             }
             if (nombreSprite(body1) == "pocion" && body2.sprite.key == "caballero") {
                 // console.log("contacto con pocion");
-                if (body2.sprite == miJugador()) {
+                if (body2.sprite == miJugador() && !isPocionCogida) {
                     masVelocidad(body2.sprite, 3);
+                    isPocionCogida = true;
+                    imprimirMensajePocion(miJugador());
+                } else if (body2.sprite == enemigoJugador() && !isPocionCogidaEnemigo) {
+                    imprimirMensajePocion(enemigoJugador());
+                    isPocionCogidaEnemigo = true;
+                    contPocionEnemigo();
                 }
                 body1.sprite.destroy();
                 audioPocion.play();
             } else if (nombreSprite(body2) == "pocion" && body1.sprite.key == "caballero") {
                 // console.log("contacto con pocion");
-                if (body1.sprite == miJugador()) {
+                if (body1.sprite == miJugador() && !isPocionCogida) {
                     masVelocidad(body1.sprite, 3);
+                    isPocionCogida = true;
+                    imprimirMensajePocion(miJugador());
+                }
+                else if (body1.sprite == enemigoJugador() && !isPocionCogidaEnemigo) {
+                    imprimirMensajePocion(enemigoJugador());
+                    isPocionCogidaEnemigo = true;
+                    contPocionEnemigo();
                 }
                 body2.sprite.destroy();
                 audioPocion.play();
@@ -324,12 +344,12 @@ function volverTransparenciaNormal() {
     // console.log("mostramos al enemigo");
     // console.log(idJugadoresImprimidos[1]);
     // setTimeout(function () {
-    if (sePuedeReaparecer && game.camera.target == null) {
+    if (sePuedeReaparecer && game.camera.target == null && limiteActual != 0 && limiteActual != 4) {
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 1;
         Client.opacityEnemigo("mostrar", direccionCamara);
+        inmortal(enemigoJugador());
         sePuedeReaparecer = false;
     }
-
     // }, 3000);
 }
 
@@ -343,12 +363,14 @@ function opacityJugador(accion, move) {
         setCamara(jugadoresImprimidos.get(idJugadoresImprimidos[1]));
         muertes++;
     } else if (accion == "mostrar") {
-        // console.log("mi id es: " + miid);
-        // console.log("me vuelvo a mostrar ya que me han matado");
-        jugadoresImprimidos.get(miid).body.x = zonasReaparecion[limiteActual];
-        jugadoresImprimidos.get(miid).body.y = 100;
-        sePuedeJugar = true;
-        jugadoresImprimidos.get(miid).alpha = 1;
+        //no reaparecer al jugador si esta en el principio o final del limite
+        if (limiteActual != 0 && limiteActual != 4) {
+            jugadoresImprimidos.get(miid).body.x = zonasReaparecion[limiteActual];
+            jugadoresImprimidos.get(miid).body.y = 100;
+            sePuedeJugar = true;
+            jugadoresImprimidos.get(miid).alpha = 1;
+            inmortal(miJugador());
+        }
     } else if (accion == "fueraMapa") {
         //hacemos desaparecer al enemigo que se ha caido en su pantalla
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 0;
@@ -497,14 +519,31 @@ function murcielagosVolumen() {
 
 function masVelocidad(jugador, segundos) {
     var tiempo = 0;
-    sumarVelocidad = 1000;
+    sumarVelocidad = 300;
     var intervalo = setInterval(function () {
         tiempo++;
         if (tiempo == segundos) {
+            mensajePocion.destroy();
+            mensajePocion = null;
             clearInterval(intervalo);
             sumarVelocidad = 0;
+            isPocionCogida = false;
         }
-    }, 1000);
+    }, 3000);
+}
+
+function contPocionEnemigo() {
+    console.log("entro aqui");
+    var tiempo = 0;
+    var intervalo = setInterval(function () {
+        tiempo++;
+        if (tiempo == 3) {
+            mensajePocionEnemigo.destroy();
+            mensajePocionEnemigo = null;
+            clearInterval(intervalo);
+            isPocionCogidaEnemigo = false;
+        }
+    }, 3000);
 }
 
 function sonidoSaltar() {
@@ -534,11 +573,11 @@ function movimientoNombreJugador(jugador = "yo") {
         id = idJugadoresImprimidos[1];
     }
     if (jugadorNombre != null) {
-        if (direccion == "right") {
+        /*if (direccion == "right") {
             jugadorNombre.position.x = jugadoresImprimidos.get(id).x - 35;
         } else {
             jugadorNombre.position.x = jugadoresImprimidos.get(id).x - 20;
-        }
+        }*/
         jugadorNombre.position.y = jugadoresImprimidos.get(id).y - 30;
     }
 }
@@ -670,6 +709,7 @@ function posicionFlecha() {
         }
     }
 }
+
 function reproducirSonidosPasos() {
     if (pasoPlay) {
         var paso = game.add.audio(`paso${numeroRandom(9, 1)}`);
@@ -699,3 +739,58 @@ function reproducirSonidosPegarAire() {
 function miJugador() {
     return jugadoresImprimidos.get(miid);
 }
+
+function movimientoMensajePocionInmortalidad() {
+    if (mensajePocionEnemigo != null && isPocionCogidaEnemigo) {
+        console.log("entro aqui para cambiar posicion de pocion");
+        mensajePocionEnemigo.position.x = enemigoJugador().x;
+        mensajePocionEnemigo.position.y = enemigoJugador().y - 30;
+    }
+    if (mensajePocion != null && isPocionCogida) {
+        mensajePocion.position.x = miJugador().x;
+        mensajePocion.position.y = miJugador().y - 30;
+    }
+}
+
+function enemigoJugador() {
+    return jugadoresImprimidos.get(idJugadoresImprimidos[1]);
+}
+
+function inmortal(jugador) {
+    enemigoInmortal = true;
+    console.log("ahora enemigo es inmortal?: " + enemigoInmortal);
+    setTimeout(function () {
+        enemigoInmortal = false;
+    }, 1000);
+}
+
+function imprimirMensajePocion(jugador) {
+    if (jugador == miJugador()) {
+        mensajePocion = game.add.text(jugador.x, jugador.y - 30, "+Velocidad", {
+            fill: "white",
+            stroke: "black",
+            fontSize: 15
+        });
+        mensajePocion.anchor.setTo(0.5, 0.5);
+    } else if (jugador == enemigoJugador()) {
+        mensajePocionEnemigo = game.add.text(jugador.x, jugador.y - 30, "+Velocidad", {
+            fill: "white",
+            stroke: "black",
+            fontSize: 15
+        });
+        mensajePocionEnemigo.anchor.setTo(0.5, 0.5);
+    }
+}
+
+//IVAN
+//no reaparecer en la zona 4 y 0                    +
+//pociones no se pueden coger si ya teien una       +
+//poner un mensaje de que has cogido una pocion     +
+//arreglar el menu.js
+//1 segundo de inmortalidad cuando reaparece        +
+
+//NACOR
+//mejorar vicotria y derrota (reinciiar animaciones)
+//que devuelva al menu al acabar
+//rooms
+
