@@ -372,7 +372,6 @@ function opacityJugador(accion, move) {
         reproducirSonidosPegar();
         //cogemos nuestra id ya que se hace un broadcast del server
         sinColision = true;
-        jugadoresImprimidos.get(miid).body.clearShapes();
         jugadoresImprimidos.get(miid).alpha = 0;
         sePuedeJugar = false;
         direccionCamara = move;
@@ -382,8 +381,6 @@ function opacityJugador(accion, move) {
     } else if (accion == "mostrar") {
         //no reaparecer al jugador si esta en el principio o final del limite
         if (limiteActual != 0 && limiteActual != 4) {
-            if (direccion == "right") jugadoresImprimidos.get(miid).body.setRectangle(60, 58, 5, 22);
-            else jugadoresImprimidos.get(miid).body.setRectangle(60, 58, -5, 22);
             jugadoresImprimidos.get(miid).body.x = zonasReaparecion[limiteActual];
             jugadoresImprimidos.get(miid).body.y = 100;
             sePuedeJugar = true;
@@ -444,7 +441,7 @@ function easterEgg() {
 
 function revisarCaidoFueraMapa() {
     //ejecutar esta funcion cada vez que el personaje se mueve
-    if (jugadoresImprimidos.get(miid).y > bordeMapa && !isFueraMapa && !sinColision) {
+    if (jugadoresImprimidos.get(miid).y > bordeMapa && !isFueraMapa) {
         audioCaida.play();
         jugadoresImprimidos.get(miid).alpha = 0;
         muertes++;
@@ -849,4 +846,15 @@ function volverMenu() {
 function destruirPocion(pocion) {
     pocion.sprite.destroy();
     audioPocion.play();
+}
+
+function ambosMuertos(){
+    if(jugadoresImprimidos.get(miid).alpha == 0 && jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha == 0){
+        if (direccionCamara == "derecha") {
+            limiteActual--;
+        } else if (direccionCamara == "izquierda") {
+            limiteActual++;
+        }
+        opacityJugador("mostrar", "");
+    }
 }

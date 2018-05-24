@@ -89,7 +89,6 @@ var bajas = 0;
 var isPocionCogida = false;
 var isPocionCogidaEnemigo = false;
 var enemigoInmortal = false;
-var sinColision = false;
 Game.playerMap = new Map();
 
 
@@ -192,6 +191,7 @@ Game.update = function () {
             //damos movimiento del jugador al personaje
             movimientoNombreJugador();
             movimientoNombreJugador("enemigo");
+            ambosMuertos();
             // console.log("x: "+jugadoresImprimidos.get(miid).x);
             // console.log("y: "+jugadoresImprimidos.get(miid).y);
         }
@@ -333,7 +333,7 @@ Game.preload = function () {
     game.load.audio("pegar6", `assets/sonidos/espada/espada9.mp3`);
     game.load.audio("pegarAire2", `assets/sonidos/espada/espadaAire2.wav`);
     game.load.audio("pegarAire3", `assets/sonidos/espada/espadaAire3.wav`);
-    game.load.audio("victoria", `assets/sonidos/victoria/musica_victoria.mp3`);
+    game.load.audio("victoria", `assets/sonidos/victoria/audio_victoria.mp3`);
 };
 
 //movemos al jugadopr enemigo sincornizando los movimientos
