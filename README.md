@@ -8,7 +8,8 @@ Por acabar:
 Puntos posibles para la presentacion:
 	- Descripción del juego (porque, como funciona, reglas)
 	- Tecnologias Utilizadas (cuales, porque, evntajas)
-		-Problemas que tubimos
-	- Explicación rápido de como funciona phaser (con posibles dibujos de update, create, preload etc...)
+		+ Problemas que tubimos
+		+ Demostración de creación de mapas
+		+ Explicación rápido de como funciona phaser (con posibles dibujos de update, create, preload etc...)
 	- Demostración del juego y explicación de como se juega
 
