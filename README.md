@@ -4,6 +4,7 @@ Por acabar:
 	- Optimización de codigo
 	- Descomentar el otro boton de pegar
  	- Mirar lo de los murcielagos
+	- Hacer que +velocidad se reinicie y no imprima el mensaje si se muere el personaje
 
 Puntos posibles para la presentacion:
 	- Descripción del juego (porque, como funciona, reglas)
