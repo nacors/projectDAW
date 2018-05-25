@@ -316,11 +316,11 @@ function imprimirMensajeOculto(quien) {
     } else if (quien == "inma") {
         frase = frasesInma[parseInt(Math.random() * (frasesInma.length - 0) + 0)];
     }
-    mensajeOculto = game.add.text(jugadoresImprimidos.get(miid).x, jugadoresImprimidos.get(miid).y - 20, frase, {
-        fill: "black",
-        stroke: "black",
-        fontSize: 10,
-        font: 'Merriweather Sans'
+    mensajeOculto = game.add.text(jugadoresImprimidos.get(miid).x, jugadoresImprimidos.get(miid).y - 50, frase, {
+        fill: "white",
+        stroke: "white",
+        fontSize: 18,
+        font: 'VT323'
     });
     mensajeOculto.anchor.setTo(0.5, 0.5);
 }
@@ -448,7 +448,7 @@ function easterEgg() {
     //easter egg
     if (mostrarMensajeOculto === true) {
         mensajeOculto.position.x = jugadoresImprimidos.get(miid).x;
-        mensajeOculto.position.y = jugadoresImprimidos.get(miid).y - 20;
+        mensajeOculto.position.y = jugadoresImprimidos.get(miid).y -50;
     }
 }
 
@@ -589,15 +589,18 @@ function sonidoSaltar() {
 }
 
 function añadirNombreUsuario() {
-    var nombre = sessionStorage.getItem("usuario");
+    var nombre;
+    console.log("añado mi nombre y lo imprimo");
+    nombre = sessionStorage.getItem("usuario");
     if (sessionStorage.getItem("usuario") == null) {
         nombre = "Invitado";
     }
-    nombreJugador = game.add.text(jugadoresImprimidos.get(miid).x, jugadoresImprimidos.get(miid).y - 20, nombre, {
+    if (nombreJugador != null) nombreJugador = null;
+    nombreJugador = game.add.text(miJugador().x, miJugador().y - 20, nombre, {
         fill: "white",
         stroke: "black",
-        fontSize: 15,
-        font: 'Merriweather Sans'
+        fontSize: 18,
+        font: 'VT323'
     });
     nombreJugador.anchor.setTo(0.5, 0.5);
 }
@@ -623,8 +626,11 @@ function movimientoNombreJugador(jugador = "yo") {
 }
 
 function enviarMiNombreUsuario() {
-    //console.log("envio mi nombre a otro usuario");
-    Client.nickEnemigo(sessionStorage.getItem("usuario"));
+    if (sessionStorage.getItem("usuario") == null) {
+        Client.nickEnemigo("Invitado");
+    } else {
+        Client.nickEnemigo(sessionStorage.getItem("usuario"));
+    }
 }
 
 function limites(limite) {
@@ -823,11 +829,11 @@ function movimientoMensajePocionInmortalidad() {
     if (mensajePocionEnemigo != null && isPocionCogidaEnemigo) {
         // console.log("entro aqui para cambiar posicion de pocion");
         mensajePocionEnemigo.position.x = enemigoJugador().x;
-        mensajePocionEnemigo.position.y = enemigoJugador().y - 40;
+        mensajePocionEnemigo.position.y = enemigoJugador().y - 35;
     }
     if (mensajePocion != null && isPocionCogida) {
         mensajePocion.position.x = miJugador().x;
-        mensajePocion.position.y = miJugador().y - 40;
+        mensajePocion.position.y = miJugador().y - 35;
     }
 }
 
@@ -845,19 +851,19 @@ function inmortal(jugador) {
 
 function imprimirMensajePocion(jugador) {
     if (jugador == miJugador()) {
-        mensajePocion = game.add.text(jugador.x, jugador.y - 30, "+Velocidad", {
+        mensajePocion = game.add.text(jugador.x, jugador.y - 35, "+Velocidad", {
             fill: "white",
             stroke: "black",
-            fontSize: 15,
-            font: 'Merriweather Sans'
+            fontSize: 18,
+            font: 'VT323'
         });
         mensajePocion.anchor.setTo(0.5, 0.5);
     } else if (jugador == enemigoJugador()) {
-        mensajePocionEnemigo = game.add.text(jugador.x, jugador.y - 30, "+Velocidad", {
+        mensajePocionEnemigo = game.add.text(jugador.x, jugador.y - 35, "+Velocidad", {
             fill: "white",
             stroke: "black",
-            fontSize: 15,
-            font: 'Merriweather Sans'
+            fontSize: 18,
+            font: 'VT323'
         });
         mensajePocionEnemigo.anchor.setTo(0.5, 0.5);
     }
@@ -910,18 +916,20 @@ function contadorBajasMuertes() {
         fill: "white",
         stroke: "black",
         fontSize: 30,
-        font: 'Merriweather Sans',
+        font: 'VT323',
         backgroundColor: "#6c5ce7"
     });
     mensajeBajas.fixedToCamera = true;
+    mensajeBajas.alpha = .5;
     //mensajeBajas.cameraOffset.setTo(200, 100);
     mensajeMuertes = game.add.text(100, 100, `Muertes: ${muertes}`, {
         fill: "white",
         stroke: "black",
         fontSize: 30,
-        font: 'Merriweather Sans',
+        font: 'VT323',
         backgroundColor: "#6c5ce7"
     });
     mensajeMuertes.fixedToCamera = true;
+    mensajeMuertes.alpha = .5;
     //mensajeMuertes.cameraOffset.setTo(200, 200);
 }

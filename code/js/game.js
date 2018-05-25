@@ -42,7 +42,7 @@ var propiedadesTexto = {
     fill: "white",
     stroke: "black",
     fontSize: 40,
-    font: 'Merriweather Sans'
+    font: 'VT323'
 };
 var countSalto = 0;
 var restartAnim = true;
@@ -459,15 +459,15 @@ Game.crearMurcielagos = function (direccion, y) {
 }
 
 Game.nickEnemigo = function (nombre) {
-    //console.log("imprimo el nombre del enemigo");
+    console.log("imprimo el nombre del enemigo");
     if (idJugadoresImprimidos.length > 1) {
-        nombreEnemigo = game.add.text(jugadoresImprimidos.get(idJugadoresImprimidos[1]).x, jugadoresImprimidos.get(idJugadoresImprimidos[1]).y - 20, nombre, {
+        nombreEnemigo = game.add.text(enemigoJugador().x, enemigoJugador().y - 20, nombre, {
             fill: "white",
             stroke: "black",
-            fontSize: 15,
-            font: 'Merriweather Sans'
+            fontSize: 18,
+            font: 'VT323'
         });
-        nombreEnemigo.anchor.setTo(.5, .5);
+        nombreEnemigo.anchor.setTo(0.5, 0.5);
     }
 }
 
