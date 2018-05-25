@@ -41,7 +41,8 @@ var sePuedeJugar = true;
 var propiedadesTexto = {
     fill: "white",
     stroke: "black",
-    fontSize: 40
+    fontSize: 40,
+    font: 'Merriweather Sans'
 };
 var countSalto = 0;
 var restartAnim = true;
@@ -89,6 +90,8 @@ var bajas = 0;
 var isPocionCogida = false;
 var isPocionCogidaEnemigo = false;
 var enemigoInmortal = false;
+var mensajeMuertes = null;
+var mensajeBajas = null;
 Game.playerMap = new Map();
 
 
@@ -115,7 +118,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
     jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
     jugador.animations.play('stay', 10, true);
-    game.physics.p2.enable(jugador, false);
+    game.physics.p2.enable(jugador, true);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
     //jugador.body.loadPolygon("ninja_escalado", "correr");
@@ -155,7 +158,7 @@ Game.create = function () {
     s = game.input.keyboard.addKey(Phaser.Keyboard.S);
     d = game.input.keyboard.addKey(Phaser.Keyboard.D);
     cursors = game.input.keyboard.createCursorKeys();
-    hit1 = game.input.keyboard.addKey(Phaser.Keyboard.K);
+    //hit1 = game.input.keyboard.addKey(Phaser.Keyboard.K);
     hit2 = game.input.keyboard.addKey(Phaser.Keyboard.L);
     Client.askNewPlayer();
     game.physics.p2.setPostBroadphaseCallback(checkOverlap, this);
@@ -191,9 +194,6 @@ Game.update = function () {
             //damos movimiento del jugador al personaje
             movimientoNombreJugador();
             movimientoNombreJugador("enemigo");
-            ambosMuertos();
-            // console.log("x: "+jugadoresImprimidos.get(miid).x);
-            // console.log("y: "+jugadoresImprimidos.get(miid).y);
         }
         //movimiento para el personaje que controla el jugador
         if (a.isDown) {
@@ -250,14 +250,14 @@ Game.update = function () {
             }
             salto = true;
         }
-        if (hit1.isDown) {
+        /*if (hit1.isDown) {
             while (pegar) {
                 Client.ataque("hit1", direccion);
                 pegar1(miid, direccion);
                 pegar = false;
                 reproducirSonidosPegarAire();
             }
-        } else if (hit2.isDown) {
+        } else */if (hit2.isDown) {
             while (pegar) {
                 Client.ataque("hit2", direccion);
                 pegar2(miid, direccion);
@@ -265,7 +265,7 @@ Game.update = function () {
                 reproducirSonidosPegarAire();
             }
         }
-        if (hit1.isUp && hit2.isUp) {
+        if (/*hit1.isUp &&*/ hit2.isUp) {
             pegar = true;
         }
 
@@ -279,6 +279,7 @@ Game.update = function () {
         movimientoNombreJugador("enemigo");
     }
     //parte de easter egg
+    ambosMuertos();
     easterEgg();
     reaparecerJugador();
     volverTransparenciaNormal();
@@ -288,6 +289,7 @@ Game.update = function () {
     //cont que sirve para reproducir correctamente los sonidos de los pasos
     contadorPasos();
     movimientoMensajePocionInmortalidad();
+    contadorBajasMuertes();
 }
 
 Game.render = function () {
@@ -334,6 +336,9 @@ Game.preload = function () {
     game.load.audio("pegarAire2", `assets/sonidos/espada/espadaAire2.wav`);
     game.load.audio("pegarAire3", `assets/sonidos/espada/espadaAire3.wav`);
     game.load.audio("victoria", `assets/sonidos/victoria/audio_victoria.mp3`);
+    game.load.audio("pegarLosDos1", `assets/sonidos/espada/espada5.mp3`);
+    game.load.audio("pegarLosDos2", `assets/sonidos/espada/espada7.mp3`);
+    game.load.audio("pegarLosDos3", `assets/sonidos/espada/espada8.mp3`);
 };
 
 //movemos al jugadopr enemigo sincornizando los movimientos
@@ -351,17 +356,21 @@ Game.movimiento = function (id, data, accion, direccion) {
     //hay que tener en cuenta de que escuha constantemente los movimientos, tal vez es lo que mas carga el sistema
     if (accion == "presionar") {
         if (direccion == "izquierda") {
-            jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
-            jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
-            jugadoresImprimidos.get(id).animations.play('right', 10, true);
+            if(jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2"){
+                jugadoresImprimidos.get(id).animations.play('right', 10, true);
+                jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
+                jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+            } 
             reproducirSonidosPasos();
         } else if (direccion == "derecha") {
-            jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
-            jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
-            jugadoresImprimidos.get(id).animations.play('right', 10, true);
+            if(jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2"){
+                jugadoresImprimidos.get(id).animations.play('right', 10, true);
+                jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
+                jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
+            } 
             reproducirSonidosPasos();
         } else if (direccion == "salto") {
-            jugadoresImprimidos.get(id).animations.play('stay', 10, true);
+            if(jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") jugadoresImprimidos.get(id).animations.play('stay', 10, true);
             //console.log(jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x);
             if (jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x < 1000
                 && jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x > -1000) {
@@ -455,14 +464,16 @@ Game.nickEnemigo = function (nombre) {
         nombreEnemigo = game.add.text(jugadoresImprimidos.get(idJugadoresImprimidos[1]).x, jugadoresImprimidos.get(idJugadoresImprimidos[1]).y - 20, nombre, {
             fill: "white",
             stroke: "black",
-            fontSize: 15
+            fontSize: 15,
+            font: 'Merriweather Sans'
         });
         nombreEnemigo.anchor.setTo(.5, .5);
     }
 }
 
 Game.pararCamara = function (posicion) {
-    game.camera.target = null;
+    console.log("entro de parte del cliente");
+    if(miJugador().alpha == 0)game.camera.target = null;
     game.camera.x = posicion;
 }
 

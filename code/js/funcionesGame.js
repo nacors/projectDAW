@@ -14,7 +14,7 @@ function imprimirJugador(jugadorImprimir) {
     jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
     jugador.animations.play('stay', 10, true);
-    game.physics.p2.enable(jugador);
+    game.physics.p2.enable(jugador, true);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
     jugador.body.fixedRotation = true;
@@ -61,20 +61,17 @@ function nosaltar(body, bodyB) {
 //si se recarga la pagina a la hora del juego se reinicia todo para no poder continiar jugando
 if (window.performance.navigation.type == 1) {
     alert("el juego se va a interrumpir, todos los jugadores iran al menu de logeo");
-    location.href = "/";
-    jugadoresImprimidos = [];
-    idJugadoresImprimidos = [];
-    Client.killAllConnections();
+    location.href = "/menu";
 }
 
 function iniciarPartida() {
     if (idJugadoresImprimidos[0] < idJugadoresImprimidos[1]) {
-        jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 3450;
-        jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 2950;
-        miDireccion = "derecha";
-    } else {
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 3450;
         jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 2950;
+        miDireccion = "derecha";
+    } else {
+        jugadoresImprimidos.get(idJugadoresImprimidos[0]).body.x = 3450;
+        jugadoresImprimidos.get(idJugadoresImprimidos[1]).body.x = 2950;
         miDireccion = "izquierda";
     }
 }
@@ -91,10 +88,14 @@ function textoEspera() {
 function checkOverlap(body1, body2) {
     if (body1 != null && body2 != null) {
         if ((body1.sprite && body2.sprite) && (nombreSprite(body1) && nombreSprite(body2))) {
-            //console.log("Ambos muertos");
+            if (body1.sprite.key == "caballero" && body2.sprite.key == "caballero") {
+                reproducirSonidosPegarMutuo();
+                console.log("se reproduce");
+            }
+
         } else if (nombreSprite(body1) && (body1.sprite && body2.sprite)) {
-            if (body2.x < body1.x && direccion == "left" /*&& !enemigoInmortal*/) {
-                if (jugadoresImprimidos.get(miid) == body1.sprite) {
+            if (body2.x < body1.x && direccion == "left" && !enemigoInmortal) {
+                if (jugadoresImprimidos.get(miid) == body1.sprite && !sePuedeReaparecer && body2.sprite.alpha != 0) {
                     // console.log("matamos al enemigo que se encuentra a la izquierda");
                     if (body2.sprite.alpha != 0) {
                         direccionCamara = miDireccion;
@@ -115,10 +116,10 @@ function checkOverlap(body1, body2) {
                     sePuedeReaparecer = true;
 
                 }
-            } else if (body2.x > body1.x && direccion == "right" /*&& !enemigoInmortal*/) {
+            } else if (body2.x > body1.x && direccion == "right" && !enemigoInmortal) {
                 //console.log("inmortal: " + enemigoInmortal);
                 // console.log("Muere " + body2.sprite.name);
-                if (jugadoresImprimidos.get(miid) == body1.sprite) {
+                if (jugadoresImprimidos.get(miid) == body1.sprite && !sePuedeReaparecer && body2.sprite.alpha != 0) {
                     // console.log("matamos al enemigo que se encuentra a la derecha");
                     if (body2.sprite.alpha != 0) {
                         direccionCamara = miDireccion;
@@ -139,10 +140,10 @@ function checkOverlap(body1, body2) {
                 }
             }
         } else if (nombreSprite(body2) && (body1.sprite && body2.sprite)) {
-            if (body2.x > body1.x && direccion == "left" /*&& !enemigoInmortal*/) {
+            if (body2.x > body1.x && direccion == "left" && !enemigoInmortal) {
                 //console.log("inmortal: " + enemigoInmortal);
                 // console.log("Muere " + body1.sprite.name);
-                if (jugadoresImprimidos.get(miid) == body2.sprite) {
+                if (jugadoresImprimidos.get(miid) == body2.sprite && !sePuedeReaparecer && body1.sprite.alpha != 0) {
                     // console.log("matamos al enemigo que se encuentra a la izquierda");
                     if (body1.sprite.alpha != 0) {
                         direccionCamara = miDireccion;
@@ -161,10 +162,10 @@ function checkOverlap(body1, body2) {
                     sePuedeReaparecer = true;
 
                 }
-            } else if (body2.x < body1.x && direccion == "right" /*&& !enemigoInmortal*/) {
+            } else if (body2.x < body1.x && direccion == "right" && !enemigoInmortal) {
                 //console.log("inmortal: " + enemigoInmortal);
                 // console.log("Muere " + body1.sprite.name);
-                if (jugadoresImprimidos.get(miid) == body2.sprite) {
+                if (jugadoresImprimidos.get(miid) == body2.sprite && !sePuedeReaparecer && body1.sprite.alpha != 0) {
                     // console.log("matamos al enemigo que se encuentra a la derecha");
                     if (body1.sprite.alpha != 0) {
                         direccionCamara = miDireccion;
@@ -213,34 +214,34 @@ function checkOverlap(body1, body2) {
                     isPocionCogida = true;
                     masVelocidad(body2.sprite, 3);
                     imprimirMensajePocion(miJugador());
-                    console.log("yo cogi pocion: " + isPocionCogida);
-                    console.log("1111");
+                    //console.log("yo cogi pocion: " + isPocionCogida);
+                    //console.log("1111");
                     destruirPocion(body1);
                 } else if (body2.sprite == enemigoJugador() && !isPocionCogidaEnemigo) {
                     imprimirMensajePocion(enemigoJugador());
                     isPocionCogidaEnemigo = true;
                     contPocionEnemigo();
-                    console.log("copia cogio pocion: " + isPocionCogidaEnemigo);
-                    console.log("2222");
+                    //console.log("copia cogio pocion: " + isPocionCogidaEnemigo);
+                    //console.log("2222");
                     destruirPocion(body1);
                 }
 
             } else if (nombreSprite(body2) == "pocion" && body1.sprite.key == "caballero") {
-                console.log("CONTACTO CON LA POCION");
+                //console.log("CONTACTO CON LA POCION");
                 if (body1.sprite == miJugador() && !isPocionCogida) {
                     isPocionCogida = true;
                     masVelocidad(body1.sprite, 3);
                     imprimirMensajePocion(miJugador());
-                    console.log("yo cogi pocion: " + isPocionCogida);
-                    console.log("3333");
+                    //console.log("yo cogi pocion: " + isPocionCogida);
+                    //console.log("3333");
                     destruirPocion(body2);
                 }
                 else if (body1.sprite == enemigoJugador() && !isPocionCogidaEnemigo) {
                     imprimirMensajePocion(enemigoJugador());
                     isPocionCogidaEnemigo = true;
                     contPocionEnemigo();
-                    console.log("copia cogio pocion: " + isPocionCogidaEnemigo);
-                    console.log("4444");
+                    //console.log("copia cogio pocion: " + isPocionCogidaEnemigo);
+                    //console.log("4444");
                     destruirPocion(body2);
                 }
 
@@ -274,29 +275,35 @@ function pegar1(id, direccion) {
 }
 
 function pegar2(id, direccion) {
-    if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(70, 58, 10, 22);
-    else jugadoresImprimidos.get(id).body.setRectangle(70, 58, -10, 22);
-    jugadoresImprimidos.get(id).animations.stop();
-    jugadoresImprimidos.get(id).animations.play('hit2', 10, false);
-    jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
-        if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
-        else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
-        jugadoresImprimidos.get(id).animations.play('stay', 10, true);
-    }, this);
+    if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") {
+        if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(70, 58, 10, 22);
+        else jugadoresImprimidos.get(id).body.setRectangle(70, 58, -10, 22);
+        jugadoresImprimidos.get(id).animations.stop();
+        jugadoresImprimidos.get(id).animations.play('hit2', 10, false);
+        jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
+            if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
+            else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+            jugadoresImprimidos.get(id).animations.play('stay', 10, true);
+        }, this);
+    }
 }
 
 function moverJugador(id, direccion) {
     if (direccion == "izquierda") {
-        jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
-        jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
         jugadoresImprimidos.get(id).body.moveLeft(700 + sumarVelocidad);
-        if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") {
+            jugadoresImprimidos.get(id).animations.play('right', 10, true);
+            jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+            jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
+        }
         reproducirSonidosPasos();
     } else if (direccion == "derecha") {
-        jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
-        jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
         jugadoresImprimidos.get(id).body.moveRight(700 + sumarVelocidad);
-        if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") jugadoresImprimidos.get(id).animations.play('right', 10, true);
+        if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") {
+            jugadoresImprimidos.get(id).animations.play('right', 10, true);
+            jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
+            jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
+        }
         reproducirSonidosPasos();
     }
 }
@@ -312,7 +319,8 @@ function imprimirMensajeOculto(quien) {
     mensajeOculto = game.add.text(jugadoresImprimidos.get(miid).x, jugadoresImprimidos.get(miid).y - 20, frase, {
         fill: "black",
         stroke: "black",
-        fontSize: 10
+        fontSize: 10,
+        font: 'Merriweather Sans'
     });
     mensajeOculto.anchor.setTo(0.5, 0.5);
 }
@@ -359,10 +367,12 @@ function volverTransparenciaNormal() {
     // console.log(idJugadoresImprimidos[1]);
     // setTimeout(function () {
     if (sePuedeReaparecer && game.camera.target == null && limiteActual != 0 && limiteActual != 4) {
+        //console.log("reaparezco");
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 1;
         Client.opacityEnemigo("mostrar", direccionCamara);
         inmortal(enemigoJugador());
         sePuedeReaparecer = false;
+        nombreEnemigo.alpha = 1;
     }
     // }, 3000);
 }
@@ -387,11 +397,13 @@ function opacityJugador(accion, move) {
             jugadoresImprimidos.get(miid).alpha = 1;
             sinColision = false;
             inmortal(miJugador());
-            nombreEnemigo.alpha = 1;
+            nombreJugador.alpha = 1;
         }
     } else if (accion == "fueraMapa") {
         //hacemos desaparecer al enemigo que se ha caido en su pantalla
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 0;
+        nombreEnemigo.alpha = 0;
+        mensajePocion.alpha = 0;
         if (jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(idJugadoresImprimidos[1]).x < 1000
             && jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(idJugadoresImprimidos[1]).x > -1000) {
             audioCaida.play();
@@ -399,6 +411,7 @@ function opacityJugador(accion, move) {
     } else if (accion == "reaparecer") {
         jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 1;
         nombreEnemigo.alpha = 1;
+
     }
 }
 
@@ -583,7 +596,8 @@ function añadirNombreUsuario() {
     nombreJugador = game.add.text(jugadoresImprimidos.get(miid).x, jugadoresImprimidos.get(miid).y - 20, nombre, {
         fill: "white",
         stroke: "black",
-        fontSize: 15
+        fontSize: 15,
+        font: 'Merriweather Sans'
     });
     nombreJugador.anchor.setTo(0.5, 0.5);
 }
@@ -623,25 +637,34 @@ function setCamara(body) {
     // console.log("------------------------------------------");
     // console.log("esto es direccionCamara: " + direccionCamara);
     // console.log("esto es el limiteActual: " + limiteActual);
+    console.log(direccionCamara + " direccion de la camara");
+    console.log(body);
+    console.log(game.camera);
     if (direccionCamara == "derecha") {
+        console.log("entro al set derecha");
         limiteActual++;
-        limiteDerecha = limitesMapa[limiteActual] + 1910;
-        game.camera.follow(body);
+        console.log("limite actual : " + limiteActual);
         if (body == jugadoresImprimidos.get(miid)) imrpimirFlechaDireccion("derecha");
         //console.log("sumo limite actual por que voy a la derecha");
     } else if (direccionCamara == "izquierda") {
+        console.log("entro al set izquierda");
         limiteActual--;
-        limiteDerecha = limitesMapa[limiteActual] + 1910;
-        game.camera.follow(body);
+        console.log("limite actual : " + limiteActual);
         if (body == jugadoresImprimidos.get(miid)) imrpimirFlechaDireccion("izquierda");
     }
+    limiteDerecha = limitesMapa[limiteActual] + 1910;
+    game.camera.follow(body);
+    console.log(game.camera);
+    console.log("----------------------------------");
     //console.log(game.camera.x + " posicion camara");
 }
 
 function fixCamara() {
+
     // console.log("los limites actuales son: " + limitesMapa[limiteActual] + " - " + limiteDerecha);
     if (direccionCamara == "izquierda") {
         if (game.camera.x <= limitesMapa[limiteActual]) {
+            console.log("Fix camera izquierda");
             // console.log("quitamos la camara izquierda: " + game.camera.x + " limite actual " + limitesMapa[limiteActual]);
             // reaparecerJugador = true;
             game.camera.target = null;
@@ -655,6 +678,7 @@ function fixCamara() {
     }
     if (direccionCamara == "derecha") {
         if (game.camera.x >= limitesMapa[limiteActual]) {
+            console.log("Fix camera derecha");
             // console.log("quitamos la camara derecha: " + game.camera.x + " limite actual " + limitesMapa[limiteActual]);
             game.camera.target = null;
             // reaparecerJugador = true;
@@ -733,17 +757,21 @@ function derrota(x, y) {
 function imrpimirFlechaDireccion(direccion) {
     if (flecha != null) flecha.destroy();
     if (direccion == "derecha") {
-        flecha = game.add.tileSprite(game.camera.x + 1800, 100, 192, 192, 'flecha');
+        flecha = game.add.tileSprite(960, 100, 192, 192, 'flecha');
         flecha.angle += 270;
         flecha.anchor.setTo(0.5);
         flecha.scale.setTo(0.5);
+        flecha.fixedToCamera = true;
+        game.add.tween(flecha.scale).to({ x: 0.7, y: 0.7 }, 0, Phaser.Easing.Back.InOut, true, 0, 20, true).loop(true);
     } else if (direccion == "izquierda") {
-        flecha = game.add.tileSprite(game.camera.x + 100, 100, 192, 192, 'flecha');
+        flecha = game.add.tileSprite(960, 100, 192, 192, 'flecha');
         flecha.angle += 90;
         flecha.anchor.setTo(0.5);
         flecha.scale.setTo(0.5);
+        flecha.fixedToCamera = true;
+        game.add.tween(flecha.scale).to({ x: 0.7, y: 0.7 }, 0, Phaser.Easing.Back.InOut, true, 0, 20, true).loop(true);
     }
-    moverFlecha = true;
+    moverFlecha = false;
     direccionFlecha = direccion;
 }
 
@@ -782,6 +810,10 @@ function reproducirSonidosPegarAire() {
     var pegar = game.add.audio(`pegarAire${numeroRandom(4, 2)}`);
     pegar.play();
 }
+function reproducirSonidosPegarMutuo() {
+    var pegraMutuo = game.add.audio(`pegarLosDos${numeroRandom(4, 1)}`);
+    pegraMutuo.play();
+}
 
 function miJugador() {
     return jugadoresImprimidos.get(miid);
@@ -805,10 +837,10 @@ function enemigoJugador() {
 
 function inmortal(jugador) {
     enemigoInmortal = true;
-    console.log("ahora enemigo es inmortal?: " + enemigoInmortal);
+    //console.log("ahora enemigo es inmortal?: " + enemigoInmortal);
     setTimeout(function () {
         enemigoInmortal = false;
-    }, 1000);
+    }, 2000);
 }
 
 function imprimirMensajePocion(jugador) {
@@ -816,14 +848,16 @@ function imprimirMensajePocion(jugador) {
         mensajePocion = game.add.text(jugador.x, jugador.y - 30, "+Velocidad", {
             fill: "white",
             stroke: "black",
-            fontSize: 15
+            fontSize: 15,
+            font: 'Merriweather Sans'
         });
         mensajePocion.anchor.setTo(0.5, 0.5);
     } else if (jugador == enemigoJugador()) {
         mensajePocionEnemigo = game.add.text(jugador.x, jugador.y - 30, "+Velocidad", {
             fill: "white",
             stroke: "black",
-            fontSize: 15
+            fontSize: 15,
+            font: 'Merriweather Sans'
         });
         mensajePocionEnemigo.anchor.setTo(0.5, 0.5);
     }
@@ -848,13 +882,46 @@ function destruirPocion(pocion) {
     audioPocion.play();
 }
 
-function ambosMuertos(){
-    if(jugadoresImprimidos.get(miid).alpha == 0 && jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha == 0){
-        if (direccionCamara == "derecha") {
-            limiteActual--;
-        } else if (direccionCamara == "izquierda") {
-            limiteActual++;
+function ambosMuertos() {
+    /*if(miJugador()){
+        if (miJugador().alpha == 0 && enemigoJugador().alpha == 0) {
+            console.log("ambos muertos");
+            if (direccionCamara == "derecha") {
+                limiteActual--;
+            } else if (direccionCamara == "izquierda") {
+                limiteActual++;
+            }
+            miJugador().alpha = 0;
+            enemigoJugador().alpha = 0;
+            game.camera.target = null;
+            sePuedeReaparecer = true;
         }
-        opacityJugador("mostrar", "");
+    }*/
+}
+
+function contadorBajasMuertes() {
+    if (mensajeBajas != null) {
+        mensajeBajas.destroy();
     }
+    if (mensajeMuertes != null) {
+        mensajeMuertes.destroy();
+    }
+    mensajeBajas = game.add.text(100, 50, `Bajas: ${bajas}`, {
+        fill: "white",
+        stroke: "black",
+        fontSize: 30,
+        font: 'Merriweather Sans',
+        backgroundColor: "#6c5ce7"
+    });
+    mensajeBajas.fixedToCamera = true;
+    //mensajeBajas.cameraOffset.setTo(200, 100);
+    mensajeMuertes = game.add.text(100, 100, `Muertes: ${muertes}`, {
+        fill: "white",
+        stroke: "black",
+        fontSize: 30,
+        font: 'Merriweather Sans',
+        backgroundColor: "#6c5ce7"
+    });
+    mensajeMuertes.fixedToCamera = true;
+    //mensajeMuertes.cameraOffset.setTo(200, 200);
 }
