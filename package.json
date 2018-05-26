@@ -1,0 +1,27 @@
+{
+  "name": "projectdaw",
+  "version": "1.0.0",
+  "description": "Por acabar:\r \t- Mirar Porque el personaje no cae en la primera pantalla (Mi copia no cambia de opacity si caigo) LISTO\r \t. Mirar porque se imrpime dos veces el nombre LISTO\r \t- No se puede coger pocion hatsa que no empiezxe la partida (si alguien cogio una pocion y entra otro jugador a la partida, la vera igualmente y podra cogerla mientras el eneigo no) LISTO\r \t- Implementación de menu mejorado LISTO\r \t- Optimización de codigo\r \t- Descomentar el otro boton de pegar\r  \t- Mirar lo de los murcielagos\r \t- Hacer que +velocidad se reinicie y no imprima el mensaje si se muere el personaje LISTO\r \t- Reiniciar bbdd de mongo",
+  "main": "server.js",
+  "dependencies": {
+    "cron": "^1.3.0",
+    "express": "^4.16.3",
+    "mongodb": "^3.0.7",
+    "socket.io": "^2.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nacors/projectDAW.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nacors/projectDAW/issues"
+  },
+  "homepage": "https://github.com/nacors/projectDAW#readme"
+}
