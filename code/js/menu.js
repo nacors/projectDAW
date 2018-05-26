@@ -1,5 +1,5 @@
 window.onload = () => {
-    if(sessionStorage.getItem("usuario") == null){
+    if (sessionStorage.getItem("usuario") == null) {
         sessionStorage.setItem("usuario", "Invitado");
     }
     document.getElementById("nickJugador").innerHTML = sessionStorage.getItem("usuario");
@@ -52,21 +52,30 @@ window.onload = () => {
     document.getElementById("reglas").addEventListener("click", function () {
         reiniciarColoresBotones();
         this.style.background = "#6c5ce7";
-        info.innerHTML = "<h3>1. Debes de llegar al final del mapa del lado enemigo para ganar la partida</h3>";
-        info.innerHTML += "<h3>2. Para avanzar debes eliminar a tu enemigo</h3>";
-        info.innerHTML += "<h3>3. Puedes utilizar pociones para ganar más velocidad o ser invencible</h3>";
-        info.innerHTML += "<h3>4. Ten cuidado al no caerte fuera del mapa!</h3>";
-        info.innerHTML += "<h3>5. Control muy fácil, muevete con las flechas <div id='imagenFlechas'></div></h3>";
-        info.innerHTML += "<h3>6. Pega con X y C</h3>";
-        info.innerHTML += "<h3>7. Disfruta!!!</h3><br>";
+        info.innerHTML = `  <div id="reglasGenereales"></div>`;
+        document.getElementById("reglasGenereales").innerHTML = `<div id="reglasJuego">
+                    <h2>Reglas</h2>
+                    <h3><b id="enumeracion">1.</b> Elimina a tu enemigo para poder avanzar y ganar</h3>
+                    <h3><b id="enumeracion">2.</b> Sigue a la flecha que te indica la dirección</h3>
+                    <h3><b id="enumeracion">3.</b> Utiliza pociones para ganar más velocidad</h3>
+                    <h3><b id="enumeracion">4.</b> Salta con doble salto</h3>
+                    <h3><b id="enumeracion">5.</b> No caigas fuera del mapa, ten ciudado!</h3>
+                </div>`;
+        document.getElementById("reglasGenereales").innerHTML += `<div id="reglasImg">
+                    <h2>Controles</h2>
+                    <h3><b id="enumeracion">1.</b> Para moverte usa W(salto), A(izquierda) y D(derecha)</h3>
+                    <h3><b id="enumeracion">2.</b> Ataca con la tecla de L</h3>
+                    <div id="imagenFlechas"></div>
+            </div>`;
+
     });
     document.getElementById("info").addEventListener("click", function () {
         reiniciarColoresBotones();
         this.style.background = "#6c5ce7";
-        info.innerHTML = "<h3>El juego ha sido desarollado como un proyecto final para el curso de Grado Superior DAW 2</h3><br>";
-        info.innerHTML += "<h3>El lenguaje principal del juego es JavaScript y se utilizarón tecnologias y librerias como</h3><br>";
-        info.innerHTML += "<h3>PHASER, NODEJS, SOCKET.IO, MONGODB y JQUERY</h3><br>";
-        info.innerHTML += "<h3>Si te interesa, puedes consultar el codigo en el siguiente enlace</h3><br>";
+        info.innerHTML = "<h3>El juego ha sido desarollado como un proyecto final para el curso de Grado Superior DAW 2</h3>";
+        info.innerHTML += "<h3>El lenguaje principal del juego es JavaScript y se utilizarón tecnologias y librerias como</h3>";
+        info.innerHTML += "<h3><a href='https://phaser.io/'>PHASER</a>, <a href='https://nodejs.org/es/'>NODEJS</a>, <a href='https://socket.io/'>SOCKET.IO</a>, <a href='https://www.mongodb.com/'>MONGODB</a> y <a href='https://jquery.com/'>JQUERY</a></h3><br>";
+        info.innerHTML += "<h3>Si te interesa, puedes consultar el codigo en el siguiente enlace</h3>";
         info.innerHTML += "<a id='enlacecODIGO' href='https://github.com/nacors/projectDAW'>GitHub Codigo</a>";
     });
 
@@ -147,7 +156,8 @@ window.onload = () => {
 
     function abrirPestañaJugar(pestaña) {
         pestaña.style.background = "#6c5ce7";
-        info.innerHTML = "<h3>Atención, el emparejamiento es aleatorio. Para buscar una sesión presiona el botón de abajo</h3><br>";
+        info.innerHTML = "<h3>Atención, el emparejamiento es aleatorio. Para buscar una sesión presiona el botón de abajo</h3>";
+        info.innerHTML += "<h3>La elección del mapa tambien es aleatoria!</h3>";
         info.innerHTML += "<div id='imagenJuego'></div>";
         info.innerHTML += "<a id='enlacePartida' href='/jugar'>JUGAR</a>";
         document.getElementById("enlacePartida").addEventListener("click", function (e) {
