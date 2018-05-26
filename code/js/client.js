@@ -31,27 +31,29 @@ Client.ataque = function (ataque, direccion) {
     Client.socket.emit("atacar", ataque, direccion);
 }
 //para detener la camara del enemigo
-Client.pararCamara = function(posicion){
+Client.pararCamara = function (posicion) {
     Client.socket.emit("pararCamara", posicion);
 }
 
 //metodo para elimianr el enemigo
-Client.opacityEnemigo = function(accion, move){
-    if(move != undefined){
+Client.opacityEnemigo = function (accion, move) {
+    if (move != undefined) {
         Client.socket.emit("opacityEnemigo", accion, move);
+    } else {
+        Client.socket.emit("opacityEnemigo", accion, "derecha");
     }
 }
 
 //metodo para coger el nick del contrincante
-Client.nickEnemigo = function(nombre){
+Client.nickEnemigo = function (nombre) {
     Client.socket.emit("nickEnemigo", nombre);
 }
 
-Client.clasificacionJugador = function (resultado, bajas, tiempo, nick, muertes){
+Client.clasificacionJugador = function (resultado, bajas, tiempo, nick, muertes) {
     Client.socket.emit("clasificacionJugador", resultado, bajas, tiempo, nick, muertes);
 }
 
-Client.derrota = function(x, y){
+Client.derrota = function (x, y) {
     Client.socket.emit("derrota", x, y);
 }
 
@@ -109,26 +111,26 @@ Client.socket.on("atacar", function (id, ataque, direccion) {
     Game.ataqueEnemigo(id, ataque, direccion);
 });
 
-Client.socket.on("opacityEnemigo", function(accion, move){
-    if(move != undefined){
+Client.socket.on("opacityEnemigo", function (accion, move) {
+    if (move != undefined) {
         Game.opacityEnemigo(accion, move);
     }
 });
 
-Client.socket.on("murcielagos", function(direccion, y){
+Client.socket.on("murcielagos", function (direccion, y) {
     //console.log("recibe el cliente");
     Game.crearMurcielagos(direccion, y);
 });
 
-Client.socket.on("nickEnemigo", function(nombre){
+Client.socket.on("nickEnemigo", function (nombre) {
     //console.log("recibe el cliente");
     Game.nickEnemigo(nombre);
 });
 
-Client.socket.on("pararCamara", function(posicion){
+Client.socket.on("pararCamara", function (posicion) {
     Game.pararCamara(posicion);
 });
 
-Client.socket.on("derrota", function(x, y){
+Client.socket.on("derrota", function (x, y) {
     Game.derrota(x, y);
 });

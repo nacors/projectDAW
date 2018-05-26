@@ -209,15 +209,15 @@ function checkOverlap(body1, body2) {
                 }
             }
             if (nombreSprite(body1) == "pocion" && body2.sprite.key == "caballero") {
-                console.log("CONTACTO CON LA POCION");
-                if (body2.sprite == miJugador() && !isPocionCogida) {
+                // console.log("CONTACTO CON LA POCION");
+                if (body2.sprite == miJugador() && !isPocionCogida && sePuedeCogerPociones) {
                     isPocionCogida = true;
                     masVelocidad(body2.sprite, 3);
                     imprimirMensajePocion(miJugador());
                     //console.log("yo cogi pocion: " + isPocionCogida);
                     //console.log("1111");
                     destruirPocion(body1);
-                } else if (body2.sprite == enemigoJugador() && !isPocionCogidaEnemigo) {
+                } else if (body2.sprite == enemigoJugador() && !isPocionCogidaEnemigo && sePuedeCogerPociones) {
                     imprimirMensajePocion(enemigoJugador());
                     isPocionCogidaEnemigo = true;
                     contPocionEnemigo();
@@ -228,7 +228,7 @@ function checkOverlap(body1, body2) {
 
             } else if (nombreSprite(body2) == "pocion" && body1.sprite.key == "caballero") {
                 //console.log("CONTACTO CON LA POCION");
-                if (body1.sprite == miJugador() && !isPocionCogida) {
+                if (body1.sprite == miJugador() && !isPocionCogida && sePuedeCogerPociones) {
                     isPocionCogida = true;
                     masVelocidad(body1.sprite, 3);
                     imprimirMensajePocion(miJugador());
@@ -236,7 +236,7 @@ function checkOverlap(body1, body2) {
                     //console.log("3333");
                     destruirPocion(body2);
                 }
-                else if (body1.sprite == enemigoJugador() && !isPocionCogidaEnemigo) {
+                else if (body1.sprite == enemigoJugador() && !isPocionCogidaEnemigo && sePuedeCogerPociones) {
                     imprimirMensajePocion(enemigoJugador());
                     isPocionCogidaEnemigo = true;
                     contPocionEnemigo();
@@ -401,9 +401,10 @@ function opacityJugador(accion, move) {
         }
     } else if (accion == "fueraMapa") {
         //hacemos desaparecer al enemigo que se ha caido en su pantalla
-        jugadoresImprimidos.get(idJugadoresImprimidos[1]).alpha = 0;
+        console.log("entro aqui para hacer invisible al enemigo");
+        enemigoJugador().alpha = 0;
         nombreEnemigo.alpha = 0;
-        mensajePocion.alpha = 0;
+        if (mensajePocionEnemigo != null) mensajePocionEnemigo.alpha = 0;
         if (jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(idJugadoresImprimidos[1]).x < 1000
             && jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(idJugadoresImprimidos[1]).x > -1000) {
             audioCaida.play();
@@ -448,7 +449,7 @@ function easterEgg() {
     //easter egg
     if (mostrarMensajeOculto === true) {
         mensajeOculto.position.x = jugadoresImprimidos.get(miid).x;
-        mensajeOculto.position.y = jugadoresImprimidos.get(miid).y -50;
+        mensajeOculto.position.y = jugadoresImprimidos.get(miaid).y - 50;
     }
 }
 
@@ -460,9 +461,14 @@ function revisarCaidoFueraMapa() {
         muertes++;
         //no le permitimos el movimiento al jugador con esa variable
         sePuedeJugar = false;
+        sumarVelocidad = 0;
+        // console.log(direccionCamara);
+        //hacemos que los efectos de la pocion se vayan si se muere
+        if (mensajePocion != null) mensajePocion.alpha = 0;
         Client.opacityEnemigo("fueraMapa", direccionCamara);
         isFueraMapa = true;
         nombreJugador.alpha = 0;
+        // console.log("esta fuera del mapa");
     }
 }
 
@@ -553,7 +559,7 @@ function murcielagosVolumen() {
 
 function masVelocidad(jugador, segundos) {
     // console.log("entro para dar mas velocidad");
-    var tiempo = 0;
+    tiempo = 0;
     sumarVelocidad = 300;
     var intervalo = setInterval(function () {
         tiempo++;
@@ -569,8 +575,8 @@ function masVelocidad(jugador, segundos) {
 }
 
 function contPocionEnemigo() {
-    console.log("Contacto Enemigo - Pocion");
-    var tiempo = 0;
+    // console.log("Contacto Enemigo - Pocion");
+    tiempo = 0;
     var intervalo = setInterval(function () {
         tiempo++;
         if (tiempo == 3) {
@@ -590,19 +596,24 @@ function sonidoSaltar() {
 
 function añadirNombreUsuario() {
     var nombre;
-    console.log("añado mi nombre y lo imprimo");
+    // console.log("añado mi nombre y lo imprimo");
     nombre = sessionStorage.getItem("usuario");
     if (sessionStorage.getItem("usuario") == null) {
         nombre = "Invitado";
     }
     if (nombreJugador != null) nombreJugador = null;
-    nombreJugador = game.add.text(miJugador().x, miJugador().y - 20, nombre, {
-        fill: "white",
-        stroke: "black",
-        fontSize: 18,
-        font: 'VT323'
-    });
-    nombreJugador.anchor.setTo(0.5, 0.5);
+    //por alguna reazon la primera vez que se crea el nombre no se pilla bien el estilo de la letra
+    //le damos un delay de 1 segundos, asi aseguremos de que si pilla el estilo correctamente
+    setTimeout(function () {
+        nombreJugador = game.add.text(miJugador().x, miJugador().y - 20, nombre, {
+            fill: "white",
+            stroke: "black",
+            fontSize: 18,
+            font: 'VT323'
+        });
+        nombreJugador.anchor.setTo(0.5, 0.5);
+    }, 1000);
+    
 }
 
 function movimientoNombreJugador(jugador = "yo") {
@@ -643,25 +654,25 @@ function setCamara(body) {
     // console.log("------------------------------------------");
     // console.log("esto es direccionCamara: " + direccionCamara);
     // console.log("esto es el limiteActual: " + limiteActual);
-    console.log(direccionCamara + " direccion de la camara");
-    console.log(body);
-    console.log(game.camera);
+    // console.log(direccionCamara + " direccion de la camara");
+    // console.log(body);
+    // console.log(game.camera);
     if (direccionCamara == "derecha") {
-        console.log("entro al set derecha");
+        // console.log("entro al set derecha");
         limiteActual++;
-        console.log("limite actual : " + limiteActual);
+        // console.log("limite actual : " + limiteActual);
         if (body == jugadoresImprimidos.get(miid)) imrpimirFlechaDireccion("derecha");
         //console.log("sumo limite actual por que voy a la derecha");
     } else if (direccionCamara == "izquierda") {
-        console.log("entro al set izquierda");
+        // console.log("entro al set izquierda");
         limiteActual--;
-        console.log("limite actual : " + limiteActual);
+        // console.log("limite actual : " + limiteActual);
         if (body == jugadoresImprimidos.get(miid)) imrpimirFlechaDireccion("izquierda");
     }
     limiteDerecha = limitesMapa[limiteActual] + 1910;
     game.camera.follow(body);
-    console.log(game.camera);
-    console.log("----------------------------------");
+    // console.log(game.camera);
+    // console.log("----------------------------------");
     //console.log(game.camera.x + " posicion camara");
 }
 
@@ -670,7 +681,7 @@ function fixCamara() {
     // console.log("los limites actuales son: " + limitesMapa[limiteActual] + " - " + limiteDerecha);
     if (direccionCamara == "izquierda") {
         if (game.camera.x <= limitesMapa[limiteActual]) {
-            console.log("Fix camera izquierda");
+            // console.log("Fix camera izquierda");
             // console.log("quitamos la camara izquierda: " + game.camera.x + " limite actual " + limitesMapa[limiteActual]);
             // reaparecerJugador = true;
             game.camera.target = null;
@@ -684,7 +695,7 @@ function fixCamara() {
     }
     if (direccionCamara == "derecha") {
         if (game.camera.x >= limitesMapa[limiteActual]) {
-            console.log("Fix camera derecha");
+            // console.log("Fix camera derecha");
             // console.log("quitamos la camara derecha: " + game.camera.x + " limite actual " + limitesMapa[limiteActual]);
             game.camera.target = null;
             // reaparecerJugador = true;

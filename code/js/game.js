@@ -92,6 +92,8 @@ var isPocionCogidaEnemigo = false;
 var enemigoInmortal = false;
 var mensajeMuertes = null;
 var mensajeBajas = null;
+var sePuedeCogerPociones = false;
+var tiempo = 0;
 Game.playerMap = new Map();
 
 
@@ -269,10 +271,10 @@ Game.update = function () {
             pegar = true;
         }
 
-    }else{
-        if(resultadoFinal == "victoria"){
+    } else {
+        if (resultadoFinal == "victoria") {
             saltosVictoria(jugadoresImprimidos.get(miid));
-        }else if(resultadoFinal == "derrota"){
+        } else if (resultadoFinal == "derrota") {
             saltosVictoria(jugadoresImprimidos.get(idJugadoresImprimidos[1]));
         }
         //movemos el nombre del enemigo cuando estamos muertos
@@ -356,21 +358,21 @@ Game.movimiento = function (id, data, accion, direccion) {
     //hay que tener en cuenta de que escuha constantemente los movimientos, tal vez es lo que mas carga el sistema
     if (accion == "presionar") {
         if (direccion == "izquierda") {
-            if(jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2"){
+            if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") {
                 jugadoresImprimidos.get(id).animations.play('right', 10, true);
                 jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
                 jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
-            } 
+            }
             reproducirSonidosPasos();
         } else if (direccion == "derecha") {
-            if(jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2"){
+            if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") {
                 jugadoresImprimidos.get(id).animations.play('right', 10, true);
                 jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
                 jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
-            } 
+            }
             reproducirSonidosPasos();
         } else if (direccion == "salto") {
-            if(jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") jugadoresImprimidos.get(id).animations.play('stay', 10, true);
+            if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") jugadoresImprimidos.get(id).animations.play('stay', 10, true);
             //console.log(jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x);
             if (jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x < 1000
                 && jugadoresImprimidos.get(miid).x - jugadoresImprimidos.get(id).x > -1000) {
@@ -387,7 +389,7 @@ Game.movimiento = function (id, data, accion, direccion) {
 Game.iniciarPartida = function () {
     propiedadesTexto.fontSize = 50;
     sePuedeJugar = false;
-    var segundos = 2;
+    var segundos = 3;
     var imprimirSegundos;
     setTimeout(function () {
         mensaje.setText("La partida empieza en...");
@@ -399,6 +401,7 @@ Game.iniciarPartida = function () {
                 mensaje.setText("");
                 clearInterval(imprimirSegundos);
                 sePuedeJugar = true;
+                sePuedeCogerPociones = true;
             }
         }, 1000);
     }, 1000);
@@ -459,21 +462,27 @@ Game.crearMurcielagos = function (direccion, y) {
 }
 
 Game.nickEnemigo = function (nombre) {
-    console.log("imprimo el nombre del enemigo");
+    // console.log("imprimo el nombre del enemigo");
+    if (nombreEnemigo != null) {
+        nombreEnemigo.destroy();
+        nombreEnemigo = null;
+    }
     if (idJugadoresImprimidos.length > 1) {
-        nombreEnemigo = game.add.text(enemigoJugador().x, enemigoJugador().y - 20, nombre, {
-            fill: "white",
-            stroke: "black",
-            fontSize: 18,
-            font: 'VT323'
-        });
-        nombreEnemigo.anchor.setTo(0.5, 0.5);
+        setTimeout(function () {
+            nombreEnemigo = game.add.text(enemigoJugador().x, enemigoJugador().y - 20, nombre, {
+                fill: "white",
+                stroke: "black",
+                fontSize: 18,
+                font: 'VT323'
+            });
+            nombreEnemigo.anchor.setTo(0.5, 0.5);
+        }, 1000);
     }
 }
 
 Game.pararCamara = function (posicion) {
     console.log("entro de parte del cliente");
-    if(miJugador().alpha == 0)game.camera.target = null;
+    if (miJugador().alpha == 0) game.camera.target = null;
     game.camera.x = posicion;
 }
 
