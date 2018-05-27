@@ -9,6 +9,10 @@ Por acabar:
 	- Hacer que +velocidad se reinicie y no imprima el mensaje si se muere el personaje LISTO
 	- Reiniciar bbdd de mongo LISTO
 	- Reactivar la musica con un volumen más bajo LISTO
+	- Poner música de derrota
+	- Poner sonido de muerte
+	- Investiguar ambos muertos
+	- Error ortográfico de inicia sesión (menú.js)
 
 Puntos posibles para la presentacion:
 	- Descripción del juego (porque, como funciona, reglas)

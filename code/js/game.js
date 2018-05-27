@@ -321,7 +321,6 @@ Game.update = function () {
         movimientoNombreJugador("enemigo");
     }
     //parte de easter egg
-    ambosMuertos();
     easterEgg();
     reaparecerJugador();
     volverTransparenciaNormal();

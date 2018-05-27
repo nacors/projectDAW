@@ -4,10 +4,6 @@ Client.askNewPlayer = function () {
     this.socket.emit('newplayer');
 };
 
-//elimina todas las conexiones existentes y las reinicia de nuevo
-Client.killAllConnections = function () {
-    Client.socket.emit("matarConexiones");
-};
 //llamada del metodo del servidor para iniciar sesion
 Client.iniciarSesion = function (nick, cont) {
     Client.socket.emit('iniciarSesion', { nick: nick, cont: cont });

@@ -134,20 +134,6 @@ io.on('connection', function (socket) {
     socket.broadcast.to(funcion.getRoom(socket)).emit('soltar', socket.player.id, data);
   });
 
-  //reinicia todas las variables del jugador
-  socket.on("matarConexiones", function () {
-    // console.log();
-    let id = socket.id;
-    let sala = jugadoresTodos[id];
-    //eliminamos la sala
-    delete jugadores[sala];
-    //eliminamos los jugadores de la sala
-    delete jugadoresTodos[id];
-    //reiniciamos las paginas de todos
-    socket.broadcast.to(sala).emit('finJuego');
-    jugadoresRoom = (jugadoresRoom == 1) ? 0 : 1;
-  });
-
   //el atque del personaje
   socket.on("atacar", function (ataque, direccion) {
     socket.broadcast.to(funcion.getRoom(socket)).emit('atacar', socket.player.id, ataque, direccion);
@@ -174,18 +160,6 @@ io.on('connection', function (socket) {
 
   socket.on("derrota", function(x, y){
     socket.broadcast.to(funcion.getRoom(socket)).emit('derrota', x, y);
-  });
-});
-
-//funciones del aldo cliente en el juego
-io.on('connection', function (socket) {
-  socket.on('usuarioJuego', function () {
-    linea();
-    console.log("--usuario conectado al juego");
-    socket.on('disconnect', function () {
-      linea();
-      console.log("--usuario desconectado del juego");
-    });
   });
 });
 

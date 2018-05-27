@@ -902,23 +902,6 @@ function destruirPocion(pocion) {
     audioPocion.play();
 }
 
-function ambosMuertos() {
-    /*if(miJugador()){
-        if (miJugador().alpha == 0 && enemigoJugador().alpha == 0) {
-            console.log("ambos muertos");
-            if (direccionCamara == "derecha") {
-                limiteActual--;
-            } else if (direccionCamara == "izquierda") {
-                limiteActual++;
-            }
-            miJugador().alpha = 0;
-            enemigoJugador().alpha = 0;
-            game.camera.target = null;
-            sePuedeReaparecer = true;
-        }
-    }*/
-}
-
 function contadorBajasMuertes() {
     if (mensajeBajas != null) {
         mensajeBajas.destroy();
