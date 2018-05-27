@@ -151,6 +151,47 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
     }
 };
 
+Game.preload = function () {
+    //cargamos los dos mapas
+    for (let numMapa = 1; numMapa < 3; numMapa++) {
+        game.load.tilemap(`mapa${numMapa}`, `assets/mapas/mapa${numMapa}/elMapa${numMapa}.json`, null, Phaser.Tilemap.TILED_JSON);
+        if (numMapa != 1) game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.png`, 16, 16);
+        else game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.gif`, 16, 16);
+    }
+    game.load.audio("fondo", `assets/sonidos/fondo/fondo1.wav`);
+    game.load.audio("salto1", `assets/sonidos/salto/salto1.mp3`);
+    game.load.audio("salto2", `assets/sonidos/salto/salto2.mp3`);
+    game.load.audio("paso1", `assets/sonidos/pasos/paso1.mp3`);
+    game.load.audio("paso2", `assets/sonidos/pasos/paso2.mp3`);
+    game.load.audio("paso3", `assets/sonidos/pasos/paso3.mp3`);
+    game.load.audio("paso4", `assets/sonidos/pasos/paso4.mp3`);
+    game.load.audio("paso5", `assets/sonidos/pasos/paso5.mp3`);
+    game.load.audio("paso6", `assets/sonidos/pasos/paso6.mp3`);
+    game.load.audio("paso7", `assets/sonidos/pasos/paso7.mp3`);
+    game.load.audio("paso8", `assets/sonidos/pasos/paso8.mp3`);
+    game.load.audio("audioMurcielagos", `assets/sonidos/murcielagos/murcielagos.mp3`);
+    game.load.audio("caida", `assets/sonidos/salto/caida.wav`);
+    game.load.audio("pocion", `assets/sonidos/pocion/pocion.wav`);
+    game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 81);
+    game.load.spritesheet('murcielago', 'assets/imagenes/murcielagos/murcielago.png', 32, 32);
+    game.load.spritesheet('fin', 'assets/imagenes/fin/victory_defeat.png', 264, 100);
+    game.load.image("background", `assets/mapas/mapa${1}/fondo${2}.png`);
+    game.load.image("pocion", `assets/imagenes/pociones/pocion.png`);
+    game.load.image("flecha", `assets/imagenes/estilo/direccion.png`);
+    game.load.audio("pegar1", `assets/sonidos/espada/espada1.mp3`);
+    game.load.audio("pegar2", `assets/sonidos/espada/espada2.mp3`);
+    game.load.audio("pegar3", `assets/sonidos/espada/espada3.mp3`);
+    game.load.audio("pegar4", `assets/sonidos/espada/espada4.mp3`);
+    game.load.audio("pegar5", `assets/sonidos/espada/espada6.mp3`);
+    game.load.audio("pegar6", `assets/sonidos/espada/espada9.mp3`);
+    game.load.audio("pegarAire2", `assets/sonidos/espada/espadaAire2.wav`);
+    game.load.audio("pegarAire3", `assets/sonidos/espada/espadaAire3.wav`);
+    game.load.audio("victoria", `assets/sonidos/victoria/audio_victoria.mp3`);
+    game.load.audio("pegarLosDos1", `assets/sonidos/espada/espada5.mp3`);
+    game.load.audio("pegarLosDos2", `assets/sonidos/espada/espada7.mp3`);
+    game.load.audio("pegarLosDos3", `assets/sonidos/espada/espada8.mp3`);
+};
+
 Game.create = function () {
     game.physics.startSystem(Phaser.Physics.P2JS);
     game.physics.p2.gravity.y = 5000;
@@ -302,46 +343,6 @@ Game.init = function () {
     game.stage.disableVisibilityChange = true;
 };
 
-Game.preload = function () {
-    //cargamos los dos mapas
-    for (let numMapa = 1; numMapa < 3; numMapa++) {
-        game.load.tilemap(`mapa${numMapa}`, `assets/mapas/mapa${numMapa}/elMapa${numMapa}.json`, null, Phaser.Tilemap.TILED_JSON);
-        if (numMapa != 1) game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.png`, 16, 16);
-        else game.load.spritesheet(`tileset${numMapa}`, `assets/mapas/mapa${numMapa}/mapa${numMapa}.gif`, 16, 16);
-    }
-    game.load.audio("fondo", `assets/sonidos/fondo/fondo1.wav`);
-    game.load.audio("salto1", `assets/sonidos/salto/salto1.mp3`);
-    game.load.audio("salto2", `assets/sonidos/salto/salto2.mp3`);
-    game.load.audio("paso1", `assets/sonidos/pasos/paso1.mp3`);
-    game.load.audio("paso2", `assets/sonidos/pasos/paso2.mp3`);
-    game.load.audio("paso3", `assets/sonidos/pasos/paso3.mp3`);
-    game.load.audio("paso4", `assets/sonidos/pasos/paso4.mp3`);
-    game.load.audio("paso5", `assets/sonidos/pasos/paso5.mp3`);
-    game.load.audio("paso6", `assets/sonidos/pasos/paso6.mp3`);
-    game.load.audio("paso7", `assets/sonidos/pasos/paso7.mp3`);
-    game.load.audio("paso8", `assets/sonidos/pasos/paso8.mp3`);
-    game.load.audio("audioMurcielagos", `assets/sonidos/murcielagos/murcielagos.mp3`);
-    game.load.audio("caida", `assets/sonidos/salto/caida.wav`);
-    game.load.audio("pocion", `assets/sonidos/pocion/pocion.wav`);
-    game.load.spritesheet('caballero', 'assets/imagenes/personajes/caballero.png', 90, 81);
-    game.load.spritesheet('murcielago', 'assets/imagenes/murcielagos/murcielago.png', 32, 32);
-    game.load.spritesheet('fin', 'assets/imagenes/fin/victory_defeat.png', 264, 100);
-    game.load.image("background", `assets/mapas/mapa${1}/fondo${2}.png`);
-    game.load.image("pocion", `assets/imagenes/pociones/pocion.png`);
-    game.load.image("flecha", `assets/imagenes/estilo/direccion.png`);
-    game.load.audio("pegar1", `assets/sonidos/espada/espada1.mp3`);
-    game.load.audio("pegar2", `assets/sonidos/espada/espada2.mp3`);
-    game.load.audio("pegar3", `assets/sonidos/espada/espada3.mp3`);
-    game.load.audio("pegar4", `assets/sonidos/espada/espada4.mp3`);
-    game.load.audio("pegar5", `assets/sonidos/espada/espada6.mp3`);
-    game.load.audio("pegar6", `assets/sonidos/espada/espada9.mp3`);
-    game.load.audio("pegarAire2", `assets/sonidos/espada/espadaAire2.wav`);
-    game.load.audio("pegarAire3", `assets/sonidos/espada/espadaAire3.wav`);
-    game.load.audio("victoria", `assets/sonidos/victoria/audio_victoria.mp3`);
-    game.load.audio("pegarLosDos1", `assets/sonidos/espada/espada5.mp3`);
-    game.load.audio("pegarLosDos2", `assets/sonidos/espada/espada7.mp3`);
-    game.load.audio("pegarLosDos3", `assets/sonidos/espada/espada8.mp3`);
-};
 
 //movemos al jugadopr enemigo sincornizando los movimientos
 Game.movimiento = function (id, data, accion, direccion) {
