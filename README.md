@@ -4,10 +4,11 @@ Por acabar:
 	- No se puede coger pocion hatsa que no empiezxe la partida (si alguien cogio una pocion y entra otro jugador a la partida, la vera igualmente y podra cogerla mientras el eneigo no) LISTO
 	- Implementación de menu mejorado LISTO
 	- Optimización de codigo
-	- Descomentar el otro boton de pegar
- 	- Mirar lo de los murcielagos
+	- Descomentar el otro boton de pegar LISTO
+ 	- Mirar lo de los murcielagos LISTO
 	- Hacer que +velocidad se reinicie y no imprima el mensaje si se muere el personaje LISTO
-	- Reiniciar bbdd de mongo
+	- Reiniciar bbdd de mongo LISTO
+	- Reactivar la musica con un volumen más bajo LISTO
 
 Puntos posibles para la presentacion:
 	- Descripción del juego (porque, como funciona, reglas)

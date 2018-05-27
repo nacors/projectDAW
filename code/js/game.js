@@ -120,7 +120,7 @@ Game.addNewPlayer = function (id, x, y, jugadores, numMapa, pociones) {
     jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
     jugador.animations.play('stay', 10, true);
-    game.physics.p2.enable(jugador, true);
+    game.physics.p2.enable(jugador);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
     //jugador.body.loadPolygon("ninja_escalado", "correr");
@@ -201,7 +201,7 @@ Game.create = function () {
     s = game.input.keyboard.addKey(Phaser.Keyboard.S);
     d = game.input.keyboard.addKey(Phaser.Keyboard.D);
     cursors = game.input.keyboard.createCursorKeys();
-    //hit1 = game.input.keyboard.addKey(Phaser.Keyboard.K);
+    hit1 = game.input.keyboard.addKey(Phaser.Keyboard.K);
     hit2 = game.input.keyboard.addKey(Phaser.Keyboard.L);
     Client.askNewPlayer();
     game.physics.p2.setPostBroadphaseCallback(checkOverlap, this);
@@ -211,13 +211,12 @@ Game.create = function () {
     //game.time.desiredFps = 30;
     musicaFondo = game.add.audio("fondo");
     audioMurcielagos = game.add.audio("audioMurcielagos");
-    audioMurcielagos = game.add.audio("audioMurcielagos");
     for (let i = 1; i < 3; i++) {
         sonidosSalto.push(game.add.audio("salto" + i));
     }
     audioCaida = game.add.audio("caida");
     audioPocion = game.add.audio("pocion");
-    // musicaFondo.loopFull(0.6);
+    musicaFondo.loopFull(0.2);
 };
 
 Game.update = function () {
@@ -293,14 +292,14 @@ Game.update = function () {
             }
             salto = true;
         }
-        /*if (hit1.isDown) {
+        if (hit1.isDown) {
             while (pegar) {
                 Client.ataque("hit1", direccion);
                 pegar1(miid, direccion);
                 pegar = false;
                 reproducirSonidosPegarAire();
             }
-        } else */if (hit2.isDown) {
+        } else if (hit2.isDown) {
             while (pegar) {
                 Client.ataque("hit2", direccion);
                 pegar2(miid, direccion);
@@ -308,7 +307,7 @@ Game.update = function () {
                 reproducirSonidosPegarAire();
             }
         }
-        if (/*hit1.isUp &&*/ hit2.isUp) {
+        if (hit1.isUp && hit2.isUp) {
             pegar = true;
         }
 
@@ -359,14 +358,14 @@ Game.movimiento = function (id, data, accion, direccion) {
     //hay que tener en cuenta de que escuha constantemente los movimientos, tal vez es lo que mas carga el sistema
     if (accion == "presionar") {
         if (direccion == "izquierda") {
-            if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") {
+            if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1") {
                 jugadoresImprimidos.get(id).animations.play('right', 10, true);
                 jugadoresImprimidos.get(id).scale.setTo(-1.3, 1.3);
                 jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
             }
             reproducirSonidosPasos();
         } else if (direccion == "derecha") {
-            if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") {
+            if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1") {
                 jugadoresImprimidos.get(id).animations.play('right', 10, true);
                 jugadoresImprimidos.get(id).scale.setTo(1.3, 1.3);
                 jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
@@ -441,7 +440,7 @@ Game.crearMurcielagos = function (direccion, y) {
         4: [y + 90, -600]
     }
     direccionMurcielagos = direccion;
-    /*if (direccion == "derecha") {
+    if (direccion == "derecha") {
         x = 50;
         sprite = [4, 5, 6, 7];
         datosMurcielagos = murcielagosDer;
@@ -458,7 +457,7 @@ Game.crearMurcielagos = function (direccion, y) {
         murcielago.animations.add('murcielagosmov', sprite, 60, true);
         murcielago.animations.play('murcielagosmov', 10, true);
         murcielagos.push(murcielago);
-    }*/
+    }
     //console.log(murcielagos);
 }
 

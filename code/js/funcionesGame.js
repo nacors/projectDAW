@@ -14,7 +14,7 @@ function imprimirJugador(jugadorImprimir) {
     jugador.animations.add('hit1', [5, 6, 7, 8, 9, 10], 60, false);
     jugador.animations.add('hit2', [11, 12, 13, 14], 60, true);
     jugador.animations.play('stay', 10, true);
-    game.physics.p2.enable(jugador, true);
+    game.physics.p2.enable(jugador);
     //resizePolygon('ninja_physics', 'ninja_escalado', 'correr', 0.1);
     jugador.body.setRectangle(35, 58, -10, 22);
     jugador.body.fixedRotation = true;
@@ -263,19 +263,21 @@ function nombreSprite(body) {
 }
 
 function pegar1(id, direccion) {
-    if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(60, 58, 5, 22);
-    else jugadoresImprimidos.get(id).body.setRectangle(60, 58, -5, 22);
-    jugadoresImprimidos.get(id).animations.stop();
-    jugadoresImprimidos.get(id).animations.play('hit1', 10, false);
-    jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
-        if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
-        else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
-        jugadoresImprimidos.get(id).animations.play('stay', 10, true);
-    }, this);
+    if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1") {
+        if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(60, 58, 5, 22);
+        else jugadoresImprimidos.get(id).body.setRectangle(60, 58, -5, 22);
+        jugadoresImprimidos.get(id).animations.stop();
+        jugadoresImprimidos.get(id).animations.play('hit1', 10, false);
+        jugadoresImprimidos.get(id).animations.currentAnim.onComplete.add(function () {
+            if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(35, 58, -10, 22);
+            else jugadoresImprimidos.get(id).body.setRectangle(35, 58, 10, 22);
+            jugadoresImprimidos.get(id).animations.play('stay', 10, true);
+        }, this);
+    }
 }
 
 function pegar2(id, direccion) {
-    if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2") {
+    if (jugadoresImprimidos.get(id).animations.currentAnim.name != "hit2" && jugadoresImprimidos.get(id).animations.currentAnim.name != "hit1") {
         if (direccion == "right") jugadoresImprimidos.get(id).body.setRectangle(70, 58, 10, 22);
         else jugadoresImprimidos.get(id).body.setRectangle(70, 58, -10, 22);
         jugadoresImprimidos.get(id).animations.stop();
@@ -529,15 +531,16 @@ function murcielagosVolumen() {
         var murcielagoY = murcielagos[0].body.y;
         var personajeX = jugadoresImprimidos.get(miid).body.x;
         var personajeY = jugadoresImprimidos.get(miid).body.y;
-        var posX = (murcielagoX - personajeX < 0) ? (murcielagoX - personajeX) * -1 : murcielagoX - personajeX;
-        var posY = (murcielagoY - personajeY < 0) ? (murcielagoY - personajeY) * -1 : murcielagoY - personajeY;
+        var posX = (murcielagoX - personajeX < 0) ? (murcielagoX - personajeX) : murcielagoX - personajeX;
+        var posY = (murcielagoY - personajeY < 0) ? (murcielagoY - personajeY) : murcielagoY - personajeY;
         var distancia = Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2));
         var volumen = 1 - (distancia / 3000);
         volumen = (volumen < 0) ? 0 : volumen;
-        audioMurcielagos.play();
+        if(!audioMurcielagos.isPlaying) audioMurcielagos.loopFull();
+        console.log(audioMurcielagos);
         audioMurcielagos.volume = volumen;
         if (direccionMurcielagos == "derecha") {
-            if (murcielagos[0].body.x == 7000) {
+            if (murcielagos[0].body.x == 10000) {
                 for (SpriteMurc of murcielagos) {
                     SpriteMurc.destroy();
                 }
@@ -546,7 +549,7 @@ function murcielagosVolumen() {
             }
         }
         if (direccionMurcielagos == "izquierda") {
-            if (murcielagos[0].body.x == -500) {
+            if (murcielagos[0].body.x == -3000) {
                 for (SpriteMurc of murcielagos) {
                     SpriteMurc.destroy();
                 }
