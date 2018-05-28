@@ -64,7 +64,7 @@ window.onload = () => {
         document.getElementById("reglasGenereales").innerHTML += `<div id="reglasImg">
                     <h2>Controles</h2>
                     <h3><b id="enumeracion">1.</b> Para moverte usa W(salto), A(izquierda) y D(derecha)</h3>
-                    <h3><b id="enumeracion">2.</b> Ataca con la tecla de L</h3>
+                    <h3><b id="enumeracion">2.</b> Ataca con la tecla de K y L</h3>
                     <div id="imagenFlechas"></div>
             </div>`;
 
