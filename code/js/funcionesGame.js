@@ -191,9 +191,9 @@ function checkOverlap(body1, body2) {
                 // console.log("has chocado con un murcielago");
                 if (jugadoresImprimidos.get(miid) == body2.sprite) {
                     body2.sprite.alpha = 0;
+                    nombreJugador.alpha = 0;
                     //no le permitimos el movimiento al jugador con esa variable
                     sePuedeJugar = false;
-                    muertes++;
                     Client.opacityEnemigo("fueraMapa", direccionCamara);
                     isFueraMapa = true;
                 }
@@ -201,9 +201,9 @@ function checkOverlap(body1, body2) {
                 // console.log("has chocado con un murcielago");
                 if (jugadoresImprimidos.get(miid) == body1.sprite) {
                     body1.sprite.alpha = 0;
+                    nombreJugador.alpha = 0;
                     //no le permitimos el movimiento al jugador con esa variable
                     sePuedeJugar = false;
-                    muertes++;
                     Client.opacityEnemigo("fueraMapa", direccionCamara);
                     isFueraMapa = true;
                 }
@@ -460,7 +460,7 @@ function revisarCaidoFueraMapa() {
     if (jugadoresImprimidos.get(miid).y > bordeMapa && !isFueraMapa) {
         audioCaida.play();
         jugadoresImprimidos.get(miid).alpha = 0;
-        muertes++;
+        //muertes++;
         //no le permitimos el movimiento al jugador con esa variable
         sePuedeJugar = false;
         sumarVelocidad = 0;
@@ -488,6 +488,7 @@ function reaparecerJugador() {
             Client.opacityEnemigo("reaparecer", direccionCamara);
             cont = 0;
             nombreJugador.alpha = 1;
+            muertes++;
         }
     }
 }
@@ -536,7 +537,7 @@ function murcielagosVolumen() {
         var distancia = Math.sqrt(Math.pow(posX, 2) + Math.pow(posY, 2));
         var volumen = 1 - (distancia / 3000);
         volumen = (volumen < 0) ? 0 : volumen;
-        if(!audioMurcielagos.isPlaying) audioMurcielagos.loopFull();
+        if (!audioMurcielagos.isPlaying) audioMurcielagos.loopFull();
         console.log(audioMurcielagos);
         audioMurcielagos.volume = volumen;
         if (direccionMurcielagos == "derecha") {
@@ -616,7 +617,7 @@ function añadirNombreUsuario() {
         });
         nombreJugador.anchor.setTo(0.5, 0.5);
     }, 1000);
-    
+
 }
 
 function movimientoNombreJugador(jugador = "yo") {
