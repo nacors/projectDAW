@@ -187,6 +187,7 @@ Game.preload = function () {
     game.load.audio("pegarAire2", `assets/sonidos/espada/espadaAire2.wav`);
     game.load.audio("pegarAire3", `assets/sonidos/espada/espadaAire3.wav`);
     game.load.audio("victoria", `assets/sonidos/victoria/audio_victoria.mp3`);
+    game.load.audio("derrota", `assets/sonidos/derrota/audio_derrota.wav`);
     game.load.audio("pegarLosDos1", `assets/sonidos/espada/espada5.mp3`);
     game.load.audio("pegarLosDos2", `assets/sonidos/espada/espada7.mp3`);
     game.load.audio("pegarLosDos3", `assets/sonidos/espada/espada8.mp3`);

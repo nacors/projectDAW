@@ -771,6 +771,9 @@ function derrota(x, y) {
     if (sessionStorage.getItem("usuario") != "Invitado") enviarClasificacionJugador("derrota", bajas, 0, sessionStorage.getItem("usuario"), muertes);
     resultadoFinal = "derrota";
     sePuedeJugar = false;
+    var audioDerrota = game.add.audio("derrota");
+    musicaFondo.stop();
+    audioDerrota.play();
     volverMenu();
 }
 
