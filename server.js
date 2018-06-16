@@ -11,7 +11,6 @@ var jugadores = {};
 var jugadoresRoom = 0;
 var room = "sala";
 var roomcount = 0;
-var port = process.env.PORET || 3000;
 var time = require('cron').CronJob;
 server.lastPlayderID = 0;
 var numeroMapa = numeroRandom(3, 1);
@@ -20,7 +19,9 @@ var posicionPociones = generarPosicionesPociones(5);
 app.use('/css', express.static(__dirname + '/code/css'));
 app.use('/js', express.static(__dirname + '/code/js'));
 app.use('/assets', express.static(__dirname + '/media'));
-server.listen(port);
+server.listen(8000, function () {
+  console.log('listening on *:8000');
+});
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
