@@ -1,24 +1,8 @@
-Por acabar:
-	- Mirar Porque el personaje no cae en la primera pantalla (Mi copia no cambia de opacity si caigo) LISTO
-	. Mirar porque se imrpime dos veces el nombre LISTO
-	- No se puede coger pocion hatsa que no empiezxe la partida (si alguien cogio una pocion y entra otro jugador a la partida, la vera igualmente y podra cogerla mientras el eneigo no) LISTO
-	- Implementación de menu mejorado LISTO
-	- Optimización de codigo
-	- Descomentar el otro boton de pegar LISTO
- 	- Mirar lo de los murcielagos LISTO
-	- Hacer que +velocidad se reinicie y no imprima el mensaje si se muere el personaje LISTO
-	- Reiniciar bbdd de mongo LISTO
-	- Reactivar la musica con un volumen más bajo LISTO
-	- Poner música de derrota
-	- Poner sonido de muerte
-	- Investiguar ambos muertos
-	- Error ortográfico de inicia sesión (menú.js)
+PLATAFORMER BASAT EN TECNOLOGIES COM PHASER, NODEJS, MONGODB, SocketIO I JS
+	Es un treball de fi de curs de DAW (Desenvolupament d'aplicacions Web) realitzat amb un company durant uns  mesos més o mneys.
+	S'executa en el servidor de NodeJS i utilitzem la tecnologia de SocketIO per poder recrear un joc online.
 
-Puntos posibles para la presentacion:
-	- Descripción del juego (porque, como funciona, reglas)
-	- Tecnologias Utilizadas (cuales, porque, evntajas)
-		+ Problemas que tubimos
-		+ Demostración de creación de mapas
-		+ Explicación rápido de como funciona phaser (con posibles dibujos de update, create, preload etc...)
-	- Demostración del juego y explicación de como se juega
+Joc testeat, no s'ha trobat més errors!
+
+Tot llest per la presentació!
 
